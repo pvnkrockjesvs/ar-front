@@ -6,9 +6,8 @@ function Artist() {
     <div className={styles.mainContainer}>
       {/* --LEFT CONTAINER-- */}
       <div className={styles.leftContainer}>
-        <div>
+        <div className={styles.artistPic}>
           <Image
-            className={styles.artistPic}
             src="/artist.jpg"
             alt="Artist picture"
             width={300}
@@ -59,6 +58,61 @@ function Artist() {
           </div>
           <div className={styles.albumsContainer}>
             <p className={styles.albumTxt}>Albums</p>
+            <div className={styles.albumsList}>
+              <div className={styles.albumTitle}>
+                <p>
+                  <a href="albumLink">Album Title</a> • 2023
+                </p>
+              </div>
+              <div className={styles.minuteTracks}>
+                <p>45 min</p>
+                <p>15 tracks</p>
+              </div>
+            </div>
+            <div className={styles.albumsList}>
+              <div className={styles.albumTitle}>
+                <p>
+                  <a href="albumLink">Album Title</a> • 2023
+                </p>
+              </div>
+              <div className={styles.minuteTracks}>
+                <p>45 min</p>
+                <p>15 tracks</p>
+              </div>
+            </div>
+            <div className={styles.albumsList}>
+              <div className={styles.albumTitle}>
+                <p>
+                  <a href="albumLink">Album Title</a> • 2023
+                </p>
+              </div>
+              <div className={styles.minuteTracks}>
+                <p>45 min</p>
+                <p>15 tracks</p>
+              </div>
+            </div>
+            <div className={styles.albumsList}>
+              <div className={styles.albumTitle}>
+                <p>
+                  <a href="albumLink">Album Title</a> • 2023
+                </p>
+              </div>
+              <div className={styles.minuteTracks}>
+                <p>45 min</p>
+                <p>15 tracks</p>
+              </div>
+            </div>
+            <div className={styles.albumsList}>
+              <div className={styles.albumTitle}>
+                <p>
+                  <a href="albumLink">Album Title</a> • 2023
+                </p>
+              </div>
+              <div className={styles.minuteTracks}>
+                <p>45 min</p>
+                <p>15 tracks</p>
+              </div>
+            </div>
             <div className={styles.albumsList}>
               <div className={styles.albumTitle}>
                 <p>
