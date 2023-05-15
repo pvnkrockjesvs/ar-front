@@ -7,7 +7,7 @@
   height: 100vh;
   display: flex;
   align-items: center;
-  background: linear-gradient(45deg, #0e5289 0%, #052341 100%);
+  background: linear-gradient(45deg, #368ed7 0%, #052341 100%);
   background-size: 200% 200%;
   animation: background-animation 6s ease infinite;
 }
@@ -137,11 +137,18 @@
 .albumsList {
   display: flex;
   flex-direction: row;
+  justify-content: space-around;
+  width: 65%;
 }
 .albumsList p {
   margin-right: 20px;
 }
 .albumTxt {
+  flex: none;
   font-size: 18px;
   font-weight: 600;
+}
+.minuteTracks {
+  display: flex;
+  flex-direction: row;
 }
