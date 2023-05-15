@@ -1,0 +1,69 @@
+.signupContainer {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.signupInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 3rem
+}
+
+.inputContainer {
+    width: 20rem;
+    height: 3rem;
+    border-radius: 5px;
+    border: none;
+    border-bottom: 2px solid #f47373;
+    border-left: 2px solid #f47373;
+    font-size: 12px;
+}
+
+.fieldTitle {
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.registerButton {
+    width: 15rem;
+    height: 3rem;
+    border-radius: 50px;
+    background-color: #f47373;
+    border: none;
+    color: white;
+    font-weight: bold;
+}
+.title {
+    color: #f47373;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.itemInfo {
+    margin: 10px;
+    line-height: 0px;
+}
+
+.passwordLink {
+    margin: 40px;
+    color: white;
+}
+
+.emailError {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: #eb144c;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.emailErrorMessage {
+    margin-left: 10px
+}

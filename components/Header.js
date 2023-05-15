@@ -3,11 +3,29 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faHome, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react'
+import { useSelector } from 'react-redux'
 
 function Header() {
 
-    const [connected, setConnected] = useState(true)
+    const user = useSelector((state) => state.user.value);
+    const [connected, setConnected] = useState(false)
 
+    const openSignInModal = () => {
+        setSignInModalOpen(true);
+    };
+  
+    const handleSignInCancel = () => {
+        setSignInModalOpen(false);
+    };
+  
+    const openSignUpModal = () => {
+        setSignUpModalOpen(true);
+    };
+  
+    const handleSignUpCancel = () => {
+        setSignUpModalOpen(false);
+    };
+  
     return (
         <header className={styles.header}>
             <div className={styles.searchContainer}>
@@ -16,10 +34,10 @@ function Header() {
                 placeholder='Search artist' />
             </div>
             <div className={styles.title}>
-                <span class="text">Album Release</span>
+                <span>Album Release</span>
             </div>            
             <div className={styles.headerRight}>
-            { connected ?
+            { user.token ?
             (   <>
                     <div className={styles.linkContainer}>
                         <FontAwesomeIcon className={styles.linkIcon} icon={faCalendar} />
@@ -43,13 +61,16 @@ function Header() {
             ) :
             (   <>
                     <div className={styles.linkContainer}>
+                        <button type="primary" className={styles.signButton} onClick={openSignUpModal}>Sign-Up</button>
+                        {/*}
                         <Link href='/SignUp'>
                             <button className={styles.button}>SignUp</button>
                         </Link>
+                        */}
                     </div>
                     <div className={styles.linkContainer}>
                         <Link href='/SignIn'>
-                            <button className={styles.button}>SignIn</button>
+                            <button className={styles.button}>LogIn</button>
                         </Link>
                     </div>
                 </>

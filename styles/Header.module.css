@@ -1,36 +1,21 @@
-@font-face {
-    font-family: "Old London";
-    src: url("/fonts/OldLondon.ttf");
-}
-
 .header {
     /*border-bottom: 2px rgb(233, 190, 89) solid;*/
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    height: 10%;
     background-color: black;
-    /*background-color: rgb(218, 236, 218)*/
+    height: 10%;
 }
 
 .title {
     font-size: 44px;
-    font-family: "Old London";
+    /*font-family: "Old London";*/
     font-weight: bold;
-    margin-left: 20px;
     color: white;
+    border: 2px solid blue;
 }
 
-/*
-.searchContainer {
-    width: 20%;
-    height: 10%;
-    border-radius: 10px;
-    margin-left: 15px;
-    font-size: 11px;
-}
-*/
 .messageContainer {
     width: 20rem;
     height: 3rem;
@@ -38,14 +23,15 @@
     border: none;
     font-size: 12px;
     margin-left: 2rem;
+    border: 2px solid blue;
 }
 
 .headerRight {
     display: flex;
-    flex-direction: 'row';
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-right: 20px;
+    border: 2px solid blue;
 }
 
 .linkContainer {
@@ -66,7 +52,7 @@
     block-size: 30px;
 }
 
-.button {
+.signButton {
     width: 5rem;
     height: 2rem;
     /*background-color: white;*/

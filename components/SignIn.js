@@ -1,56 +1,53 @@
 import styles from '../styles/SignUp.module.css'
-import Header from './Header'
+import ConnectionHeader from './ConnectionHeader'
 import { useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from '../reducers/user';
 
-const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+function SignIn (props) {
 
-function SignIn () {
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.value)
+    const [username, setUserName] = useState('');
+    const [password, setPassword] = useState('');
 
-    const [username, setUsername] = useState(null)
-    const [email, setEmail] = useState(null)
-    const [password, setPassword] = useState(null)
-    const [emailError, setEmailError] = useState(null);
-
-
-    const handleOnChange = (event) => {
-        if (EMAIL_REGEX.test(event.target.value)) {
-            setEmail(event.target.value)
-            setEmailError(false)
-        } else {
-            setEmailError(true);
-        }    
-    }
+    const handleConnection = () => {
+        fetch("http://localhost:3000/users/signin", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data)
+            if (data.result) {
+                dispatch(login({ username, token: data.token }));
+                setUserName('');
+                setPassword('');
+            }
+            props.closeModal('signin')
+        });
+    };
     
     return (
-
-        <div className={styles.signupScreen}>
-            <Header />
+        <div>
             <div className={styles.signupContainer}>
-                <p className={styles.title}>Create your account</p>
+                <p className={styles.title}>Connect to your account</p>
                 <div className={styles.signupInfo}>
                     <div className={styles.itemInfo}>
-                        <p className={styles.fieldTitle}>Enter a valid username</p>
-                        <input type="text" placeholder="Username" className={styles.inputContainer} onChange={(e) => setUsername(e.target.value)} value={username} />
+                        <p className={styles.fieldTitle}>Email adress or username</p>
+                        <input type="text" placeholder="Email or username" className={styles.inputContainer} onChange={(e) => setUserName(e.target.value)} value={username} />
                     </div>
                     <div className={styles.itemInfo}>
-                        <p className={styles.fieldTitle}>Enter a valid email adress </p>
-                        <input type="text" placeholder="Email" className={styles.inputContainer} onChange={(e) => handleOnChange(e)} value={email} />
-                        {emailError && <div className={styles.emailError}>
-                            <FontAwesomeIcon icon={faExclamationCircle} />
-                            <p className={styles.emailErrorMessage}>Invalid email address</p>
-                        </div>
-                        }
-                    </div>
-                    <div className={styles.itemInfo}>
-                        <p className={styles.fieldTitle}>Create a password</p>
+                        <p className={styles.fieldTitle}>Enter your password</p>
                         <input type="password" placeholder="Password" className={styles.inputContainer} onChange={(e) => setPassword(e.target.value)} value={password} />
                     </div>
                 </div>
-                <button className={styles.registerButton} onClick={() => handleRegister()}>Create</button>
-            </div>
+                <button className={styles.registerButton} onClick={() => handleConnection()}>Connect</button>
+                </div>
+            ) : 
+            }
         </div>
     )
 
