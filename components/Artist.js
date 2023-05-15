@@ -6,23 +6,28 @@ function Artist() {
     <div className={styles.mainContainer}>
       {/* --LEFT CONTAINER-- */}
       <div className={styles.leftContainer}>
-        <Image
-          className={styles.artistPic}
-          src="/artist.jpg"
-          alt="Artist picture"
-          width={300}
-          height={300}
-        />
-        <p className={styles.releaseTxt}>Last Release : </p>
-        <Image
-          className={styles.albumCover}
-          src="/Watch-the-throne.jpg"
-          alt="Album cover"
-          width={200}
-          height={200}
-        />
         <div>
-          <p>Album Title</p>
+          <Image
+            className={styles.artistPic}
+            src="/artist.jpg"
+            alt="Artist picture"
+            width={300}
+            height={300}
+          />
+        </div>
+        <p className={styles.releaseTxt}>Last Release : </p>
+        <div>
+          <Image
+            src="/Watch-the-throne.jpg"
+            alt="Album cover"
+            width={180}
+            height={180}
+          />
+        </div>
+        <div>
+          <p>
+            <a href="albumLink">Album Title</a>
+          </p>
           <p>2023</p>
         </div>
       </div>
@@ -53,7 +58,9 @@ function Artist() {
           <div className={styles.albumContainer}>
             <p className={styles.albumTxt}>Albums</p>
             <div className={styles.albumsList}>
-              <p>Album Title • 2023</p>
+              <p>
+                <a href="albumLink">Album Title</a> • 2023
+              </p>
               <p>45 min</p>
               <p>15 tracks</p>
             </div>
@@ -61,7 +68,9 @@ function Artist() {
           <div className={styles.albumContainer}>
             <p className={styles.albumTxt}>EPs</p>
             <div className={styles.albumsList}>
-              <p>Album Title • 2023</p>
+              <p>
+                <a href="albumLink">Album Title</a> • 2023
+              </p>
               <p>45 min</p>
               <p>15 tracks</p>
             </div>
