@@ -18,22 +18,27 @@
   -webkit-box-shadow: 0 0 3px #878787;
   box-shadow: 0 0 3px #878787;
 }
+.releaseTxt {
+  font-weight: 700;
+  font-size: 25px;
+}
 
 /*--Right Side--*/
 .rightContainer {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 .textContainer {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 80%;
+  width: 96%;
   height: 40%;
   border-radius: 10px;
-  margin-right: 20px;
   -moz-box-shadow: 0 0 3px #878787;
   -webkit-box-shadow: 0 0 3px #878787;
   box-shadow: 0 0 3px #878787;
@@ -41,11 +46,11 @@
 .topText {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
-.artistDescription {
-  margin: 30px;
-}
+
 .artistName {
+  font-size: 45px;
 }
 .buttonFollow {
   display: flex;
@@ -59,10 +64,13 @@
 }
 .buttonFollow:hover {
   background-color: #3466c3;
+  cursor: pointer;
+  border: black;
 }
 
 .artistDescription {
   padding: 20px;
+  margin: 0px 30px 30px 30px;
 }
 
 .discographyContainer {

@@ -13,13 +13,13 @@ function Artist() {
           width={300}
           height={300}
         />
-        <p>Last Release : </p>
+        <p className={styles.releaseTxt}>Last Release : </p>
         <Image
           className={styles.albumCover}
           src="/Watch-the-throne.jpg"
           alt="Album cover"
-          width={300}
-          height={300}
+          width={200}
+          height={200}
         />
         <div>
           <p>Album Title</p>
