@@ -45,7 +45,28 @@ function Artist() {
             culpa qui officia deserunt mollit anim id est laborum.
           </p>
         </div>
-        <div className={styles.discographyContainer}></div>
+        <div className={styles.discographyContainer}>
+          <div className={styles.discoFilter}>
+            <p className={styles.discoTxt}>Discography : </p>
+            <p>⚙️ Filter types</p>
+          </div>
+          <div className={styles.albumContainer}>
+            <p className={styles.albumTxt}>Albums</p>
+            <div className={styles.albumsList}>
+              <p>Album Title • 2023</p>
+              <p>45 min</p>
+              <p>15 tracks</p>
+            </div>
+          </div>
+          <div className={styles.albumContainer}>
+            <p className={styles.albumTxt}>EPs</p>
+            <div className={styles.albumsList}>
+              <p>Album Title • 2023</p>
+              <p>45 min</p>
+              <p>15 tracks</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
