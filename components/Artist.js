@@ -57,7 +57,7 @@ function Artist() {
             <p className={styles.discoTxt}>Discography : </p>
             <p>⚙️ Filter types</p>
           </div>
-          <div className={styles.albumContainer}>
+          <div className={styles.albumsContainer}>
             <p className={styles.albumTxt}>Albums</p>
             <div className={styles.albumsList}>
               <div className={styles.albumTitle}>
@@ -70,8 +70,19 @@ function Artist() {
                 <p>15 tracks</p>
               </div>
             </div>
+            <div className={styles.albumsList}>
+              <div className={styles.albumTitle}>
+                <p>
+                  <a href="albumLink">Album Title</a> • 2023
+                </p>
+              </div>
+              <div className={styles.minuteTracks}>
+                <p>45 min</p>
+                <p>15 tracks</p>
+              </div>
+            </div>
           </div>
-          <div className={styles.albumContainer}>
+          <div className={styles.albumsContainer}>
             <p className={styles.albumTxt}>EPs</p>
             <div className={styles.albumsList}>
               <div className={styles.albumTitle}>
