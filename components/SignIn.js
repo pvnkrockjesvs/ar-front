@@ -1,18 +1,19 @@
-import styles from '../styles/SignUp.module.css'
+import styles from '../styles/Sign.module.css'
 import ConnectionHeader from './ConnectionHeader'
-import { useState } from 'react'
-import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../reducers/user';
+import { useForm } from "react-hook-form";
 
 function SignIn (props) {
 
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.value)
-    const [username, setUserName] = useState('');
-    const [password, setPassword] = useState('');
+    const { register, handleSubmit, reset, formState: { errors }} = useForm(); 
 
-    const handleConnection = () => {
+
+    const connectToUserAccount = (data) => {
+        // destructuring the data object
+        const { username, password } = data
         fetch("http://localhost:3000/users/signin", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -23,31 +24,38 @@ function SignIn (props) {
             console.log(data)
             if (data.result) {
                 dispatch(login({ username, token: data.token }));
-                setUserName('');
-                setPassword('');
+                reset()
             }
             props.closeModal('signin')
         });
     };
     
     return (
-        <div>
-            <div className={styles.signupContainer}>
-                <p className={styles.title}>Connect to your account</p>
-                <div className={styles.signupInfo}>
-                    <div className={styles.itemInfo}>
-                        <p className={styles.fieldTitle}>Email adress or username</p>
-                        <input type="text" placeholder="Email or username" className={styles.inputContainer} onChange={(e) => setUserName(e.target.value)} value={username} />
-                    </div>
-                    <div className={styles.itemInfo}>
-                        <p className={styles.fieldTitle}>Enter your password</p>
-                        <input type="password" placeholder="Password" className={styles.inputContainer} onChange={(e) => setPassword(e.target.value)} value={password} />
-                    </div>
+        <div className={styles.signContainer}>
+            <p className={styles.title}>Connect to your account</p>
+            <form  autoComplete='off' className={styles.formContainer} onSubmit={handleSubmit(connectToUserAccount)}>
+                <div className={styles.userInfo}>
+                    <p className={styles.fieldTitle}>Username</p>
+                    <input
+                        className={styles.inputContainer}
+                        type="text"
+                        placeholder="Username"
+                        {...register("username", {required:'username is required'})}
+                    />
+                    <p className={styles.fieldError}>{errors.username?.message}</p>
                 </div>
-                <button className={styles.registerButton} onClick={() => handleConnection()}>Connect</button>
+                <div className={styles.userInfo}>
+                    <p className={styles.fieldTitle}>Enter your password</p>
+                    <input
+                        className={styles.inputContainer}
+                        type="password"
+                        placeholder="Password"
+                        {...register("password", {required: 'The password is required'})}
+                    />
+                    <p className={styles.fieldError}>{errors.password?.message}</p>
                 </div>
-            ) : 
-            }
+                <button className={styles.registerButton}>Connect</button>
+            </form>
         </div>
     )
 

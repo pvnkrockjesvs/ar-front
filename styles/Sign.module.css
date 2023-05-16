@@ -1,4 +1,4 @@
-.signupContainer {
+.signContainer {
     margin: auto;
     display: flex;
     flex-direction: column;
@@ -58,6 +58,9 @@
     line-height: 0px;
 }
 
+.fieldError {
+    color: red;
+}
 .passwordLink {
     margin: 40px;
     color: white;

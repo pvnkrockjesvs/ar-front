@@ -1,27 +1,26 @@
 import styles from '../styles/Sign.module.css'
 import Header from './Header'
+import Profile from './Profile'
 import { useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { login } from '../reducers/user';
 import { useForm } from "react-hook-form";
+import { Modal } from "antd";
+
 
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 function SignUp (props) {
 
     const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.value)
     const [userExistError, setUserExistError] = useState(false)
-    const { register, handleSubmit, reset } = useForm();
+    const [isProfileModalOpen, setProfileModalOpen] = useState(false);
 
-    const handleOnChange = (event) => {
-        if (EMAIL_REGEX.test(event.target.value)) {
-            setEmail(event.target.value)
-            setEmailError(false)
-        } else {
-            setEmailError(true);
-        }    
+    const { register, handleSubmit, reset, formState: { errors }  } = useForm();
+
+    const handleProfileCancel = () => {
+        setProfileModalOpen(false)
     }
 
     const CreateUserAccount = (data) => {
@@ -39,28 +38,34 @@ function SignUp (props) {
                 // reset the value of the form to the defautl values
                 reset()          
                 // reverse data flow to close the signup model
+                props.closeModal('signup')
+                setProfileModalOpen(true)
             }
-            props.closeModal('signup')
             /*else {
-                setUserExistError(true)
+                setUserExistError(true
             }
             */
             
         });
     };
 
+    const closeModal = () => {
+        setProfileModalOpen(false)
+    }
+
     return (
-        <div className={styles.signupContainer}>
+        <div className={styles.signContainer}>
             <p className={styles.title}>Create your account</p>                
-            <form  className={styles.formContainer} onSubmit={handleSubmit(CreateUserAccount)}>
+            <form  autoComplete='off' className={styles.formContainer} onSubmit={handleSubmit(CreateUserAccount)}>
                 <div className={styles.userInfo}>
                     <p className={styles.fieldTitle}>Enter a valid username</p>
                     <input
                         type='text'
                         className={styles.inputContainer}
-                        placeholder="Name........................"
-                        {...register("username")}                      
+                        placeholder="Name"
+                        {...register("username", {required: 'The username is required'})}                      
                     />
+                    <p className={styles.fieldError}>{errors.username?.message}</p>
                 </div>
                 <div className={styles.userInfo}>
                     <p className={styles.fieldTitle}>Enter a valid email address</p>
@@ -68,8 +73,15 @@ function SignUp (props) {
                         className={styles.inputContainer}
                         type='email'
                         placeholder="Email"
-                        {...register("email")}                      
+                        {...register("email", {
+                            required: 'email is required',
+                            pattern: {value: EMAIL_REGEX,
+                                      message: 'The required email shoud be valid'
+                                     }
+                                }
+                        )}                      
                     />
+                    <p className={styles.fieldError}>{errors.email?.message}</p>
                 </div>
                 <div className={styles.userInfo}>
                     <p className={styles.fieldTitle}>Enter a password</p>
@@ -77,11 +89,22 @@ function SignUp (props) {
                         type="password"
                         className={styles.inputContainer}
                         placeholder="Password"
-                        {...register("password")}                      
+                        {...register("password", {required: 'password is required'})}                      
                     />
+                    <p className={styles.fieldError}>{errors.password?.message}</p>
                 </div>
                 <button className={styles.registerButton}>Create</button>
             </form>
+            <div id="react-modals">
+                <Modal
+                    className="modalStyle"
+                    width={700}
+                    open={isProfileModalOpen}
+                    onCancel={handleProfileCancel}
+                    footer={null}>
+                    <Profile closeModal={closeModal}/>
+                </Modal>
+            </div>
             {/*}
             {userExistError &&
              <div>

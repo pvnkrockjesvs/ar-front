@@ -1,10 +1,11 @@
 import styles from '../styles/Profile.module.css'
 import React from "react";
 import { useForm, useFieldArray } from "react-hook-form";
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
   
 function Profile(props) {
+    const dispatch = useDispatch();
     const user = useSelector((state) => state.user.value)
 
     const { register, handleSubmit, watch, control } = useForm()
@@ -12,11 +13,6 @@ function Profile(props) {
             control,
             name: 'genres'}
         )
-
-    const addGenre = () => {
-        setGenres(prevGenres => [...prevGenres, counter]);
-        setCounter(prevCounter => prevCounter + 1);
-    };
 
     const updateDataProfile = (data) => {
         console.log(data)
@@ -54,7 +50,7 @@ function Profile(props) {
         .then((response) => response.json())
         .then((data) => {
             if (data.result) {
-                console.log(data)
+                props.closeModal()
             }
         })
     }
@@ -64,7 +60,7 @@ function Profile(props) {
     return (
         <div className={styles.notifyContainer}>
             <p className={styles.title}>Create your profile</p>
-            <form className={styles.formContainer} onSubmit={handleSubmit(createProfile)}>
+            <form autoComplete='off' className={styles.formContainer} onSubmit={handleSubmit(createProfile)}>
                 <div className={styles.itemType}>
                     <p className={styles.itemTitle}>What type of release do you prefer?</p>
                     <label className={styles.labelName} htmlFor="field-album">
