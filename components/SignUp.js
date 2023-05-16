@@ -42,6 +42,7 @@ function SignUp (props) {
                 setPassword('');
             }
             props.closeModal('signup')
+
         });
     };
 

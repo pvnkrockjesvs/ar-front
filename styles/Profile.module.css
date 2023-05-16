@@ -1,0 +1,37 @@
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.itemTitle {
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem
+}
+
+.labelName {
+    color: white;
+    margin: 30px;
+    font-size: 1rem;
+}
+
+.saveButton {
+    margin-top: 2rem;
+    background-color: #f47373;
+    border-radius: 10px;
+    width:  10rem;
+    height: 2rem;
+}
+
+.itemType {
+    border: 2px solod blue;
+}
+
+.labelText {
+    color: white;
+    font-weight: bold;
+    font-size: 2rem;
+}
+

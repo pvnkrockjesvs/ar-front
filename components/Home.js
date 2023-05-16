@@ -4,6 +4,7 @@ import ConnectionHeader from './ConnectionHeader'
 import Header from './Header'
 import SignIn from "../components/SignIn";
 import SignUp from "../components/SignUp";
+import Profile from '../components/Profile'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Modal } from "antd";
@@ -14,6 +15,7 @@ function Home() {
     const [isSignInModalOpen, setSignInModalOpen] = useState(false);
     const [isSignUpModalOpen, setSignUpModalOpen] = useState(false);
     const [isProfileModalOpen, setProfileModalOpen] = useState(false);
+
 
     const handleSignInCancel = () => {
         setSignInModalOpen(false);
@@ -33,13 +35,21 @@ function Home() {
 
     const handleProfileCancel = () => {
         console.log('Yes')
+        setProfileModalOpen(false)
     }
 
     const closeModal = (modalType) => {
-        if (modalType === 'signup'){
-            setSignUpModalOpen(false);
-        } else if (modalType === 'signin'){
-            setSignInModalOpen(false);
+        switch(modalType) {
+            case 'signup':
+                setSignUpModalOpen(false)
+                setProfileModalOpen(true)
+                break
+            case 'signin':
+                setSignInModalOpen(false);
+                break
+            case 'profile':
+                setProfileModalOpen(false);
+                break
         }
     }
 
@@ -48,7 +58,7 @@ function Home() {
             <Head>
                 <title>Album Release - Home</title>
             </Head>
-            { !user.token ?
+            { (!user.token) || (true) ?
             (<>
                 <ConnectionHeader selectSignOption={selectSignOption}/>
                 <div id="react-modals">
@@ -71,18 +81,16 @@ function Home() {
                         <SignUp closeModal={closeModal}/>
                     </Modal>
                 </div>
-                {/*
                 <div id="react-modals">
                     <Modal
                         className="modalStyle"
                         width={700}
-                        open={isSignUpModalOpen}
+                        open={isProfileModalOpen}
                         onCancel={handleProfileCancel}
                         footer={null}>
-                        <SignUp closeModal={closeModal}/>
+                        <Profile closeModal={closeModal}/>
                     </Modal>
                 </div>
-                */}
             </>) : 
             ( <Header />
             )}
