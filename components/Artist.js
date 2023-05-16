@@ -3,6 +3,7 @@ import styles from "../styles/Artist.module.css";
 import { Popover, Button, Radio } from "antd";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
+import { addAlbums } from "../reducers/albums";
 
 function Artist() {
   const [selectedOption, setSelectedOption] = useState("");
@@ -11,14 +12,13 @@ function Artist() {
   const dispatch = useDispatch();
   const albums = useSelector((state) => state.albums.value);
   const user = { token: false };
-  const containerRef = useRef(null);
 
   useEffect(() => {
     //Fetch pour infos artist & albums
     // fetch(`http://musicbrainz-fetch`)
     //   .then((response) => response.json())
     //   .then((data) => {
-    //     dispatch([...albums, ...data]);
+    //     dispatch(addAlbums(data.albums));
     //   });
 
     //Vérifier les releaseTypes d'albums depuis les données profiles de la db + filtrage des albums
@@ -34,20 +34,6 @@ function Artist() {
         });
     }
   }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (open) {
-        setOpen(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [open]);
 
   //Filtrage du tableau d'Albums/EPs à afficher
   const filterAlbums = (albumsData) => {
