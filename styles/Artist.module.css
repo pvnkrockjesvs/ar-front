@@ -16,6 +16,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
   }
   .artistName {
     font-size: 30px;
@@ -67,6 +69,18 @@
 .releaseTxt {
   font-weight: 700;
   font-size: 23px;
+}
+.artistNameLeft {
+  display: none;
+  font-size: 30px;
+  text-align: center;
+  height: 30px;
+}
+
+@media (max-width: 620px) {
+  .artistNameLeft {
+    display: flex;
+  }
 }
 
 /*--Right Side--*/

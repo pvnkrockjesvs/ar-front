@@ -6,6 +6,7 @@ function Artist() {
     <div className={styles.mainContainer}>
       {/* --LEFT CONTAINER-- */}
       <div className={styles.leftContainer}>
+        <h2 className={styles.artistNameLeft}>Artist EMINEM</h2>
         <div className={styles.artistPic}>
           <Image
             src="/artist.jpg"
