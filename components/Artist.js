@@ -27,7 +27,7 @@ function Artist() {
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
-            //Modifier selon les valeurs releaseTypes (à tester)
+            //Modifier selon les valeurs releaseTypes de profiles (à tester)
             setSelectedOption("albums");
             filterAlbums(albums);
           }
