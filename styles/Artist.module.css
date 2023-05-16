@@ -77,7 +77,7 @@
   height: 30px;
 }
 
-@media (max-width: 620px) {
+@media (max-width: 600px) {
   .artistNameLeft {
     display: flex;
   }
@@ -138,8 +138,9 @@
   color: white;
   padding: 10px;
   height: 30px;
-  border-radius: 10px;
+  border-radius: 8px;
   border: 1px solid #0953db;
+  font-family: "Montserrat";
 }
 .buttonFollow:hover {
   background-color: #3466c3;
@@ -147,7 +148,7 @@
   border: 1px solid black;
 }
 .buttonFollow:active {
-  transform: translate(0em, 0.2em);
+  transform: translate(0em, 0.15em);
 }
 
 @media (max-width: 620px) {
@@ -190,9 +191,13 @@
   align-items: center;
   justify-content: center;
 }
+
 .discoTxt {
   font-size: 22px;
   font-weight: 600;
+}
+.popover {
+  margin-left: 20px;
 }
 
 .albumsContainer {
@@ -203,14 +208,28 @@
   width: 75%;
   padding-bottom: 30px;
 }
-.albumsList {
+
+@media (max-width: 900px) {
+  .albumsContainer {
+    width: 90%;
+  }
+}
+
+.albumsInfos {
   display: flex;
   align-items: flex-start;
   flex-direction: row;
   justify-content: space-around;
   width: 65%;
+  height: 6vh;
 }
-.albumsList p {
+
+@media (max-width: 800px) {
+  .albumsInfos {
+    height: 9vh;
+  }
+}
+.albumsInfos p {
   margin-right: 20px;
 }
 .albumTxt {

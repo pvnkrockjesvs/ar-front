@@ -1,9 +1,16 @@
 import "../styles/globals.css";
 import Head from "next/head";
+import { Provider } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
+import albums from "../reducers/albums";
+
+const store = configureStore({
+  reducer: { albums },
+});
 
 function App({ Component, pageProps }) {
   return (
-    <>
+    <Provider store={store}>
       <Head>
         <title>Next.js App</title>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -14,7 +21,7 @@ function App({ Component, pageProps }) {
         />
       </Head>
       <Component {...pageProps} />
-    </>
+    </Provider>
   );
 }
 
