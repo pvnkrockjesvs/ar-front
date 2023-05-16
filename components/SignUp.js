@@ -1,21 +1,19 @@
-import styles from '../styles/SignUp.module.css'
+import styles from '../styles/Sign.module.css'
 import Header from './Header'
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch } from 'react-redux'
 import { login } from '../reducers/user';
+import { useForm } from "react-hook-form";
 
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 function SignUp (props) {
 
     const dispatch = useDispatch();
-    const [username, setUserName] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [emailError, setEmailError] = useState(false);
-
+    const [userExistError, setUserExistError] = useState(false)
+    const { register, handleSubmit, reset } = useForm();
 
     const handleOnChange = (event) => {
         if (EMAIL_REGEX.test(event.target.value)) {
@@ -26,7 +24,9 @@ function SignUp (props) {
         }    
     }
 
-    const handleRegister = () => {
+    const CreateUserAccount = (data) => {
+        // destructuring the data object
+        const { username, email, password } = data
         fetch("http://localhost:3000/users/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -35,62 +35,59 @@ function SignUp (props) {
         .then((response) => response.json())
         .then((data) => {
             if (data.result) {
-                console.log(data)
                 dispatch(login({ username, token: data.token }))
-                setUserName('');
-                setEmail('');
-                setPassword('');
+                // reset the value of the form to the defautl values
+                reset()          
+                // reverse data flow to close the signup model
             }
             props.closeModal('signup')
-
+            /*else {
+                setUserExistError(true)
+            }
+            */
+            
         });
     };
 
     return (
         <div className={styles.signupContainer}>
-            <p className={styles.title}>Create your account</p>
-            <div className={styles.signupInfo}>
-                <div className={styles.itemInfo}>
+            <p className={styles.title}>Create your account</p>                
+            <form  className={styles.formContainer} onSubmit={handleSubmit(CreateUserAccount)}>
+                <div className={styles.userInfo}>
                     <p className={styles.fieldTitle}>Enter a valid username</p>
                     <input
-                        type="text"
-                        placeholder="Username"
-                        id='username'
+                        type='text'
                         className={styles.inputContainer}
-                        onChange={(e) => setUserName(e.target.value)}
-                        value={username} />
+                        placeholder="Name........................"
+                        {...register("username")}                      
+                    />
                 </div>
-                <div className={styles.itemInfo}>
-                    <p className={styles.fieldTitle}>Enter a valid email adress </p>
+                <div className={styles.userInfo}>
+                    <p className={styles.fieldTitle}>Enter a valid email address</p>
                     <input
-                        type="text"
-                        placeholder="Email"
-                        id='email'
                         className={styles.inputContainer}
-                        onChange={(e) => setEmail(e.target.value)}
-                        value={email} />
-                    {/*}
-                    {emailError && <div className={styles.emailError}>
-                        <FontAwesomeIcon icon={faExclamationCircle} />
-                        <p className={styles.emailErrorMessage}>Invalid email address</p>
-                    </div>
-                    }
-                    */}
+                        type='email'
+                        placeholder="Email"
+                        {...register("email")}                      
+                    />
                 </div>
-                <div className={styles.itemInfo}>
-                    <p className={styles.fieldTitle}>Create a password</p>
+                <div className={styles.userInfo}>
+                    <p className={styles.fieldTitle}>Enter a password</p>
                     <input
                         type="password"
-                        placeholder="Password"
-                        id='password'
                         className={styles.inputContainer}
-                        onChange={(e) => setPassword(e.target.value)}
-                        value={password} />
+                        placeholder="Password"
+                        {...register("password")}                      
+                    />
                 </div>
+                <button className={styles.registerButton}>Create</button>
+            </form>
+            {/*}
+            {userExistError &&
+             <div>
+                <span className={styles.userError}> You already have an account </span>
             </div>
-            <div>
-                <button className={styles.registerButton} onClick={() => handleRegister()}>Create</button>
-            </div>
+            }*/}
         </div>
     )
 

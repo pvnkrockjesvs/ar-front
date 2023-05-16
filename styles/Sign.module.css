@@ -6,6 +6,13 @@
     align-items: center;
 }
 
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .signupInfo {
     display: flex;
     flex-direction: column;
@@ -33,11 +40,12 @@
 .registerButton {
     width: 15rem;
     height: 3rem;
-    border-radius: 50px;
+    border-radius: 20px;
     background-color: #f47373;
     border: none;
     color: white;
     font-weight: bold;
+    margin-top: 2rem;
 }
 .title {
     color: #f47373;
@@ -45,7 +53,7 @@
     font-weight: bold;
 }
 
-.itemInfo {
+.userInfo {
     margin: 10px;
     line-height: 0px;
 }
@@ -66,4 +74,12 @@
 
 .emailErrorMessage {
     margin-left: 10px
+}
+
+.userError {
+    margin-top: 10px;
+    width: 6rem;
+    height: 3rem;
+    background-color: white;
+    color: red
 }

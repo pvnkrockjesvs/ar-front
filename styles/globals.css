@@ -13,9 +13,10 @@ body {
   background-color: black;
   border-radius: 10px;
   height: 800px;
-  padding: 100px;
+  padding: 50px;
 }
 
 .modalStyle .ant-modal-close-x {
   color: white;
+  font-weight: normal;
 }

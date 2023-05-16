@@ -28,10 +28,9 @@ function ConnectionHeader(props) {
             <div className={styles.title}>
                 <span>Album Release</span>
             </div>            
-            <div className={styles.headerRight}>
-                {/*<button type="primary" className={styles.signButton} onClick={openSignUpModal}>Sign-up</button>*/}
-                <button type="primary" className={styles.signButton} onClick={(e) => handleClick('signup')}>Sign-up</button>
-                <button type="primary" className={styles.signButton} onClick={(e) => handleClick('signin')}>Log-in</button>
+            <div className={styles.connectionButtons}>
+                <button type="primary" className={styles.signupButton} onClick={(e) => handleClick('signup')}>Create an account</button>
+                <button type="primary" className={styles.signinButton} onClick={(e) => handleClick('signin')}>Connection</button>
             </div>
         </header>
     )

@@ -1,23 +1,17 @@
 import styles from '../styles/Profile.module.css'
 import React from "react";
 import { useForm, useFieldArray } from "react-hook-form";
-import Select from "react-select";
-import { Switch } from "@material-ui/core";
 import { useSelector } from 'react-redux'
-import { useState } from 'react'
 
   
 function Profile(props) {
     const user = useSelector((state) => state.user.value)
 
-    //const [genres, seGenres] = useState([]);
-    //const [counter, setCounter] = useState(0);
-
     const { register, handleSubmit, watch, control } = useForm()
     const { fields, append, remove} = useFieldArray({
-        control,
-        name: 'genres'})
-    //const { register, handleSubmit, setValue } = useForm();
+            control,
+            name: 'genres'}
+        )
 
     const addGenre = () => {
         setGenres(prevGenres => [...prevGenres, counter]);
@@ -44,9 +38,7 @@ function Profile(props) {
 
 
     const createProfile = (data) => {
-        console.log('DATA************', data)
         const profileData = updateDataProfile(data)
-        console.log('ProfileData:', profileData)
         // Check and extract the usefull data
         fetch("http://localhost:3000/profiles/create", {
             method: "POST",
@@ -71,54 +63,59 @@ function Profile(props) {
 
     return (
         <div className={styles.notifyContainer}>
-            <div>
-                <form className={styles.formContainer} onSubmit={handleSubmit(createProfile)}>
-                    <div className={styles.itemType}>
-                        <p className={styles.itemTitle}>Release type:</p>
-                        <label className={styles.labelName} htmlFor="field-album">
-                            <input
-                                {...register("releaseTypes")}
-                                type="checkbox"
-                                value="album"
-                                id="field-album"
-                            />
-                            Album
-                        </label>
-                        <label className={styles.labelName} htmlFor="field-single">
-                            <input
-                                {...register("releaseTypes")}
-                                type="checkbox"
-                                value="single"
-                                id="field-single"
-                            />
-                            Single
-                        </label>
-                        <label className={styles.labelName} htmlFor="field-ep">
-                            <input
-                                {...register("releaseTypes")}
-                                type="checkbox"
-                                value="ep"
-                                id="field-ep"
-                            />
-                            EP
-                        </label>
-                    </div>
-                    <div  className={styles.itemType}>
-                        <p className={styles.itemTitle}>Email notification:</p>
-                        <label className={styles.labelName} htmlFor="notify">
-                            <input
-                                {...register("emailNotification")}
-                                type="checkbox"
-                                value="true"
-                                id="notify"
-                            />
-                        </label>
-                    </div>
-                    {emailNotification && (
+            <p className={styles.title}>Create your profile</p>
+            <form className={styles.formContainer} onSubmit={handleSubmit(createProfile)}>
+                <div className={styles.itemType}>
+                    <p className={styles.itemTitle}>What type of release do you prefer?</p>
+                    <label className={styles.labelName} htmlFor="field-album">
+                        <input
+                            className={styles.buttonStyles}
+                            {...register("releaseTypes")}
+                            type="checkbox"
+                            value="album"
+                            id="field-album"
+                        />
+                        Album
+                    </label>
+                    <label className={styles.labelName} htmlFor="field-single">
+                        <input
+                            className={styles.buttonStyles}
+                            {...register("releaseTypes")}
+                            type="checkbox"
+                            value="single"
+                            id="field-single"
+                        />
+                        Single
+                    </label>
+                    <label className={styles.labelName} htmlFor="field-ep">
+                        <input
+                            className={styles.buttonStyles}
+                            {...register("releaseTypes")}
+                            type="checkbox"
+                            value="ep"
+                            id="field-ep"
+                        />
+                        EP
+                    </label>
+                </div>
+                <div  className={styles.itemType}>
+                    <p className={styles.itemTitle}>Do you wante to be notified by email?</p>
+                    <label className={styles.labelName} htmlFor="notify">
+                        <input
+                            className={styles.buttonStyles}
+                            {...register("emailNotification")}
+                            type="checkbox"
+                            value="true"
+                            id="notify"
+                        />
+                    </label>
+                </div>
+                {emailNotification && (
                     <div className={styles.notifyFrequency}>
-                        <p className={styles.itemTitle}>Notification Frequency:</p>
+                        <p className={styles.itemTitle}>How often to receive email notification?</p>
                         <label className={styles.labelName} htmlFor="field-oneWeek">
                             <input
+                                className={styles.buttonStyles}
                                 {...register("newsletter")}
                                 type="radio"
                                 value="1"
@@ -128,6 +125,7 @@ function Profile(props) {
                         </label>
                         <label className={styles.labelName} htmlFor="field-twoWeeks">
                             <input
+                                className={styles.buttonStyles}
                                 {...register("newsletter")}
                                 type="radio"
                                 value="2"
@@ -137,6 +135,7 @@ function Profile(props) {
                         </label>
                         <label className={styles.labelName} htmlFor="field-oneMonth">
                             <input
+                                className={styles.buttonStyles}
                                 {...register("newsletter")}
                                 type="radio"
                                 value="3"
@@ -145,33 +144,36 @@ function Profile(props) {
                             One month
                         </label>
                     </div>
-                    )}
-                    <div  className={styles.itemType}>
-                        <p className={styles.itemTitle}>Support-us:</p>
-                        <label className={styles.labelName} htmlFor="support">
-                            <input
-                                {...register("isPremium")}
-                                type="checkbox"
-                                value="true"
-                                id="support"
-                            />
-                        </label>
-                    </div>
+                )}
+                <div  className={styles.itemType}>
+                    <p className={styles.itemTitle}>Do you want to support-us</p>
+                    <label className={styles.labelName} htmlFor="support">
+                        <input
+                            className={styles.buttonStyles}
+                            {...register("isPremium")}
+                            type="checkbox"
+                            value="true"
+                            id="support"
+                        />
+                    </label>
+                </div>
+                <div>
+                    <span className={styles.itemTitle}> What music genres do you prefer (maximum 5 genres)?</span>
+                    <button className={styles.addGenreButton} type="button" onClick={() => append('')}>+</button>
                     <div>
-                        <span className={styles.itemTitle}>music genres (maximum 5 genres):</span>
-                        <button type="button" onClick={() => append('')}> Add genre</button>
-                        {fields.map((genre, index) => {
-                            return (
-                                <input
-                                    key={genre.id}
-                                    {...register(`genres.${index}.genre`)}
-                                />
-                            )
-                        })}
+                    {fields.map((genre, index) => {
+                        return (
+                            <input
+                                className={styles.genreInput}
+                                key={genre.id}
+                                {...register(`genres.${index}.genre`)}
+                            />
+                        )
+                    })}
                     </div>
-                    <button className={styles.saveButton} type="submit"> Save </button>
-                </form>
-            </div>
+                </div>
+                <button className={styles.saveButton} type="submit"> Save </button>
+            </form>
         </div>
     )
 }
