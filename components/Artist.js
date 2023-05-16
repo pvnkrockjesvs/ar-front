@@ -4,22 +4,37 @@ import { Popover, Button, Radio } from "antd";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { addAlbums } from "../reducers/albums";
+import moment from "moment";
 
 function Artist() {
   const [selectedOption, setSelectedOption] = useState("");
   const [open, setOpen] = useState(false);
+  const [artistInformation, setArtistInformation] = useState(null);
   const [albumsFiltered, setAlbumsFiltered] = useState([]);
   const dispatch = useDispatch();
   const albums = useSelector((state) => state.albums.value);
   const user = { token: false };
 
+  //Fonction de conversion du temps total d'un album avec momentjs
+  const calculTotalDuration = (totalTime) => {
+    const duration = moment.duration(totalTime);
+
+    let formattedTime;
+    if (duration.asMinutes() >= 60) {
+      formattedTime = duration.hours() + "h" + duration.minutes() + "min";
+    } else {
+      formattedTime = duration.minutes() + "min";
+    }
+    return formattedTime;
+  };
+
   useEffect(() => {
     //Fetch pour infos artist & albums
-    // fetch(`http://musicbrainz-fetch`)
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     dispatch(addAlbums(data.albums));
-    //   });
+    fetch(`http://localhost:3000/artists/5b11f4ce-a62d-471e-81fc-a69a8278c7da`)
+      .then((response) => response.json())
+      .then((data) => {
+        setArtistInformation(data.art);
+      });
 
     //Vérifier les releaseTypes d'albums depuis les données profiles de la db + filtrage des albums
     if (user.token) {
