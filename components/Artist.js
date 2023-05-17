@@ -11,11 +11,13 @@ import allreleases, {
 import moment from "moment";
 
 function Artist() {
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState("all");
+  const [filterEps, setFilterEps] = useState(false);
+  const [filterAlbums, setFilterAlbums] = useState(false);
   const [open, setOpen] = useState(false);
   const [artistInformation, setArtistInformation] = useState(null);
-  const [albumsInfos, setAlbumsInfos] = useState(null);
-  const [albumsFiltered, setAlbumsFiltered] = useState([]);
+  const [epsList, setEpsList] = useState([]);
+  const [albumsList, setAlbumsList] = useState([]);
   const dispatch = useDispatch();
   const allreleases = useSelector((state) => state.allreleases.value);
   const user = { token: false };
@@ -49,7 +51,7 @@ function Artist() {
       .then((response) => response.json())
       .then((data) => {
         data && dispatch(addAlbums(data.releases));
-        setAlbumsFiltered(data.releases);
+        setAlbumsList(data.releases);
       })
       .catch((error) => {
         console.error("Error fetching data 1:", error);
@@ -62,7 +64,7 @@ function Artist() {
       .then((response) => response.json())
       .then((data) => {
         data && dispatch(addEps(data.releases));
-        setAlbumsFiltered(data.releases);
+        setEpsList(data.releases);
       })
       .catch((error) => {
         console.error("Error fetching data 1:", error);
@@ -85,24 +87,29 @@ function Artist() {
 
   //console log
   if (allreleases) {
-    console.log(allreleases);
+    console.log(allreleases.albums);
+    console.log(allreleases.eps);
+    console.log(filterEps);
   }
 
   //Filtrage du tableau d'Albums/EPs à afficher
-  const filterAlbums = (albumsData) => {
-    if (selectedOption === "all") {
-      setAlbumsFiltered(albumsData);
-    } else if (selectedOption === "albums") {
-      setAlbumsFiltered(allreleases.albums);
+  const setFilter = () => {
+    if (selectedOption === "albums") {
+      setFilterAlbums(true);
+      setFilterEps(false);
     } else if (selectedOption === "eps") {
-      setAlbumsFiltered(allreleases.eps);
+      setFilterAlbums(false);
+      setFilterEps(true);
+    } else {
+      setFilterAlbums(true);
+      setFilterEps(true);
     }
   };
 
   //Filtrage des Albums en fonction des Radioboxes :
   useEffect(() => {
-    if (allreleases.length > 0) {
-      filterAlbums(allreleases);
+    if (allreleases) {
+      setFilter();
     }
   }, [selectedOption]);
 
@@ -142,7 +149,26 @@ function Artist() {
   );
 
   //.map du tableau d'albums filtrés pour l'afficher
-  const albumsToShow = albumsFiltered.map((data, i) => {
+  const albumsToShow = albumsList.map((data, i) => {
+    const albumLength = calculTotalDuration(data.length);
+
+    return (
+      <div className={styles.albumsInfos} key={i}>
+        <div className={styles.albumTitle}>
+          <p>
+            <a href="albumLink">{data.title}</a> • {data.date}
+          </p>
+        </div>
+        <div className={styles.minuteTracks}>
+          <p>{albumLength}</p>
+          <p>{data.numberTracks} tracks</p>
+        </div>
+      </div>
+    );
+  });
+
+  //.map du tableau d'eps filtrés pour l'afficher
+  const epsToShow = epsList.map((data, i) => {
     const albumLength = calculTotalDuration(data.length);
 
     return (
@@ -169,7 +195,9 @@ function Artist() {
     <div className={styles.mainContainer}>
       {/* --LEFT CONTAINER-- */}
       <div className={styles.leftContainer}>
-        <h2 className={styles.artistNameLeft}>ARTIST</h2>
+        <h2 className={styles.artistNameLeft}>
+          {artistInformation && artistInformation.name}
+        </h2>
         <div className={styles.artistPic}>
           <Image
             src="/artist.jpg"
@@ -236,24 +264,18 @@ function Artist() {
               </Button>
             </Popover>
           </div>
-          <div className={styles.albumsContainer}>
-            <p className={styles.albumTxt}>Albums</p>
-            {albumsToShow}
-          </div>
-          <div className={styles.albumsContainer}>
-            <p className={styles.albumTxt}>EPs</p>
-            <div className={styles.albumsInfos}>
-              <div className={styles.albumTitle}>
-                <p>
-                  <a href="albumLink">Album Title</a> • 2023
-                </p>
-              </div>
-              <div className={styles.minuteTracks}>
-                <p>45 min</p>
-                <p>15 tracks</p>
-              </div>
+          {filterAlbums && (
+            <div className={styles.albumsContainer}>
+              <p className={styles.albumTxt}>Albums</p>
+              {albumsToShow}
             </div>
-          </div>
+          )}
+          {filterEps && (
+            <div className={styles.albumsContainer}>
+              <p className={styles.albumTxt}>EPs</p>
+              {epsToShow}
+            </div>
+          )}
         </div>
       </div>
     </div>
