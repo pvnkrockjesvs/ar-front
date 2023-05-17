@@ -3,16 +3,21 @@ import styles from "../styles/Artist.module.css";
 import { Popover, Button, Radio } from "antd";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-import { addAlbums } from "../reducers/albums";
+import allreleases, {
+  addAlbums,
+  addEps,
+  removeAllAlbums,
+} from "../reducers/allreleases";
 import moment from "moment";
 
 function Artist() {
   const [selectedOption, setSelectedOption] = useState("");
   const [open, setOpen] = useState(false);
   const [artistInformation, setArtistInformation] = useState(null);
+  const [albumsInfos, setAlbumsInfos] = useState(null);
   const [albumsFiltered, setAlbumsFiltered] = useState([]);
   const dispatch = useDispatch();
-  const albums = useSelector((state) => state.albums.value);
+  const allreleases = useSelector((state) => state.allreleases.value);
   const user = { token: false };
 
   //Fonction de conversion du temps total d'un album avec momentjs
@@ -29,14 +34,36 @@ function Artist() {
   };
 
   useEffect(() => {
+    dispatch(removeAllAlbums());
     //Fetch pour infos artist & albums
     fetch(`http://localhost:3000/artists/5b11f4ce-a62d-471e-81fc-a69a8278c7da`)
       .then((response) => response.json())
       .then((data) => {
-        setArtistInformation(data.art);
+        data && setArtistInformation(data.art);
+      });
+
+    //Fetch pour récupérer les infos d'albums
+    // fetch(
+    //   `http://localhost:3000/artists/5b11f4ce-a62d-471e-81fc-a69a8278c7da/album`
+    // )
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     data && dispatch(addAlbums(data.releases));
+    //     setAlbumsFiltered(data.releases);
+    //   });
+
+    //Fetch pour récupérer les infos d'eps
+    fetch(
+      `http://localhost:3000/artists/5b11f4ce-a62d-471e-81fc-a69a8278c7da/ep`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        data && dispatch(addEps(data.releases));
+        //setAlbumsFiltered(data.releases);
       });
 
     //Vérifier les releaseTypes d'albums depuis les données profiles de la db + filtrage des albums
+    //info à stocker plutot dans le persist store Redux?
     if (user.token) {
       fetch(`http://localhost:3000/profiles/${user.token}`)
         .then((response) => response.json())
@@ -50,23 +77,26 @@ function Artist() {
     }
   }, []);
 
+  //console log
+  if (allreleases) {
+    console.log(allreleases);
+  }
+
   //Filtrage du tableau d'Albums/EPs à afficher
   const filterAlbums = (albumsData) => {
     if (selectedOption === "all") {
       setAlbumsFiltered(albumsData);
     } else if (selectedOption === "albums") {
-      const albumsOnly = albumsData.filter((album) => album.type === "album");
-      setAlbumsFiltered(albumsOnly);
+      setAlbumsFiltered(allreleases.albums);
     } else if (selectedOption === "eps") {
-      const epsOnly = albumsData.filter((album) => album.type === "ep");
-      setAlbumsFiltered(epsOnly);
+      setAlbumsFiltered(allreleases.eps);
     }
   };
 
   //Filtrage des Albums en fonction des Radioboxes :
   useEffect(() => {
-    if (albums.length > 0) {
-      filterAlbums(albums);
+    if (allreleases.length > 0) {
+      filterAlbums(allreleases);
     }
   }, [selectedOption]);
 
@@ -107,16 +137,18 @@ function Artist() {
 
   //.map du tableau d'albums filtrés pour l'afficher
   const albumsToShow = albumsFiltered.map((data, i) => {
+    const albumLength = calculTotalDuration(data.length);
+
     return (
-      <div className={styles.albumsInfos}>
+      <div className={styles.albumsInfos} key={i}>
         <div className={styles.albumTitle}>
           <p>
-            <a href="albumLink">{data.album.title}</a> • {data.album.year}
+            <a href="albumLink">{data.title}</a> • {data.date}
           </p>
         </div>
         <div className={styles.minuteTracks}>
-          <p>{data.album.duration}min</p>
-          <p>{data.albums.numberOfTracks} tracks</p>
+          <p>{albumLength}</p>
+          <p>{data.numberTracks} tracks</p>
         </div>
       </div>
     );
@@ -131,7 +163,7 @@ function Artist() {
     <div className={styles.mainContainer}>
       {/* --LEFT CONTAINER-- */}
       <div className={styles.leftContainer}>
-        <h2 className={styles.artistNameLeft}>Artist EMINEM</h2>
+        <h2 className={styles.artistNameLeft}>ARTIST</h2>
         <div className={styles.artistPic}>
           <Image
             src="/artist.jpg"
@@ -162,18 +194,14 @@ function Artist() {
         {/* --TEXT CONTAINER-- */}
         <div className={styles.textContainer}>
           <div className={styles.topText}>
-            <h2 className={styles.artistName}>ARTIST EMINEM</h2>
+            <h2 className={styles.artistName}>
+              {artistInformation && artistInformation.name}
+            </h2>
             <button className={styles.buttonFollow}>Followed</button>
           </div>
 
           <p className={styles.artistDescription}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
+            {artistInformation && artistInformation.bio}
           </p>
         </div>
         {/* --DISCOGRAPHY CONTAINER-- */}
@@ -204,83 +232,7 @@ function Artist() {
           </div>
           <div className={styles.albumsContainer}>
             <p className={styles.albumTxt}>Albums</p>
-            <div className={styles.albumsInfos}>
-              <div className={styles.albumTitle}>
-                <p>
-                  <a href="albumLink">Album Title</a> • 2023
-                </p>
-              </div>
-              <div className={styles.minuteTracks}>
-                <p>45 min</p>
-                <p>15 tracks</p>
-              </div>
-            </div>
-            <div className={styles.albumsInfos}>
-              <div className={styles.albumTitle}>
-                <p>
-                  <a href="albumLink">Album Title</a> • 2023
-                </p>
-              </div>
-              <div className={styles.minuteTracks}>
-                <p>45 min</p>
-                <p>15 tracks</p>
-              </div>
-            </div>
-            <div className={styles.albumsInfos}>
-              <div className={styles.albumTitle}>
-                <p>
-                  <a href="albumLink">Album Title</a> • 2023
-                </p>
-              </div>
-              <div className={styles.minuteTracks}>
-                <p>45 min</p>
-                <p>15 tracks</p>
-              </div>
-            </div>
-            <div className={styles.albumsInfos}>
-              <div className={styles.albumTitle}>
-                <p>
-                  <a href="albumLink">Album Title</a> • 2023
-                </p>
-              </div>
-              <div className={styles.minuteTracks}>
-                <p>45 min</p>
-                <p>15 tracks</p>
-              </div>
-            </div>
-            <div className={styles.albumsInfos}>
-              <div className={styles.albumTitle}>
-                <p>
-                  <a href="albumLink">Album Title</a> • 2023
-                </p>
-              </div>
-              <div className={styles.minuteTracks}>
-                <p>45 min</p>
-                <p>15 tracks</p>
-              </div>
-            </div>
-            <div className={styles.albumsInfos}>
-              <div className={styles.albumTitle}>
-                <p>
-                  <a href="albumLink">Album Title</a> • 2023
-                </p>
-              </div>
-              <div className={styles.minuteTracks}>
-                <p>45 min</p>
-                <p>15 tracks</p>
-              </div>
-            </div>
-            <div className={styles.albumsInfos}>
-              <div className={styles.albumTitle}>
-                <p>
-                  <a href="albumLink">Album Title</a> • 2023
-                </p>
-              </div>
-              <div className={styles.minuteTracks}>
-                <p>45 min</p>
-                <p>15 tracks</p>
-              </div>
-            </div>
+            {albumsToShow}
           </div>
           <div className={styles.albumsContainer}>
             <p className={styles.albumTxt}>EPs</p>

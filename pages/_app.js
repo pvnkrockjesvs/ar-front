@@ -2,10 +2,10 @@ import "../styles/globals.css";
 import Head from "next/head";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
-import albums from "../reducers/albums";
+import allreleases from "../reducers/allreleases";
 
 const store = configureStore({
-  reducer: { albums },
+  reducer: { allreleases },
 });
 
 function App({ Component, pageProps }) {
