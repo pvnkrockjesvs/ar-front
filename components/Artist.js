@@ -43,14 +43,17 @@ function Artist() {
       });
 
     //Fetch pour récupérer les infos d'albums
-    // fetch(
-    //   `http://localhost:3000/artists/5b11f4ce-a62d-471e-81fc-a69a8278c7da/album`
-    // )
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     data && dispatch(addAlbums(data.releases));
-    //     setAlbumsFiltered(data.releases);
-    //   });
+    fetch(
+      `http://localhost:3000/artists/5b11f4ce-a62d-471e-81fc-a69a8278c7da/album`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        data && dispatch(addAlbums(data.releases));
+        setAlbumsFiltered(data.releases);
+      })
+      .catch((error) => {
+        console.error("Error fetching data 1:", error);
+      });
 
     //Fetch pour récupérer les infos d'eps
     fetch(
@@ -59,7 +62,10 @@ function Artist() {
       .then((response) => response.json())
       .then((data) => {
         data && dispatch(addEps(data.releases));
-        //setAlbumsFiltered(data.releases);
+        setAlbumsFiltered(data.releases);
+      })
+      .catch((error) => {
+        console.error("Error fetching data 1:", error);
       });
 
     //Vérifier les releaseTypes d'albums depuis les données profiles de la db + filtrage des albums
