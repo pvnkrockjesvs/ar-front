@@ -38,59 +38,69 @@ function Artist() {
   useEffect(() => {
     dispatch(removeAllAlbums());
     //Fetch pour infos artist & albums
-    fetch(`http://localhost:3000/artists/5b11f4ce-a62d-471e-81fc-a69a8278c7da`)
-      .then((response) => response.json())
-      .then((data) => {
-        data && setArtistInformation(data.art);
-      });
+    setTimeout(() => {
+      fetch(
+        `http://localhost:3000/artists/f59c5520-5f46-4d2c-b2c4-822eabf53419`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          data && setArtistInformation(data.art);
+        });
+    }, 1000);
 
     //Fetch pour récupérer les infos d'albums
-    fetch(
-      `http://localhost:3000/artists/5b11f4ce-a62d-471e-81fc-a69a8278c7da/album`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        data && dispatch(addAlbums(data.releases));
-        setAlbumsList(data.releases);
-      })
-      .catch((error) => {
-        console.error("Error fetching data 1:", error);
-      });
+    setTimeout(() => {
+      fetch(
+        `http://localhost:3000/artists/f59c5520-5f46-4d2c-b2c4-822eabf53419/album`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          data && dispatch(addAlbums(data.releases));
+          setAlbumsList(data.releases);
+        })
+        .catch((error) => {
+          console.error("Error fetching data 1:", error);
+        });
+    }, 2000); // Ajouter une pause de 1 seconde (1000 millisecondes) avant cette requête
 
     //Fetch pour récupérer les infos d'eps
-    fetch(
-      `http://localhost:3000/artists/5b11f4ce-a62d-471e-81fc-a69a8278c7da/ep`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        data && dispatch(addEps(data.releases));
-        setEpsList(data.releases);
-      })
-      .catch((error) => {
-        console.error("Error fetching data 1:", error);
-      });
+    setTimeout(() => {
+      fetch(
+        `http://localhost:3000/artists/f59c5520-5f46-4d2c-b2c4-822eabf53419/ep`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          data && dispatch(addEps(data.releases));
+          setEpsList(data.releases);
+        })
+        .catch((error) => {
+          console.error("Error fetching data 1:", error);
+        });
+    }, 3000); // Ajouter une pause de 2 secondes (2000 millisecondes) avant cette requête
 
     //Vérifier les releaseTypes d'albums depuis les données profiles de la db + filtrage des albums
     //info à stocker plutot dans le persist store Redux?
-    if (user.token) {
-      fetch(`http://localhost:3000/profiles/${user.token}`)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.result) {
-            //Modifier selon les valeurs releaseTypes de profiles (à tester)
-            setSelectedOption("albums");
-            filterAlbums(albums);
-          }
-        });
-    }
+    // if (user.token) {
+    //   setTimeout(() => {
+    //     fetch(`http://localhost:3000/profiles/${user.token}`)
+    //       .then((response) => response.json())
+    //       .then((data) => {
+    //         if (data.result) {
+    //           //Modifier selon les valeurs releaseTypes de profiles (à tester)
+    //           setSelectedOption("albums");
+    //           filterAlbums(albums);
+    //         }
+    //       });
+    //   }, 6500); // Ajouter une pause de 3 secondes (3000 millisecondes) avant cette requête
+    // }
   }, []);
 
   //console log
-  if (allreleases) {
-    console.log(allreleases.albums);
-    console.log(allreleases.eps);
-    console.log(filterEps);
-  }
+  // if (allreleases) {
+  //   console.log(allreleases.albums);
+  //   console.log(allreleases.eps);
+  //   console.log(filterEps);
+  // }
 
   //Filtrage du tableau d'Albums/EPs à afficher
   const setFilter = () => {
