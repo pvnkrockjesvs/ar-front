@@ -62,11 +62,6 @@ function Header() {
             (   <>
                     <div className={styles.linkContainer}>
                         <button type="primary" className={styles.signButton} onClick={openSignUpModal}>Sign-Up</button>
-                        {/*}
-                        <Link href='/SignUp'>
-                            <button className={styles.button}>SignUp</button>
-                        </Link>
-                        */}
                     </div>
                     <div className={styles.linkContainer}>
                         <Link href='/SignIn'>

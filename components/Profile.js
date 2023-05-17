@@ -96,13 +96,13 @@ function Profile(props) {
                 </div>
                 <div  className={styles.itemType}>
                     <p className={styles.itemTitle}>Do you wante to be notified by email?</p>
-                    <label className={styles.labelName} htmlFor="notify">
+                    <label className={styles.labelName} htmlFor="field-notify">
                         <input
                             className={styles.buttonStyles}
                             {...register("emailNotification")}
                             type="checkbox"
                             value="true"
-                            id="notify"
+                            id="field-notify"
                         />
                     </label>
                 </div>
@@ -143,19 +143,19 @@ function Profile(props) {
                 )}
                 <div  className={styles.itemType}>
                     <p className={styles.itemTitle}>Do you want to support-us</p>
-                    <label className={styles.labelName} htmlFor="support">
+                    <label className={styles.labelName} htmlFor="field-support">
                         <input
                             className={styles.buttonStyles}
                             {...register("isPremium")}
                             type="checkbox"
                             value="true"
-                            id="support"
+                            id="field-support"
                         />
                     </label>
                 </div>
                 <div>
                     <span className={styles.itemTitle}> What music genres do you prefer (maximum 5 genres)?</span>
-                    <button className={styles.addGenreButton} type="button" onClick={() => append('')}>+</button>
+                    {(fields.length < 5) && <button className={styles.addGenreButton} type="button" onClick={() => append('')}>+</button>}
                     <div>
                     {fields.map((genre, index) => {
                         return (
