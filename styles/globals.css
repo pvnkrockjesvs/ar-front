@@ -8,3 +8,15 @@ body {
 * {
   box-sizing: border-box;
 }
+
+.modalStyle .ant-modal-content {
+  background-color: black;
+  border-radius: 10px;
+  height: 800px;
+  padding: 50px;
+}
+
+.modalStyle .ant-modal-close-x {
+  color: white;
+  font-weight: normal;
+}
