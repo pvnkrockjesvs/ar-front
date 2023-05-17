@@ -1,27 +1,13 @@
 import styles from '../styles/Sign.module.css'
-import Header from './Header'
-import Profile from './Profile'
-import { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { login } from '../reducers/user';
 import { useForm } from "react-hook-form";
-import { Modal } from "antd";
 
-
-const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 function SignUp (props) {
 
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.user.value)
-    const [userExistError, setUserExistError] = useState(false)
-    const [isProfileModalOpen, setProfileModalOpen] = useState(false);
-
     const { register, handleSubmit, reset, formState: { errors }  } = useForm();
-
-    const handleProfileCancel = () => {
-        setProfileModalOpen(false)
-    }
 
     const CreateUserAccount = (data) => {
         // destructuring the data object
@@ -39,19 +25,9 @@ function SignUp (props) {
                 reset()          
                 // reverse data flow to close the signup model
                 props.closeModal('signup')
-                setProfileModalOpen(true)
-            }
-            /*else {
-                setUserExistError(true
-            }
-            */
-            
+            }            
         });
     };
-
-    const closeModal = () => {
-        setProfileModalOpen(false)
-    }
 
     return (
         <div className={styles.signContainer}>
@@ -95,22 +71,6 @@ function SignUp (props) {
                 </div>
                 <button className={styles.registerButton}>Create</button>
             </form>
-            <div id="react-modals">
-                <Modal
-                    className="modalStyle"
-                    width={700}
-                    open={isProfileModalOpen}
-                    onCancel={handleProfileCancel}
-                    footer={null}>
-                    <Profile closeModal={closeModal}/>
-                </Modal>
-            </div>
-            {/*}
-            {userExistError &&
-             <div>
-                <span className={styles.userError}> You already have an account </span>
-            </div>
-            }*/}
         </div>
     )
 

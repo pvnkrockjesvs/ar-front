@@ -1,13 +1,12 @@
 import styles from '../styles/Sign.module.css'
 import ConnectionHeader from './ConnectionHeader'
 import { useDispatch, useSelector } from 'react-redux'
-import { login } from '../reducers/user';
+import { login, setProfile } from '../reducers/user';
 import { useForm } from "react-hook-form";
 
 function SignIn (props) {
 
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.user.value)
     const { register, handleSubmit, reset, formState: { errors }} = useForm(); 
 
 
@@ -24,6 +23,7 @@ function SignIn (props) {
             console.log(data)
             if (data.result) {
                 dispatch(login({ username, token: data.token }));
+                dispatch(setProfile())
                 reset()
             }
             props.closeModal('signin')

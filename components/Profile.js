@@ -2,13 +2,13 @@ import styles from '../styles/Profile.module.css'
 import React from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux'
+import { setProfile } from '../reducers/user';
 
   
 function Profile(props) {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.value)
-
-    const { register, handleSubmit, watch, control } = useForm()
+    const { register, handleSubmit, reset, watch, control } = useForm()
     const { fields, append, remove} = useFieldArray({
             control,
             name: 'genres'}
@@ -50,6 +50,8 @@ function Profile(props) {
         .then((response) => response.json())
         .then((data) => {
             if (data.result) {
+                dispatch(setProfile())
+                reset()
                 props.closeModal()
             }
         })
@@ -61,39 +63,6 @@ function Profile(props) {
         <div className={styles.notifyContainer}>
             <p className={styles.title}>Create your profile</p>
             <form autoComplete='off' className={styles.formContainer} onSubmit={handleSubmit(createProfile)}>
-                <div className={styles.itemType}>
-                    <p className={styles.itemTitle}>What type of release do you prefer?</p>
-                    <label className={styles.labelName} htmlFor="field-album">
-                        <input
-                            className={styles.buttonStyles}
-                            {...register("releaseTypes")}
-                            type="checkbox"
-                            value="album"
-                            id="field-album"
-                        />
-                        Album
-                    </label>
-                    <label className={styles.labelName} htmlFor="field-single">
-                        <input
-                            className={styles.buttonStyles}
-                            {...register("releaseTypes")}
-                            type="checkbox"
-                            value="single"
-                            id="field-single"
-                        />
-                        Single
-                    </label>
-                    <label className={styles.labelName} htmlFor="field-ep">
-                        <input
-                            className={styles.buttonStyles}
-                            {...register("releaseTypes")}
-                            type="checkbox"
-                            value="ep"
-                            id="field-ep"
-                        />
-                        EP
-                    </label>
-                </div>
                 <div  className={styles.itemType}>
                     <p className={styles.itemTitle}>Do you wante to be notified by email?</p>
                     <label className={styles.labelName} htmlFor="field-notify">
@@ -141,6 +110,39 @@ function Profile(props) {
                         </label>
                     </div>
                 )}
+                <div className={styles.itemType}>
+                    <p className={styles.itemTitle}>What type of release do you prefer?</p>
+                    <label className={styles.labelName} htmlFor="field-album">
+                        <input
+                            className={styles.buttonStyles}
+                            {...register("releaseTypes")}
+                            type="checkbox"
+                            value="album"
+                            id="field-album"
+                        />
+                        Album
+                    </label>
+                    <label className={styles.labelName} htmlFor="field-single">
+                        <input
+                            className={styles.buttonStyles}
+                            {...register("releaseTypes")}
+                            type="checkbox"
+                            value="single"
+                            id="field-single"
+                        />
+                        Single
+                    </label>
+                    <label className={styles.labelName} htmlFor="field-ep">
+                        <input
+                            className={styles.buttonStyles}
+                            {...register("releaseTypes")}
+                            type="checkbox"
+                            value="ep"
+                            id="field-ep"
+                        />
+                        EP
+                    </label>
+                </div>
                 <div  className={styles.itemType}>
                     <p className={styles.itemTitle}>Do you want to support-us</p>
                     <label className={styles.labelName} htmlFor="field-support">
