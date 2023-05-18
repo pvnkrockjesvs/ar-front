@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import LoaderMusic from "./LoaderMusic";
 import styles from "../styles/Artist.module.css";
 import { Popover, Button, Radio } from "antd";
 import Image from "next/image";
@@ -8,10 +9,12 @@ import allreleases, {
   addEps,
   removeAllAlbums,
 } from "../reducers/allreleases";
+import user from "../reducers/user";
 import moment from "moment";
 
 function Artist() {
   const [selectedOption, setSelectedOption] = useState("all");
+  const [isFollowed, setIsFollowed] = useState(false);
   const [filterEps, setFilterEps] = useState(false);
   const [filterAlbums, setFilterAlbums] = useState(false);
   const [open, setOpen] = useState(false);
@@ -21,7 +24,10 @@ function Artist() {
   const [albumsList, setAlbumsList] = useState([]);
   const dispatch = useDispatch();
   const allreleases = useSelector((state) => state.allreleases.value);
-  const user = { token: false };
+  const user = useSelector((state) => state.user.value);
+  const [idArtistTest, setIdArtistTest] = useState(
+    "65f4f0c5-ef9e-490c-aee3-909e7ae6b2ab"
+  );
 
   //Fonction de conversion du temps total d'un album avec momentjs
   const calculTotalDuration = (totalTime) => {
@@ -40,9 +46,7 @@ function Artist() {
     dispatch(removeAllAlbums());
     //Fetch pour infos artist & albums
     setTimeout(() => {
-      fetch(
-        `http://localhost:3000/artists/f59c5520-5f46-4d2c-b2c4-822eabf53419`
-      )
+      fetch(`http://localhost:3000/artists/${idArtistTest}`)
         .then((response) => response.json())
         .then((data) => {
           data && setArtistInformation(data.art);
@@ -50,24 +54,20 @@ function Artist() {
     }, 2000);
 
     //Fetch pour récupérer le last albums
-    // setTimeout(() => {
-    //   fetch(
-    //     `http://localhost:3000/artists/f59c5520-5f46-4d2c-b2c4-822eabf53419/lastalbum`
-    //   )
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //       data && setLastAlbum(data.releases);
-    //     })
-    //     .catch((error) => {
-    //       console.error("Error fetching data 1:", error);
-    //     });
-    // }, 2000);
+    setTimeout(() => {
+      fetch(`http://localhost:3000/artists/${idArtistTest}/lastalbum`)
+        .then((response) => response.json())
+        .then((data) => {
+          data && setLastAlbum(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data 1:", error);
+        });
+    }, 2000);
 
     //Fetch pour récupérer les infos d'albums
     setTimeout(() => {
-      fetch(
-        `http://localhost:3000/artists/f59c5520-5f46-4d2c-b2c4-822eabf53419/album`
-      )
+      fetch(`http://localhost:3000/artists/${idArtistTest}/album`)
         .then((response) => response.json())
         .then((data) => {
           data && dispatch(addAlbums(data.releases));
@@ -80,9 +80,7 @@ function Artist() {
 
     //Fetch pour récupérer les infos d'eps
     setTimeout(() => {
-      fetch(
-        `http://localhost:3000/artists/f59c5520-5f46-4d2c-b2c4-822eabf53419/ep`
-      )
+      fetch(`http://localhost:3000/artists/${idArtistTest}/ep`)
         .then((response) => response.json())
         .then((data) => {
           data && dispatch(addEps(data.releases));
@@ -111,16 +109,52 @@ function Artist() {
   }, []);
 
   //console log
-  if (lastAlbum) {
-    console.log(lastAlbum);
+  if (user) {
+    console.log(user);
   }
   //   console.log(allreleases.eps);
   //   console.log(filterEps);
   // }
 
   //Fonction Follow Artist
-  const handleFollow = () => {
-    //code
+  const handleFollow = (idArtist) => {
+    if (user.token && !isFollowed) {
+      console.log("Token is OK");
+      fetch(`http://localhost:3000/artists`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mbid: idArtist,
+          token: user.token,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result) {
+            console.log("data ok");
+            setIsFollowed(true);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching data 1:", error);
+        });
+    } else {
+      fetch(`http://localhost:3000/artists`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mbid: idArtist,
+          token: user.token,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result) {
+            console.log("data ok");
+            setIsFollowed(false);
+          }
+        });
+    }
   };
 
   //Filtrage du tableau d'Albums/EPs à afficher
@@ -149,7 +183,7 @@ function Artist() {
     setSelectedOption(e.target.value);
   };
 
-  //Checkboxes :
+  //Checkboxes du filtre par type :
   const popoverContent = (
     <div className={styles.popoverContent}>
       <Radio
@@ -190,10 +224,10 @@ function Artist() {
             <a href="albumLink">{data.title}</a> • {data.date}
           </p>
         </div>
-        <div className={styles.minuteTracks}>
+        {/* <div className={styles.minuteTracks}>
           <p>{albumLength}</p>
           <p>{data.numberTracks} tracks</p>
-        </div>
+        </div> */}
       </div>
     );
   });
@@ -209,10 +243,10 @@ function Artist() {
             <a href="albumLink">{data.title}</a> • {data.date}
           </p>
         </div>
-        <div className={styles.minuteTracks}>
+        {/* <div className={styles.minuteTracks}>
           <p>{albumLength}</p>
           <p>{data.numberTracks} tracks</p>
-        </div>
+        </div> */}
       </div>
     );
   });
@@ -230,27 +264,46 @@ function Artist() {
           {artistInformation && artistInformation.name}
         </h2>
         <div className={styles.artistPic}>
-          <Image
-            src="/artist.jpg"
-            alt="Artist picture"
-            width={300}
-            height={300}
-          />
+          {!lastAlbum ? (
+            <div className={styles.loaderDiv1}>
+              {" "}
+              <LoaderMusic />
+            </div>
+          ) : (
+            <Image
+              src={lastAlbum.cover}
+              alt="Artist picture"
+              width={300}
+              height={300}
+            />
+          )}
         </div>
         <p className={styles.releaseTxt}>Last Release : </p>
         <div>
-          <Image
-            src="/Watch-the-throne.jpg"
-            alt="Album cover"
-            width={180}
-            height={180}
-          />
+          {!lastAlbum ? (
+            <div className={styles.loaderDiv2}>
+              <LoaderMusic />
+            </div>
+          ) : (
+            <Image
+              src={lastAlbum.cover}
+              alt="Album cover"
+              width={180}
+              height={180}
+            />
+          )}
         </div>
         <div>
           <p>
-            <a href="albumLink">Album Title</a>
+            <a href="albumLink">
+              {!lastAlbum ? "Loading album title" : lastAlbum.title}
+            </a>
           </p>
-          <p>2023</p>
+          <p>
+            {!lastAlbum
+              ? "Loading release date"
+              : moment(lastAlbum.date).format("DD-MM-YYYY")}
+          </p>
         </div>
       </div>
 
@@ -262,7 +315,12 @@ function Artist() {
             <h2 className={styles.artistName}>
               {artistInformation && artistInformation.name}
             </h2>
-            <button className={styles.buttonFollow}>Followed</button>
+            <button
+              className={styles.buttonFollow}
+              onClick={() => handleFollow(idArtistTest)}
+            >
+              {isFollowed ? "✅Followed" : "Follow"}
+            </button>
           </div>
 
           <p className={styles.artistDescription}>

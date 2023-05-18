@@ -76,6 +76,22 @@
   text-align: center;
   height: 25px;
 }
+.loaderDiv1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 300px;
+  border: 1px solid #001c4f;
+}
+.loaderDiv2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 180px;
+  height: 180px;
+  border: 1px solid #001c4f;
+}
 
 @media (max-width: 600px) {
   .artistNameLeft {
