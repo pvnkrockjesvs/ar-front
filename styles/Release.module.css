@@ -1,0 +1,266 @@
+.mainContainer {
+   width: 100vw;
+   height: 96vh;
+   display: flex;
+   align-items: center;
+   overflow: auto;
+   font-family: "Montserrat", sans-serif;
+   background: linear-gradient(45deg, #368ed7 0%, #052341 100%);
+   background-size: 200% 200%;
+   animation: background-animation 6s ease infinite;
+ }
+ 
+/* --MEDIA QUERIES-- */
+@media (max-width: 620px) {
+  .mainContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  .artistName {
+    font-size: 30px;
+  }
+}
+
+@keyframes background-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/*--Left Side--*/
+.leftContainer {
+  display: flex;
+  flex-direction: column;
+  margin-left: 30px;
+  padding: 25px;
+  min-width: 22%;
+  height: 90vh;
+  border: 1.5px solid #001c4f;
+  border-radius: 10px;
+  -moz-box-shadow: 0 0 9px #878787;
+  -webkit-box-shadow: 0 0 9px #878787;
+  box-shadow: 0 0 9px #878787;
+  background-color: rgb(226, 221, 213);
+}
+@media (max-width: 620px) {
+  .leftContainer {
+    display: flex;
+    justify-content: center;
+    margin-left: 0;
+    width: 90vw;
+  }
+}
+.artistPic {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+.releaseTxt {
+  font-weight: 700;
+  font-size: 23px;
+}
+.artistNameLeft {
+  display: none;
+  font-size: 25px;
+  text-align: center;
+  height: 25px;
+}
+
+@media (max-width: 600px) {
+  .artistNameLeft {
+    display: flex;
+  }
+}
+
+/*--Right Side--*/
+.rightContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 78%;
+  height: 90vh;
+}
+
+/*--Text Container--*/
+.textContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+  min-height: 4vh;
+  width: 95%;
+  border: 1.5px solid #001c4f;
+  border-radius: 10px;
+  -moz-box-shadow: 0 0 9px #878787;
+  -webkit-box-shadow: 0 0 9px #878787;
+  box-shadow: 0 0 9px #878787;
+  background-color: rgb(226, 221, 213);
+  overflow: auto;
+}
+
+@media (max-width: 620px) {
+  .textContainer {
+    width: 90vw;
+    margin-top: 20px;
+  }
+}
+.topText {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.artistName {
+  font-size: 45px;
+  margin-right: 30px;
+  margin-left: 30px;
+}
+@media (max-width: 620px) {
+  .artistName {
+    font-size: 24px;
+  }
+}
+.buttonFollow {
+  display: flex;
+  align-items: center;
+  background-color: #0953db;
+  color: white;
+  padding: 10px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid #0953db;
+  font-family: "Montserrat";
+}
+.buttonFollow:hover {
+  background-color: #3466c3;
+  cursor: pointer;
+  border: 1px solid black;
+}
+.buttonFollow:active {
+  transform: translate(0em, 0.15em);
+}
+
+@media (max-width: 620px) {
+  .buttonFollow {
+    margin-right: 12px;
+  }
+}
+
+.artistDescription {
+  padding: 10px;
+  margin: 0px 30px 30px 30px;
+}
+
+/*--Disco Container--*/
+.discographyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+  min-height: 60vh;
+  max-height: 100vh;
+  width: 95%;
+  padding: 25px;
+  margin-top: 20px;
+  overflow: auto;
+  border: 1.5px solid #001c4f;
+  border-radius: 10px;
+  -moz-box-shadow: 0 0 9px #878787;
+  -webkit-box-shadow: 0 0 9px #878787;
+  box-shadow: 0 0 9px #878787;
+  background-color: rgb(226, 221, 213);
+}
+@media (max-width: 620px) {
+  .discographyContainer {
+    width: 90vw;
+    padding: 0px;
+  }
+}
+
+.discoFilter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.discoTxt {
+  font-size: 22px;
+  font-weight: 600;
+}
+.popover {
+  margin-left: 20px;
+}
+
+.albumsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 30px;
+  overflow-y: hidden
+
+}
+
+@media (max-width: 940px) {
+  .albumsContainer {
+    width: 95%;
+  }
+}
+
+.albumsInfos {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 65%;
+  height: 6vh;
+}
+
+@media (max-width: 800px) {
+  .albumsInfos {
+    height: 9vh;
+  }
+}
+.albumsInfos p {
+  margin-right: 20px;
+}
+
+@media (max-width: 800px) {
+  .albumsInfos p {
+    font-size: 15px;
+  }
+}
+.albumTxt {
+  font-size: 18px;
+  font-weight: 600;
+  position: static;
+  right: auto;
+  margin-bottom: 10px;
+}
+.albumP {
+  text-align: start;
+}
+.minuteTracks {
+  display: flex;
+  flex-direction: row;
+}
+
+.trackContainer {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  width: 100%;
+  align-items: flex-start;
+}

@@ -10,6 +10,17 @@ import { PersistGate } from 'redux-persist/integration/react'
 import storage from 'redux-persist/lib/storage'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
+
+
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Routes
+   } from "react-router-dom";
+   
+  import Release from "../components/Release";
+
 const reducers = combineReducers({ user, albums })
 const persistConfig = { key: 'albumRelease', storage };
 
@@ -35,7 +46,13 @@ function App({ Component, pageProps }) {
                     />
                 </Head>
                 <Header />
-                <Component {...pageProps} />
+                
+                <Router>
+                    <Routes>
+                        <Route path="/release/:mbid" element={<Release/>}/>
+                        <Route {...pageProps}/>
+                    </Routes>
+                </Router>
         </PersistGate>
     </Provider>
   );
