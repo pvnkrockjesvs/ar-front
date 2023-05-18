@@ -8,6 +8,7 @@ function ArtistPage() {
       <Head>
         <title>Artist Page</title>
       </Head>
+
       <Artist />
     </>
   );

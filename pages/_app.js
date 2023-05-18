@@ -33,6 +33,7 @@ function App({ Component, pageProps }) {
             rel="stylesheet"
           />
         </Head>
+
         <Component {...pageProps} />
       </PersistGate>
     </Provider>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../styles/Artist.module.css";
 import { Popover, Button, Radio } from "antd";
 import Image from "next/image";
