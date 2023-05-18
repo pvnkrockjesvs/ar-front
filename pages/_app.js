@@ -4,12 +4,13 @@ import Header from '../components/Header'
 import { Provider } from 'react-redux';
 import user from '../reducers/user';
 import albums from "../reducers/albums";
-
 import { persistStore, persistReducer } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import storage from 'redux-persist/lib/storage'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-
+import Release from "../components/Release";
+import Artist from "../components/Artist";
+import MyArtists from "../components/MyArtists";
 
 
 import {
@@ -19,7 +20,6 @@ import {
     Routes
    } from "react-router-dom";
    
-  import Release from "../components/Release";
 
 const reducers = combineReducers({ user, albums })
 const persistConfig = { key: 'albumRelease', storage };
@@ -31,8 +31,16 @@ const store = configureStore({
 
 const persistor = persistStore(store);
 
+function NoMatch() {
+    return (
+      <div style={{ padding: 20,}}>
+        <h2>404: Page Not Found</h2>
+        <p>Oops! The page you're searching is not here</p>
+      </div>
+    );
+  }
 
-function App({ Component, pageProps }) {
+function App() {
     return (
         <Provider store={store}>
             <PersistGate persistor={persistor}>
@@ -50,7 +58,9 @@ function App({ Component, pageProps }) {
                 <Router>
                     <Routes>
                         <Route path="/release/:mbid" element={<Release/>}/>
-                        <Route {...pageProps}/>
+                        <Route path="/artist/:mbid" element={<Artist/>}/>
+                        <Route path="/myartists" element={<MyArtists/>}/>
+                        <Route path="*" element={<NoMatch />} />                    
                     </Routes>
                 </Router>
         </PersistGate>
