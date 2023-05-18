@@ -1,5 +1,6 @@
 import "../styles/globals.css";
 import Head from "next/head";
+import Header from "../components/Header";
 import { Provider } from "react-redux";
 import user from "../reducers/user";
 import allreleases from "../reducers/allreleases";
@@ -33,7 +34,7 @@ function App({ Component, pageProps }) {
             rel="stylesheet"
           />
         </Head>
-
+        <Header />
         <Component {...pageProps} />
       </PersistGate>
     </Provider>
