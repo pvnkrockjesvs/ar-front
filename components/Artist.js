@@ -9,7 +9,6 @@ import allreleases, {
   addEps,
   removeAllAlbums,
 } from "../reducers/allreleases";
-import user from "../reducers/user";
 import moment from "moment";
 
 function Artist() {
@@ -25,6 +24,7 @@ function Artist() {
   const dispatch = useDispatch();
   const allreleases = useSelector((state) => state.allreleases.value);
   const user = useSelector((state) => state.user.value);
+  const profile = useSelector((state) => state.profile.value);
   const [idArtistTest, setIdArtistTest] = useState(
     "65f4f0c5-ef9e-490c-aee3-909e7ae6b2ab"
   );
@@ -92,26 +92,15 @@ function Artist() {
     }, 7000); // Ajouter une pause de 2 secondes (2000 millisecondes) avant cette requête
 
     //Vérifier les releaseTypes d'albums depuis les données profiles de la db + filtrage des albums
-    //info à stocker plutot dans le persist store Redux?
-    // if (user.token) {
-    //   setTimeout(() => {
-    //     fetch(`http://localhost:3000/profiles/${user.token}`)
-    //       .then((response) => response.json())
-    //       .then((data) => {
-    //         if (data.result) {
-    //           //Modifier selon les valeurs releaseTypes de profiles (à tester)
-    //           setSelectedOption("albums");
-    //           filterAlbums(albums);
-    //         }
-    //       });
-    //   }, 6500); // Ajouter une pause de 3 secondes (3000 millisecondes) avant cette requête
-    // }
+    if (profile) {
+      console.log(profile.artists);
+    }
   }, []);
 
   //console log
-  if (user) {
-    console.log(user);
-  }
+  // if (profile) {
+  //   console.log(profile);
+  // }
   //   console.log(allreleases.eps);
   //   console.log(filterEps);
   // }
