@@ -1,26 +1,38 @@
 import "../styles/globals.css";
 import Head from "next/head";
 import { Provider } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
+import user from "../reducers/user";
 import allreleases from "../reducers/allreleases";
 
+import { persistStore, persistReducer } from "redux-persist";
+import { PersistGate } from "redux-persist/integration/react";
+import storage from "redux-persist/lib/storage";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+
+const reducers = combineReducers({ user, allreleases });
+const persistConfig = { key: "albumRelease", storage };
+
 const store = configureStore({
-  reducer: { allreleases },
+  reducer: { allreleases, user },
 });
+
+const persistor = persistStore(store);
 
 function App({ Component, pageProps }) {
   return (
     <Provider store={store}>
-      <Head>
-        <title>Next.js App</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
-      </Head>
-      <Component {...pageProps} />
+      <PersistGate persistor={persistor}>
+        <Head>
+          <title>Album release</title>
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+            rel="stylesheet"
+          />
+        </Head>
+        <Component {...pageProps} />
+      </PersistGate>
     </Provider>
   );
 }
