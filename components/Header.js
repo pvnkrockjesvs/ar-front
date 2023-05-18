@@ -1,78 +1,103 @@
-import styles from '../styles/Header.module.css'
-import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faHome, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import Head from 'next/head';
+import ConnectionHeader from './ConnectionHeader'
+import UserHeader from './UserHeader'
+import SignIn from "../components/SignIn";
+import SignUp from "../components/SignUp";
+import Profile from '../components/Profile'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { Modal } from "antd";
 
-function Header() {
+function Home() {
 
-    const user = useSelector((state) => state.user.value);
-    const [connected, setConnected] = useState(false)
+    const user = useSelector((state) => state.user.value)
+    const [isSignInModalOpen, setSignInModalOpen] = useState(false);
+    const [isSignUpModalOpen, setSignUpModalOpen] = useState(false);
+    const [isProfileModalOpen, setProfileModalOpen] = useState(false);
 
-    const openSignInModal = () => {
-        setSignInModalOpen(true);
-    };
-  
+
     const handleSignInCancel = () => {
         setSignInModalOpen(false);
     };
-  
-    const openSignUpModal = () => {
-        setSignUpModalOpen(true);
-    };
-  
+
     const handleSignUpCancel = () => {
         setSignUpModalOpen(false);
     };
-  
+
+    const selectSignOption = (buttonType) => {
+        if (buttonType === 'signup'){
+            setSignUpModalOpen(true);
+        } else if (buttonType === 'signin'){
+            setSignInModalOpen(true);
+        }
+    }
+
+    const handleProfileCancel = () => {
+        setProfileModalOpen(false)
+    }
+
+    const closeModal = (modalType) => {
+        switch(modalType) {
+            case 'signup':
+                setSignUpModalOpen(false)
+                setProfileModalOpen(true)
+                break
+            case 'signin':
+                setSignInModalOpen(false);
+                break
+            case 'profile':
+                setProfileModalOpen(false);
+                break
+        }
+    }
+    
+    let userConnected = (user.token) && (user.isProfileCreated)
+    let userNotConnected = !user.isProfileCreated
+
     return (
-        <header className={styles.header}>
-            <div className={styles.searchContainer}>
-                <input
-                className={styles.messageContainer} type="text"
-                placeholder='Search artist' />
+        <div>
+            { userConnected && 
+                <div>
+                    <UserHeader />
+                </div>
+            }
+            { userNotConnected &&
+            (<>
+                <ConnectionHeader selectSignOption={selectSignOption}/>
+                <div id="react-modals">
+                    <Modal
+                        className="modalStyle"
+                        width={700}
+                        open={isSignInModalOpen}
+                        onCancel={handleSignInCancel}
+                        footer={null}>
+                        <SignIn closeModal={closeModal} />
+                    </Modal>
+                </div>
+                <div id="react-modals">
+                    <Modal
+                        className="modalStyle"
+                        width={700}
+                        open={isSignUpModalOpen}
+                        onCancel={handleSignUpCancel}
+                        footer={null}>
+                        <SignUp closeModal={closeModal}/>
+                    </Modal>
+                </div>
+                <div id="react-modals">
+                    <Modal
+                        className="modalStyle"
+                        width={700}
+                        open={isProfileModalOpen}
+                        onCancel={handleProfileCancel}
+                        footer={null}>
+                        <Profile closeModal={closeModal}/>
+                    </Modal>
+                </div>
+            </>)
+            }
             </div>
-            <div className={styles.title}>
-                <span>Album Release</span>
-            </div>            
-            <div className={styles.headerRight}>
-            { user.token ?
-            (   <>
-                    <div className={styles.linkContainer}>
-                        <FontAwesomeIcon className={styles.linkIcon} icon={faCalendar} />
-                        <Link href="/">
-                            <span className={styles.linkText}>Calendar</span>
-                        </Link>
-                    </div>
-                    <div className={styles.linkContainer}>
-                        <FontAwesomeIcon className={styles.linkIcon} icon={faHome} />
-                        <Link href="/">
-                            <span className={styles.linkText}>Home</span>
-                        </Link>
-                    </div>
-                    <div className={styles.linkContainer}>
-                        <FontAwesomeIcon className={styles.linkIcon} icon={faUser} />
-                        <Link href="/">
-                            <span className={styles.linkText}>Profil</span>
-                        </Link>
-                    </div>
-                </>
-            ) :
-            (   <>
-                    <div className={styles.linkContainer}>
-                        <button type="primary" className={styles.signButton} onClick={openSignUpModal}>Sign-Up</button>
-                    </div>
-                    <div className={styles.linkContainer}>
-                        <Link href='/SignIn'>
-                            <button className={styles.button}>LogIn</button>
-                        </Link>
-                    </div>
-                </>
-            )}
-            </div>
-        </header>
-    )
+  );
 }
 
-export default Header
+export default Home;

@@ -15,7 +15,6 @@ function Profile(props) {
         )
 
     const updateDataProfile = (data) => {
-        console.log(data)
         const profileData = {}
         profileData.releaseTypes = data.releaseTypes
         profileData.newsletter = data.newsletter
