@@ -118,6 +118,11 @@ function Artist() {
   //   console.log(filterEps);
   // }
 
+  //Fonction Follow Artist
+  const handleFollow = () => {
+    //code
+  };
+
   //Filtrage du tableau d'Albums/EPs à afficher
   const setFilter = () => {
     if (selectedOption === "albums") {
