@@ -16,6 +16,7 @@ function Artist() {
   const [filterAlbums, setFilterAlbums] = useState(false);
   const [open, setOpen] = useState(false);
   const [artistInformation, setArtistInformation] = useState(null);
+  const [lastAlbum, setLastAlbum] = useState(null);
   const [epsList, setEpsList] = useState([]);
   const [albumsList, setAlbumsList] = useState([]);
   const dispatch = useDispatch();
@@ -46,7 +47,21 @@ function Artist() {
         .then((data) => {
           data && setArtistInformation(data.art);
         });
-    }, 1000);
+    }, 2000);
+
+    //Fetch pour récupérer le last albums
+    setTimeout(() => {
+      fetch(
+        `http://localhost:3000/artists/f59c5520-5f46-4d2c-b2c4-822eabf53419/lastalbum`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          data && setLastAlbum(data.releases);
+        })
+        .catch((error) => {
+          console.error("Error fetching data 1:", error);
+        });
+    }, 2000);
 
     //Fetch pour récupérer les infos d'albums
     setTimeout(() => {
@@ -61,7 +76,7 @@ function Artist() {
         .catch((error) => {
           console.error("Error fetching data 1:", error);
         });
-    }, 2000); // Ajouter une pause de 1 seconde (1000 millisecondes) avant cette requête
+    }, 4500); // Ajouter une pause de 1 seconde (1000 millisecondes) avant cette requête
 
     //Fetch pour récupérer les infos d'eps
     setTimeout(() => {
@@ -76,7 +91,7 @@ function Artist() {
         .catch((error) => {
           console.error("Error fetching data 1:", error);
         });
-    }, 3000); // Ajouter une pause de 2 secondes (2000 millisecondes) avant cette requête
+    }, 7000); // Ajouter une pause de 2 secondes (2000 millisecondes) avant cette requête
 
     //Vérifier les releaseTypes d'albums depuis les données profiles de la db + filtrage des albums
     //info à stocker plutot dans le persist store Redux?
@@ -96,8 +111,9 @@ function Artist() {
   }, []);
 
   //console log
-  // if (allreleases) {
-  //   console.log(allreleases.albums);
+  if (lastAlbum) {
+    console.log(lastAlbum);
+  }
   //   console.log(allreleases.eps);
   //   console.log(filterEps);
   // }
@@ -274,10 +290,23 @@ function Artist() {
               </Button>
             </Popover>
           </div>
+          {/* LOADER */}
+          {albumsList.length === 0 && (
+            <div className={styles.loader}>
+              <span className={styles.loaderText}>loading</span>
+              <span className={styles.load}></span>
+            </div>
+          )}
           {filterAlbums && (
             <div className={styles.albumsContainer}>
               <p className={styles.albumTxt}>Albums</p>
               {albumsToShow}
+            </div>
+          )}
+          {epsList.length === 0 && (
+            <div className={styles.loader}>
+              <span className={styles.loaderText}>loading</span>
+              <span className={styles.load}></span>
             </div>
           )}
           {filterEps && (
