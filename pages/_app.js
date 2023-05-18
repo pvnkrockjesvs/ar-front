@@ -13,7 +13,9 @@ const reducers = combineReducers({ user, allreleases });
 const persistConfig = { key: "albumRelease", storage };
 
 const store = configureStore({
-  reducer: { allreleases, user },
+  reducer: persistReducer(persistConfig, reducers),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }),
 });
 
 const persistor = persistStore(store);

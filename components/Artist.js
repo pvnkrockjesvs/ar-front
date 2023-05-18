@@ -50,18 +50,18 @@ function Artist() {
     }, 2000);
 
     //Fetch pour récupérer le last albums
-    setTimeout(() => {
-      fetch(
-        `http://localhost:3000/artists/f59c5520-5f46-4d2c-b2c4-822eabf53419/lastalbum`
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          data && setLastAlbum(data.releases);
-        })
-        .catch((error) => {
-          console.error("Error fetching data 1:", error);
-        });
-    }, 2000);
+    // setTimeout(() => {
+    //   fetch(
+    //     `http://localhost:3000/artists/f59c5520-5f46-4d2c-b2c4-822eabf53419/lastalbum`
+    //   )
+    //     .then((response) => response.json())
+    //     .then((data) => {
+    //       data && setLastAlbum(data.releases);
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error fetching data 1:", error);
+    //     });
+    // }, 2000);
 
     //Fetch pour récupérer les infos d'albums
     setTimeout(() => {
