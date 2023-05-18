@@ -19,7 +19,10 @@
 .artistsList {
   width: 80%;
   border: solid;
-  flex: 5 1 auto;
   padding: 20px;
   height: auto;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  row-gap: 20px
 }
+
