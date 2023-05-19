@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faHome, faCalendar } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import { TextField } from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+//import Autocomplete from "@material-ui/lab/Autocomplete";
 import { useRouter } from "next/router";
 
 function UserHeader() {
@@ -74,7 +74,7 @@ function UserHeader() {
       <div className={styles.navMenu}>
         <div className={styles.linkContainer}>
           <FontAwesomeIcon className={styles.linkIcon} icon={faCalendar} />
-          <Link href="/">
+          <Link href="/Calendar">
             <span className={styles.linkText}>Calendar</span>
           </Link>
         </div>
