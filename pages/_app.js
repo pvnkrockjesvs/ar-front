@@ -12,7 +12,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import Release from "../components/Release";
 import Artist from "../components/Artist";
 import MyArtists from "../components/MyArtists";
-import Home from "../components/Header";
+import Home from "../components/Home";
 
 
 import {
