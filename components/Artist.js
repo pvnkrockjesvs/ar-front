@@ -56,7 +56,7 @@ function Artist() {
         });
     }, 2000);
 
-    //Fetch pour récupérer le last albums
+    //Fetch pour récupérer le last album
     setTimeout(() => {
       fetch(`http://localhost:3000/artists/${mbid}/lastalbum`)
         .then((response) => response.json())
@@ -97,9 +97,36 @@ function Artist() {
         });
     }, 7000); // Ajouter une pause de 2 secondes (2000 millisecondes) avant cette requête
 
-    //Vérifier les releaseTypes d'albums depuis les données profiles de la db + filtrage des albums
-    if (profile) {
-      console.log(profile.artists);
+    //Vérifier les releaseTypes d'albums depuis le store + filtrage des albums avec selectedOption
+    if (profile[0]) {
+      const typesArray = profile[0].releaseTypes;
+      if (
+        typesArray === 3 ||
+        (typesArray.includes("ep") && typesArray.includes("album"))
+      ) {
+        setSelectedOption("all");
+      } else if (typesArray.includes("album")) {
+        setSelectedOption("albums");
+      } else if (typesArray.includes("ep")) {
+        setSelectedOption("eps");
+      }
+    }
+
+    //Vérifier si l'artiste est follow ou pas :
+    if (user.token) {
+      fetch(`http://localhost:3000/profiles/myartists/${user.token}`)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result) {
+            console.log(data.artists);
+            data.artists.some(
+              (mbidArtist) => mbidArtist.mbid === idArtistTest
+            ) && setIsFollowed(true);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching data 1:", error);
+        });
     }
   }, []);
 
