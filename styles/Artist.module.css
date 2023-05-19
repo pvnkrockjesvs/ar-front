@@ -122,7 +122,7 @@
   -webkit-box-shadow: 0 0 9px #878787;
   box-shadow: 0 0 9px #878787;
   background-color: #F8F6F4;
-  overflow: auto;
+  height: 280vh
 }
 
 @media (max-width: 620px) {

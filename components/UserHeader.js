@@ -8,6 +8,7 @@ import { TextField } from "@material-ui/core";
 // import Autocomplete from "@material-ui/lab/Autocomplete";
 import { useRouter } from "next/router";
 
+
 function UserHeader() {
   const router = useRouter();
   const [value, setValue] = useState("");
@@ -80,7 +81,7 @@ function UserHeader() {
         </div>
         <div className={styles.linkContainer}>
           <FontAwesomeIcon className={styles.linkIcon} icon={faHome} />
-          <Link href="/">
+          <Link href="/home">
             <span className={styles.linkText}>Home</span>
           </Link>
         </div>

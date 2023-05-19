@@ -62,6 +62,7 @@ function App({ Component, pageProps }) {
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/release/:mbid" element={<Release />} />
             <Route path="/artist/:mbid" element={<Artist />} />
             <Route path="/myartists" element={<MyArtists />} />
