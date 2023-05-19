@@ -20,7 +20,7 @@ function UserHeader() {
                 <div className={styles.navMenu}>
                     <div className={styles.linkContainer}>
                         <FontAwesomeIcon className={styles.linkIcon} icon={faCalendar} />
-                        <Link href="/">
+                        <Link href="/Calendar">
                             <span className={styles.linkText}>Calendar</span>
                         </Link>
                     </div>
