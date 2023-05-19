@@ -11,6 +11,8 @@ import allreleases, {
   removeAllAlbums,
 } from "../reducers/allreleases";
 import moment from "moment";
+import Link from 'next/link';
+
 
 function Artist() {
   const [selectedOption, setSelectedOption] = useState("all");
@@ -26,6 +28,7 @@ function Artist() {
   const allreleases = useSelector((state) => state.allreleases.value);
   const user = useSelector((state) => state.user.value);
   const profile = useSelector((state) => state.profile.value);
+  const [lastUrl, setLastUrl] = useState('')
   const { mbid } = useParams();
 
 
@@ -58,7 +61,10 @@ function Artist() {
       fetch(`http://localhost:3000/artists/${mbid}/lastalbum`)
         .then((response) => response.json())
         .then((data) => {
-          data && setLastAlbum(data);
+          if (data) {
+            setLastAlbum(data) 
+            setLastUrl(`../release/${data.mbid}`)
+          } 
         })
         .catch((error) => {
           console.error("Error fetching data 1:", error);
@@ -205,12 +211,13 @@ function Artist() {
   //.map du tableau d'albums filtrés pour l'afficher
   const albumsToShow = albumsList.map((data, i) => {
     const albumLength = calculTotalDuration(data.length);
+    const url = `../release/${data.mbid}`
 
     return (
       <div className={styles.albumsInfos} key={i}>
         <div className={styles.albumTitle}>
           <p>
-            <a href="albumLink">{data.title}</a> • {data.date}
+          <Link href={url}>{data.title}</Link> • {data.date}
           </p>
         </div>
         {/* <div className={styles.minuteTracks}>
@@ -225,11 +232,13 @@ function Artist() {
   const epsToShow = epsList.map((data, i) => {
     const albumLength = calculTotalDuration(data.length);
 
+    const url = `../release/${data.mbid}`
+
     return (
       <div className={styles.albumsInfos} key={i}>
         <div className={styles.albumTitle}>
           <p>
-            <a href="albumLink">{data.title}</a> • {data.date}
+            <Link href={url}>{data.title}</Link> • {data.date}
           </p>
         </div>
         {/* <div className={styles.minuteTracks}>
@@ -284,9 +293,9 @@ function Artist() {
         </div>
         <div>
           <p>
-            <a href="albumLink">
+            <Link href={lastUrl}>
               {!lastAlbum ? "Loading album title" : lastAlbum.title}
-            </a>
+            </Link>
           </p>
           <p>
             {!lastAlbum
