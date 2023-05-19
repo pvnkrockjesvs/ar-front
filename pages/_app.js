@@ -3,7 +3,8 @@ import Head from "next/head";
 import Header from '../components/Header'
 import { Provider } from 'react-redux';
 import user from '../reducers/user';
-import albums from "../reducers/albums";
+import allreleases from "../reducers/allreleases";
+import profile from "../reducers/profile";
 import { persistStore, persistReducer } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import storage from 'redux-persist/lib/storage'
@@ -11,6 +12,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import Release from "../components/Release";
 import Artist from "../components/Artist";
 import MyArtists from "../components/MyArtists";
+import Home from "../components/Header";
 
 
 import {
@@ -21,12 +23,13 @@ import {
    } from "react-router-dom";
    
 
-const reducers = combineReducers({ user, albums })
-const persistConfig = { key: 'albumRelease', storage };
+const reducers = combineReducers({ user, allreleases, profile });
+const persistConfig = { key: "albumRelease", storage };
 
 const store = configureStore({
-    reducer: persistReducer(persistConfig, reducers),
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
+  reducer: persistReducer(persistConfig, reducers),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }),
 });
 
 const persistor = persistStore(store);
@@ -40,7 +43,7 @@ function NoMatch() {
     );
   }
 
-function App() {
+function App({ Component, pageProps }) {
     return (
         <Provider store={store}>
             <PersistGate persistor={persistor}>
@@ -57,6 +60,7 @@ function App() {
                 
                 <Router>
                     <Routes>
+                        <Route path="/" element={<Home/>}/>
                         <Route path="/release/:mbid" element={<Release/>}/>
                         <Route path="/artist/:mbid" element={<Artist/>}/>
                         <Route path="/myartists" element={<MyArtists/>}/>

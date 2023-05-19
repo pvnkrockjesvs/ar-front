@@ -1,57 +1,169 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import LoaderMusic from "./LoaderMusic";
 import styles from "../styles/Artist.module.css";
 import { Popover, Button, Radio } from "antd";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-import { addAlbums } from "../reducers/albums";
+import allreleases, {
+  addAlbums,
+  addEps,
+  removeAllAlbums,
+} from "../reducers/allreleases";
+import moment from "moment";
 
 function Artist() {
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState("all");
+  const [isFollowed, setIsFollowed] = useState(false);
+  const [filterEps, setFilterEps] = useState(false);
+  const [filterAlbums, setFilterAlbums] = useState(false);
   const [open, setOpen] = useState(false);
-  const [albumsFiltered, setAlbumsFiltered] = useState([]);
+  const [artistInformation, setArtistInformation] = useState(null);
+  const [lastAlbum, setLastAlbum] = useState(null);
+  const [epsList, setEpsList] = useState([]);
+  const [albumsList, setAlbumsList] = useState([]);
   const dispatch = useDispatch();
-  const albums = useSelector((state) => state.albums.value);
-  const user = { token: false };
+  const allreleases = useSelector((state) => state.allreleases.value);
+  const user = useSelector((state) => state.user.value);
+  const profile = useSelector((state) => state.profile.value);
+  const { mbid } = useParams();
+
+
+  //Fonction de conversion du temps total d'un album avec momentjs
+  const calculTotalDuration = (totalTime) => {
+    const duration = moment.duration(totalTime);
+
+    let formattedTime;
+    if (duration.asMinutes() >= 60) {
+      formattedTime = duration.hours() + "h" + duration.minutes() + "min";
+    } else {
+      formattedTime = duration.minutes() + "min";
+    }
+    return formattedTime;
+  };
 
   useEffect(() => {
+    dispatch(removeAllAlbums());
     //Fetch pour infos artist & albums
-    // fetch(`http://musicbrainz-fetch`)
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     dispatch(addAlbums(data.albums));
-    //   });
-
-    //Vérifier les releaseTypes d'albums depuis les données profiles de la db + filtrage des albums
-    if (user.token) {
-      fetch(`http://localhost:3000/profiles/${user.token}`)
+    setTimeout(() => {
+      fetch(`http://localhost:3000/artists/${mbid}`)
         .then((response) => response.json())
         .then((data) => {
-          if (data.result) {
-            //Modifier selon les valeurs releaseTypes (à tester)
-            setSelectedOption("albums");
-            filterAlbums(albums);
-          }
+          data && setArtistInformation(data.art);
         });
+    }, 2000);
+
+    //Fetch pour récupérer le last albums
+    setTimeout(() => {
+      fetch(`http://localhost:3000/artists/${mbid}/lastalbum`)
+        .then((response) => response.json())
+        .then((data) => {
+          data && setLastAlbum(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data 1:", error);
+        });
+    }, 2000);
+
+    //Fetch pour récupérer les infos d'albums
+    setTimeout(() => {
+      fetch(`http://localhost:3000/artists/${mbid}/album`)
+        .then((response) => response.json())
+        .then((data) => {
+          data && dispatch(addAlbums(data.releases));
+          setAlbumsList(data.releases);
+        })
+        .catch((error) => {
+          console.error("Error fetching data 1:", error);
+        });
+    }, 4500); // Ajouter une pause de 1 seconde (1000 millisecondes) avant cette requête
+
+    //Fetch pour récupérer les infos d'eps
+    setTimeout(() => {
+      fetch(`http://localhost:3000/artists/${mbid}/ep`)
+        .then((response) => response.json())
+        .then((data) => {
+          data && dispatch(addEps(data.releases));
+          setEpsList(data.releases);
+        })
+        .catch((error) => {
+          console.error("Error fetching data 1:", error);
+        });
+    }, 7000); // Ajouter une pause de 2 secondes (2000 millisecondes) avant cette requête
+
+    //Vérifier les releaseTypes d'albums depuis les données profiles de la db + filtrage des albums
+    if (profile) {
+      console.log(profile.artists);
     }
   }, []);
 
+  //console log
+  // if (profile) {
+  //   console.log(profile);
+  // }
+  //   console.log(allreleases.eps);
+  //   console.log(filterEps);
+  // }
+
+  //Fonction Follow Artist
+  const handleFollow = (idArtist) => {
+    if (user.token && !isFollowed) {
+      console.log("Token is OK");
+      fetch(`http://localhost:3000/artists`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mbid: idArtist,
+          token: user.token,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result) {
+            console.log("data ok");
+            setIsFollowed(true);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching data 1:", error);
+        });
+    } else {
+      fetch(`http://localhost:3000/artists`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mbid: idArtist,
+          token: user.token,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result) {
+            console.log("data ok");
+            setIsFollowed(false);
+          }
+        });
+    }
+  };
+
   //Filtrage du tableau d'Albums/EPs à afficher
-  const filterAlbums = (albumsData) => {
-    if (selectedOption === "all") {
-      setAlbumsFiltered(albumsData);
-    } else if (selectedOption === "albums") {
-      const albumsOnly = albumsData.filter((album) => album.type === "album");
-      setAlbumsFiltered(albumsOnly);
+  const setFilter = () => {
+    if (selectedOption === "albums") {
+      setFilterAlbums(true);
+      setFilterEps(false);
     } else if (selectedOption === "eps") {
-      const epsOnly = albumsData.filter((album) => album.type === "ep");
-      setAlbumsFiltered(epsOnly);
+      setFilterAlbums(false);
+      setFilterEps(true);
+    } else {
+      setFilterAlbums(true);
+      setFilterEps(true);
     }
   };
 
   //Filtrage des Albums en fonction des Radioboxes :
   useEffect(() => {
-    if (albums.length > 0) {
-      filterAlbums(albums);
+    if (allreleases) {
+      setFilter();
     }
   }, [selectedOption]);
 
@@ -60,7 +172,7 @@ function Artist() {
     setSelectedOption(e.target.value);
   };
 
-  //Checkboxes :
+  //Checkboxes du filtre par type :
   const popoverContent = (
     <div className={styles.popoverContent}>
       <Radio
@@ -91,18 +203,39 @@ function Artist() {
   );
 
   //.map du tableau d'albums filtrés pour l'afficher
-  const albumsToShow = albumsFiltered.map((data, i) => {
+  const albumsToShow = albumsList.map((data, i) => {
+    const albumLength = calculTotalDuration(data.length);
+
     return (
-      <div className={styles.albumsInfos}>
+      <div className={styles.albumsInfos} key={i}>
         <div className={styles.albumTitle}>
           <p>
-            <a href="albumLink">{data.album.title}</a> • {data.album.year}
+            <a href="albumLink">{data.title}</a> • {data.date}
           </p>
         </div>
-        <div className={styles.minuteTracks}>
-          <p>{data.album.duration}min</p>
-          <p>{data.albums.numberOfTracks} tracks</p>
+        {/* <div className={styles.minuteTracks}>
+          <p>{albumLength}</p>
+          <p>{data.numberTracks} tracks</p>
+        </div> */}
+      </div>
+    );
+  });
+
+  //.map du tableau d'eps filtrés pour l'afficher
+  const epsToShow = epsList.map((data, i) => {
+    const albumLength = calculTotalDuration(data.length);
+
+    return (
+      <div className={styles.albumsInfos} key={i}>
+        <div className={styles.albumTitle}>
+          <p>
+            <a href="albumLink">{data.title}</a> • {data.date}
+          </p>
         </div>
+        {/* <div className={styles.minuteTracks}>
+          <p>{albumLength}</p>
+          <p>{data.numberTracks} tracks</p>
+        </div> */}
       </div>
     );
   });
@@ -116,29 +249,50 @@ function Artist() {
     <div className={styles.mainContainer}>
       {/* --LEFT CONTAINER-- */}
       <div className={styles.leftContainer}>
-        <h2 className={styles.artistNameLeft}>Artist EMINEM</h2>
+        <h2 className={styles.artistNameLeft}>
+          {artistInformation && artistInformation.name}
+        </h2>
         <div className={styles.artistPic}>
-          <Image
-            src="/artist.jpg"
-            alt="Artist picture"
-            width={300}
-            height={300}
-          />
+          {!lastAlbum ? (
+            <div className={styles.loaderDiv1}>
+              {" "}
+              <LoaderMusic />
+            </div>
+          ) : (
+            <Image
+              src={lastAlbum.cover}
+              alt="Artist picture"
+              width={300}
+              height={300}
+            />
+          )}
         </div>
         <p className={styles.releaseTxt}>Last Release : </p>
         <div>
-          <Image
-            src="/Watch-the-throne.jpg"
-            alt="Album cover"
-            width={180}
-            height={180}
-          />
+          {!lastAlbum ? (
+            <div className={styles.loaderDiv2}>
+              <LoaderMusic />
+            </div>
+          ) : (
+            <Image
+              src={lastAlbum.cover}
+              alt="Album cover"
+              width={180}
+              height={180}
+            />
+          )}
         </div>
         <div>
           <p>
-            <a href="albumLink">Album Title</a>
+            <a href="albumLink">
+              {!lastAlbum ? "Loading album title" : lastAlbum.title}
+            </a>
           </p>
-          <p>2023</p>
+          <p>
+            {!lastAlbum
+              ? "Loading release date"
+              : moment(lastAlbum.date).format("DD-MM-YYYY")}
+          </p>
         </div>
       </div>
 
@@ -147,18 +301,19 @@ function Artist() {
         {/* --TEXT CONTAINER-- */}
         <div className={styles.textContainer}>
           <div className={styles.topText}>
-            <h2 className={styles.artistName}>ARTIST EMINEM</h2>
-            <button className={styles.buttonFollow}>Followed</button>
+            <h2 className={styles.artistName}>
+              {artistInformation && artistInformation.name}
+            </h2>
+            <button
+              className={styles.buttonFollow}
+              onClick={() => handleFollow(mbid)}
+            >
+              {isFollowed ? "✅Followed" : "Follow"}
+            </button>
           </div>
 
           <p className={styles.artistDescription}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
+            {artistInformation && artistInformation.bio}
           </p>
         </div>
         {/* --DISCOGRAPHY CONTAINER-- */}
@@ -187,100 +342,31 @@ function Artist() {
               </Button>
             </Popover>
           </div>
-          <div className={styles.albumsContainer}>
-            <p className={styles.albumTxt}>Albums</p>
-            <div className={styles.albumsInfos}>
-              <div className={styles.albumTitle}>
-                <p>
-                  <a href="albumLink">Album Title</a> • 2023
-                </p>
-              </div>
-              <div className={styles.minuteTracks}>
-                <p>45 min</p>
-                <p>15 tracks</p>
-              </div>
+          {/* LOADER */}
+          {albumsList.length === 0 && (
+            <div className={styles.loader}>
+              <span className={styles.loaderText}>loading</span>
+              <span className={styles.load}></span>
             </div>
-            <div className={styles.albumsInfos}>
-              <div className={styles.albumTitle}>
-                <p>
-                  <a href="albumLink">Album Title</a> • 2023
-                </p>
-              </div>
-              <div className={styles.minuteTracks}>
-                <p>45 min</p>
-                <p>15 tracks</p>
-              </div>
+          )}
+          {filterAlbums && (
+            <div className={styles.albumsContainer}>
+              <p className={styles.albumTxt}>Albums</p>
+              {albumsToShow}
             </div>
-            <div className={styles.albumsInfos}>
-              <div className={styles.albumTitle}>
-                <p>
-                  <a href="albumLink">Album Title</a> • 2023
-                </p>
-              </div>
-              <div className={styles.minuteTracks}>
-                <p>45 min</p>
-                <p>15 tracks</p>
-              </div>
+          )}
+          {epsList.length === 0 && (
+            <div className={styles.loader}>
+              <span className={styles.loaderText}>loading</span>
+              <span className={styles.load}></span>
             </div>
-            <div className={styles.albumsInfos}>
-              <div className={styles.albumTitle}>
-                <p>
-                  <a href="albumLink">Album Title</a> • 2023
-                </p>
-              </div>
-              <div className={styles.minuteTracks}>
-                <p>45 min</p>
-                <p>15 tracks</p>
-              </div>
+          )}
+          {filterEps && (
+            <div className={styles.albumsContainer}>
+              <p className={styles.albumTxt}>EPs</p>
+              {epsToShow}
             </div>
-            <div className={styles.albumsInfos}>
-              <div className={styles.albumTitle}>
-                <p>
-                  <a href="albumLink">Album Title</a> • 2023
-                </p>
-              </div>
-              <div className={styles.minuteTracks}>
-                <p>45 min</p>
-                <p>15 tracks</p>
-              </div>
-            </div>
-            <div className={styles.albumsInfos}>
-              <div className={styles.albumTitle}>
-                <p>
-                  <a href="albumLink">Album Title</a> • 2023
-                </p>
-              </div>
-              <div className={styles.minuteTracks}>
-                <p>45 min</p>
-                <p>15 tracks</p>
-              </div>
-            </div>
-            <div className={styles.albumsInfos}>
-              <div className={styles.albumTitle}>
-                <p>
-                  <a href="albumLink">Album Title</a> • 2023
-                </p>
-              </div>
-              <div className={styles.minuteTracks}>
-                <p>45 min</p>
-                <p>15 tracks</p>
-              </div>
-            </div>
-          </div>
-          <div className={styles.albumsContainer}>
-            <p className={styles.albumTxt}>EPs</p>
-            <div className={styles.albumsInfos}>
-              <div className={styles.albumTitle}>
-                <p>
-                  <a href="albumLink">Album Title</a> • 2023
-                </p>
-              </div>
-              <div className={styles.minuteTracks}>
-                <p>45 min</p>
-                <p>15 tracks</p>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
