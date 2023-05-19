@@ -3,23 +3,45 @@ import Head from "next/head";
 import Header from '../components/Header'
 import { Provider } from 'react-redux';
 import user from '../reducers/user';
-import albums from "../reducers/albums";
-
+import allreleases from "../reducers/allreleases";
+import profile from "../reducers/profile";
 import { persistStore, persistReducer } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import storage from 'redux-persist/lib/storage'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import Release from "../components/Release";
+import Artist from "../components/Artist";
+import MyArtists from "../components/MyArtists";
+import Home from "../components/Home";
 
-const reducers = combineReducers({ user, albums })
-const persistConfig = { key: 'albumRelease', storage };
+
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Routes
+   } from "react-router-dom";
+   
+
+const reducers = combineReducers({ user, allreleases, profile });
+const persistConfig = { key: "albumRelease", storage };
 
 const store = configureStore({
-    reducer: persistReducer(persistConfig, reducers),
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
+  reducer: persistReducer(persistConfig, reducers),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }),
 });
 
 const persistor = persistStore(store);
 
+function NoMatch() {
+    return (
+      <div style={{ padding: 20,}}>
+        <h2>404: Page Not Found</h2>
+        <p>Oops! The page you're searching is not here</p>
+      </div>
+    );
+  }
 
 function App({ Component, pageProps }) {
     return (
@@ -35,7 +57,16 @@ function App({ Component, pageProps }) {
                     />
                 </Head>
                 <Header />
-                <Component {...pageProps} />
+                
+                <Router>
+                    <Routes>
+                        <Route path="/" element={<Home/>}/>
+                        <Route path="/release/:mbid" element={<Release/>}/>
+                        <Route path="/artist/:mbid" element={<Artist/>}/>
+                        <Route path="/myartists" element={<MyArtists/>}/>
+                        <Route path="*" element={<NoMatch />} />                    
+                    </Routes>
+                </Router>
         </PersistGate>
     </Provider>
   );
