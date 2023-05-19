@@ -1,11 +1,11 @@
 .mainContainer {
   width: 100vw;
-  height: 100vh;
+  height: 96vh;
   display: flex;
   align-items: center;
   overflow: auto;
   font-family: "Montserrat", sans-serif;
-  background: linear-gradient(45deg, #368ed7 0%, #052341 100%);
+  background: linear-gradient(45deg, #CDF0EA 0%, #B9EDDD 100%);
   background-size: 200% 200%;
   animation: background-animation 6s ease infinite;
 }
@@ -46,12 +46,13 @@
   padding: 25px;
   min-width: 22%;
   height: 90vh;
-  border: 1.5px solid #001c4f;
   border-radius: 10px;
   -moz-box-shadow: 0 0 9px #878787;
   -webkit-box-shadow: 0 0 9px #878787;
   box-shadow: 0 0 9px #878787;
-  background-color: rgb(226, 221, 213);
+  background-color: #F8F6F4;
+    font-size: small;
+
 }
 @media (max-width: 620px) {
   .leftContainer {
@@ -114,14 +115,13 @@
   flex-direction: column;
   align-items: center;
   flex-grow: 1;
-  min-height: 40vh;
+  min-height: 4vh;
   width: 95%;
-  border: 1.5px solid #001c4f;
   border-radius: 10px;
   -moz-box-shadow: 0 0 9px #878787;
   -webkit-box-shadow: 0 0 9px #878787;
   box-shadow: 0 0 9px #878787;
-  background-color: rgb(226, 221, 213);
+  background-color: #F8F6F4;
   overflow: auto;
 }
 
@@ -190,12 +190,11 @@
   padding: 25px;
   margin-top: 20px;
   overflow: auto;
-  border: 1.5px solid #001c4f;
   border-radius: 10px;
   -moz-box-shadow: 0 0 9px #878787;
   -webkit-box-shadow: 0 0 9px #878787;
   box-shadow: 0 0 9px #878787;
-  background-color: rgb(226, 221, 213);
+  background-color: #F8F6F4;
 }
 @media (max-width: 620px) {
   .discographyContainer {

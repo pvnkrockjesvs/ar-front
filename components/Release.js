@@ -3,11 +3,13 @@ import { useParams } from "react-router-dom";
 import styles from "../styles/Release.module.css";
 import Image from "next/image";
 import Moment from 'react-moment';
+import LoaderMusic from "./LoaderMusic";
+
 
 function Release() {
   const { mbid } = useParams();
   const [album, setAlbum ]= useState({});
-  const [cover, setCover] = useState('/cover.jpeg');
+  const [cover, setCover] = useState(null);
   const [track, setTrack] = useState()
   const [trackLengthFormat, setTrackLengthFormat] = useState('mm:ss')
 
@@ -50,11 +52,19 @@ function Release() {
     <div className={styles.mainContainer}>
     {/* --LEFT CONTAINER-- */}
       <div className={styles.leftContainer}>
-        <Image
+        {!cover ? (
+            <div className={styles.loaderDiv1}>
+              {" "}
+              <LoaderMusic />
+            </div>
+          ) : (
+            <Image
             src={cover}
-            alt="Artist picture"
+            alt="Album picture"
             width={300}
             height={300} />
+          )}
+      
         <div className={styles.leftInfo}>
           <Moment format="DD MMMM YYYY">{album.date}</Moment>
           {album.label}
