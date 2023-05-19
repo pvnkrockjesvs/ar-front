@@ -1,11 +1,13 @@
-/* This component generate the calendar for a given user.
-it lists the album that will be releases for a given period.
-The periods are the current, the previous and the next weeks.
+/* This component generates the calendar for a given user.
+it lists the album that will be released for a given period (one week at a time).
+The periods are the current, the 4 previous and the next weeks.
 The algorithm steps:
-    1. Make a fetch to get the list of artits from the user profile
-    2. for each artist, get the last album.
+    1. Get the user artist list from the store
+    2. for each artist, get the recent and upcoming releases according to the type of release.
     3. Compare the data of release of the album (the first release) to the period of interest.
     4. Display the album if it is within the period of interest.
+
+    THIS COMPONENT IS STILL IN PROGRESS......
 */
 import styles from '../styles/Calendar.module.css'
 import CalendarRow from './CalendarRow'
