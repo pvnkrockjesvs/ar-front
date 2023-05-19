@@ -14,6 +14,8 @@ import Artist from "../components/Artist";
 import MyArtists from "../components/MyArtists";
 import Home from "../components/Home";
 import Search from "../components/Search";
+import Calendar from "../components/Calendar";
+
 
 import {
   BrowserRouter as Router,
@@ -64,6 +66,7 @@ function App({ Component, pageProps }) {
             <Route path="/artist/:mbid" element={<Artist />} />
             <Route path="/myartists" element={<MyArtists />} />
             <Route path="/search/:name" element={<Search />} />
+            <Route path="/calendar" element={<Calendar />} />
             <Route path="*" element={<NoMatch />} />
           </Routes>
         </Router>
