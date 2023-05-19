@@ -28,7 +28,6 @@ function Artist() {
   const profile = useSelector((state) => state.profile.value);
   const { mbid } = useParams();
 
-
   //Fonction de conversion du temps total d'un album avec momentjs
   const calculTotalDuration = (totalTime) => {
     const duration = moment.duration(totalTime);
@@ -112,10 +111,8 @@ function Artist() {
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
-            console.log(data.artists);
-            data.artists.some(
-              (mbidArtist) => mbidArtist.mbid === idArtistTest
-            ) && setIsFollowed(true);
+            data.artists.some((mbidArtist) => mbidArtist.mbid === mbid) &&
+              setIsFollowed(true);
           }
         })
         .catch((error) => {
@@ -154,7 +151,7 @@ function Artist() {
         .catch((error) => {
           console.error("Error fetching data 1:", error);
         });
-    } else {
+    } else if (user.token && isFollowed) {
       fetch(`http://localhost:3000/artists`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
