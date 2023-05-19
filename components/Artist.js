@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import LoaderMusic from "./LoaderMusic";
 import styles from "../styles/Artist.module.css";
 import { Popover, Button, Radio } from "antd";
@@ -25,9 +26,8 @@ function Artist() {
   const allreleases = useSelector((state) => state.allreleases.value);
   const user = useSelector((state) => state.user.value);
   const profile = useSelector((state) => state.profile.value);
-  const [idArtistTest, setIdArtistTest] = useState(
-    "65f4f0c5-ef9e-490c-aee3-909e7ae6b2ab"
-  );
+  const { mbid } = useParams();
+
 
   //Fonction de conversion du temps total d'un album avec momentjs
   const calculTotalDuration = (totalTime) => {
@@ -46,7 +46,7 @@ function Artist() {
     dispatch(removeAllAlbums());
     //Fetch pour infos artist & albums
     setTimeout(() => {
-      fetch(`http://localhost:3000/artists/${idArtistTest}`)
+      fetch(`http://localhost:3000/artists/${mbid}`)
         .then((response) => response.json())
         .then((data) => {
           data && setArtistInformation(data.art);
@@ -55,7 +55,7 @@ function Artist() {
 
     //Fetch pour récupérer le last album
     setTimeout(() => {
-      fetch(`http://localhost:3000/artists/${idArtistTest}/lastalbum`)
+      fetch(`http://localhost:3000/artists/${mbid}/lastalbum`)
         .then((response) => response.json())
         .then((data) => {
           data && setLastAlbum(data);
@@ -67,7 +67,7 @@ function Artist() {
 
     //Fetch pour récupérer les infos d'albums
     setTimeout(() => {
-      fetch(`http://localhost:3000/artists/${idArtistTest}/album`)
+      fetch(`http://localhost:3000/artists/${mbid}/album`)
         .then((response) => response.json())
         .then((data) => {
           data && dispatch(addAlbums(data.releases));
@@ -80,7 +80,7 @@ function Artist() {
 
     //Fetch pour récupérer les infos d'eps
     setTimeout(() => {
-      fetch(`http://localhost:3000/artists/${idArtistTest}/ep`)
+      fetch(`http://localhost:3000/artists/${mbid}/ep`)
         .then((response) => response.json())
         .then((data) => {
           data && dispatch(addEps(data.releases));
@@ -333,7 +333,7 @@ function Artist() {
             </h2>
             <button
               className={styles.buttonFollow}
-              onClick={() => handleFollow(idArtistTest)}
+              onClick={() => handleFollow(mbid)}
             >
               {isFollowed ? "✅Followed" : "Follow"}
             </button>
