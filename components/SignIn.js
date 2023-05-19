@@ -18,7 +18,7 @@ function SignIn(props) {
   //Fonction pour fetch les données du profile et les stockées dans le persist store
   const fetchProfile = (tokenData) => {
     if (tokenData) {
-      console.log("Token is OK");
+      console.log(`Token is OK : ${tokenData}`);
       fetch(`http://localhost:3000/profiles/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
