@@ -1,18 +1,18 @@
 .header {
-    /*border-bottom: 2px rgb(233, 190, 89) solid;*/
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    background-color: black;
-    height: 4vh;
+  /*border-bottom: 2px rgb(233, 190, 89) solid;*/
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: black;
+  height: 6vh;
 }
 
 .title {
-    font-size: 44px;
-    font-family: "Lobster";
-    font-weight: bold;
-    color: white;
+  font-size: 44px;
+  font-family: "Lobster";
+  font-weight: bold;
+  color: white;
 }
 
 .messageContainer {

@@ -44,13 +44,12 @@
   flex-direction: column;
   margin-left: 30px;
   padding: 25px;
-  min-width: 22%;
   height: 90vh;
   border-radius: 10px;
   -moz-box-shadow: 0 0 9px #878787;
   -webkit-box-shadow: 0 0 9px #878787;
   box-shadow: 0 0 9px #878787;
-  background-color: #F8F6F4;
+  background-color: #FFFFFF;
   font-size: small;
 }
 @media (max-width: 620px) {
@@ -63,7 +62,7 @@
 }
 
 
-.artistPic {
+.albumPic {
   width: 100%;
   height: auto;
   object-fit: cover;
@@ -113,7 +112,7 @@
   -moz-box-shadow: 0 0 9px #878787;
   -webkit-box-shadow: 0 0 9px #878787;
   box-shadow: 0 0 9px #878787;
-  background-color: #F8F6F4;
+  background-color: #FFFFFF;
   overflow: auto;
 }
 
@@ -188,7 +187,7 @@
   -moz-box-shadow: 0 0 9px #878787;
   -webkit-box-shadow: 0 0 9px #878787;
   box-shadow: 0 0 9px #878787;
-  background-color: #F8F6F4;
+  background-color: #FFFFFF;
 }
 @media (max-width: 620px) {
   .discographyContainer {

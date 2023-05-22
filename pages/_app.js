@@ -16,7 +16,6 @@ import Home from "../components/Home";
 import Search from "../components/Search";
 import Calendar from "../components/Calendar";
 
-
 import {
   BrowserRouter as Router,
   Switch,
@@ -56,12 +55,14 @@ function App({ Component, pageProps }) {
             href="https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:wght@400;700&display=swap"
             rel="stylesheet"
           />
+          <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet" />
         </Head>
         <Header />
 
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/release/:mbid" element={<Release />} />
             <Route path="/artist/:mbid" element={<Artist />} />
             <Route path="/myartists" element={<MyArtists />} />
@@ -71,6 +72,8 @@ function App({ Component, pageProps }) {
             <Route path="*" element={<NoMatch />} />
           </Routes>
         </Router>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
       </PersistGate>
     </Provider>
   );
