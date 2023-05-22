@@ -67,6 +67,7 @@ function App({ Component, pageProps }) {
             <Route path="/myartists" element={<MyArtists />} />
             <Route path="/search/:name" element={<Search />} />
             <Route path="/calendar" element={<Calendar />} />
+            <Route path="/home" element={<Home />} />
             <Route path="*" element={<NoMatch />} />
           </Routes>
         </Router>
