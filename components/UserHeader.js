@@ -24,8 +24,7 @@ import LastFmModal from "./LastFmModal";
 import Profile from './Profile'
 import { AiOutlineHome, AiFillCalendar } from "react-icons/ai";
 import { logout } from "../reducers/user";
-
-
+import { deleteProfile } from '../reducers/profile'
 
 
 function UserHeader() {
@@ -94,6 +93,13 @@ function UserHeader() {
       console.log("Recherche effectuée avec la valeur :", value);
     }
   };
+
+  const handleLogOut = () => {
+    dispatch(logout())
+    dispatch(deleteProfile())
+    router.push("/home");
+
+  }
 
   return (
     <Navbar
@@ -187,7 +193,7 @@ function UserHeader() {
           />
           <Dropdown.Item>Settings</Dropdown.Item>
           <Dropdown.Divider />
-          <Dropdown.Item onClick={() => {dispatch(logout())}}>
+          <Dropdown.Item onClick={() => {handleLogOut()}}>
             Sign out
           </Dropdown.Item>
         </Dropdown>
