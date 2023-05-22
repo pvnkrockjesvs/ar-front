@@ -11,12 +11,9 @@ import allreleases, {
   removeAllAlbums,
 } from "../reducers/allreleases";
 import moment from "moment";
-import Link from 'next/link';
+import Link from "next/link";
 import { Button } from "flowbite-react";
 import { RxGear, RxCheck } from "react-icons/rx";
-
-
-
 
 function Artist() {
   const [selectedOption, setSelectedOption] = useState("all");
@@ -32,7 +29,7 @@ function Artist() {
   const allreleases = useSelector((state) => state.allreleases.value);
   const user = useSelector((state) => state.user.value);
   const profile = useSelector((state) => state.profile.value);
-  const [lastUrl, setLastUrl] = useState('')
+  const [lastUrl, setLastUrl] = useState("");
   const { mbid } = useParams();
 
   //Fonction de conversion du temps total d'un album avec momentjs
@@ -65,9 +62,9 @@ function Artist() {
         .then((response) => response.json())
         .then((data) => {
           if (data) {
-            setLastAlbum(data) 
-            setLastUrl(`../release/${data.mbid}`)
-          } 
+            setLastAlbum(data);
+            setLastUrl(`../release/${data.mbid}`);
+          }
         })
         .catch((error) => {
           console.error("Error fetching data 1:", error);
@@ -239,13 +236,18 @@ function Artist() {
   //.map du tableau d'albums filtrés pour l'afficher
   const albumsToShow = albumsList.map((data, i) => {
     const albumLength = calculTotalDuration(data.length);
-    const url = `../release/${data.mbid}`
+    const url = `../release/${data.mbid}`;
 
     return (
       <div className={styles.albumsInfos} key={i}>
         <div className={styles.albumTitle}>
           <p>
-          <Link  href={url}><span className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">{data.title}</span></Link> • {data.date}
+            <Link href={url}>
+              <span className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+                {data.title}
+              </span>
+            </Link>{" "}
+            • {data.date}
           </p>
         </div>
         {/* <div className={styles.minuteTracks}>
@@ -260,13 +262,18 @@ function Artist() {
   const epsToShow = epsList.map((data, i) => {
     const albumLength = calculTotalDuration(data.length);
 
-    const url = `../release/${data.mbid}`
+    const url = `../release/${data.mbid}`;
 
     return (
       <div className={styles.albumsInfos} key={i}>
         <div className={styles.albumTitle}>
           <p>
-          <Link  href={url}><span className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">{data.title}</span></Link> • {data.date}
+            <Link href={url}>
+              <span className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+                {data.title}
+              </span>
+            </Link>{" "}
+            • {data.date}
           </p>
         </div>
         {/* <div className={styles.minuteTracks}>
@@ -292,17 +299,21 @@ function Artist() {
         <div className={styles.artistPic}>
           {!artistInformation ? (
             <div className={styles.loaderDiv1}>
-              {" "}
               <LoaderMusic />
             </div>
-          ) : ( artistInformation.image ? (
-            <img class="h-auto max-w-md rounded-lg" src={artistInformation.image} alt="image description"/>
-            ) : <Image
-            src={artistInformation.image}
-            alt="Artist picture"
-            width={300}
-            height={300}
-          />
+          ) : artistInformation.image ? (
+            <img
+              class="h-auto max-w-md rounded-lg"
+              src={artistInformation.image}
+              alt="image description"
+            />
+          ) : (
+            <Image
+              src={artistInformation.image}
+              alt="Artist picture"
+              width={300}
+              height={300}
+            />
           )}
         </div>
         <p className={styles.releaseTxt}>Last Release : </p>
@@ -314,14 +325,17 @@ function Artist() {
           ) : (
             <figure class="relative max-w-xs transition-all duration-300 cursor-pointer filter grayscale hover:grayscale-0">
               <a href={lastUrl}>
-                <img class="rounded-lg" src={lastAlbum.cover} alt="image description"/>
+                <img
+                  class="rounded-lg"
+                  src={lastAlbum.cover}
+                  alt="image description"
+                />
               </a>
               <figcaption class="absolute px-4 text-md text-white bottom-6">
-                  <p>{lastAlbum.title}</p>
-                  <p>{lastAlbum.date}</p>
+                <p>{lastAlbum.title}</p>
+                <p>{lastAlbum.date}</p>
               </figcaption>
             </figure>
-
           )}
         </div>
       </div>
@@ -334,12 +348,21 @@ function Artist() {
             <h2 className={styles.artistName}>
               {artistInformation && artistInformation.name}
             </h2>
-              {isFollowed ? (<Button gradientDuoTone="purpleToBlue"
-                                onClick={() => handleFollow(mbid)}
-                              ><RxCheck /> Followed</Button>) 
-                              : <Button gradientDuoTone="purpleToBlue"
-                              onClick={() => handleFollow(mbid)}
-                            >Follow</Button>}
+            {isFollowed ? (
+              <Button
+                gradientDuoTone="purpleToBlue"
+                onClick={() => handleFollow(mbid)}
+              >
+                <RxCheck /> Followed
+              </Button>
+            ) : (
+              <Button
+                gradientDuoTone="purpleToBlue"
+                onClick={() => handleFollow(mbid)}
+              >
+                Follow
+              </Button>
+            )}
           </div>
 
           <p className={styles.artistDescription}>
