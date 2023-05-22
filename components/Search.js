@@ -2,6 +2,9 @@ import styles from "../styles/Search.module.css";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import Link from 'next/link';
+import { Button } from "flowbite-react";
+import { RxCheck } from "react-icons/rx";
 
 function Search() {
   const { name } = useParams();
@@ -87,18 +90,19 @@ function Search() {
     return (
       <div className={styles.artistContainer} key={i}>
         <div>
-          <a href={`/artist/${data.mbid}`}>{data.name}</a>
+          <Link  href={`/artist/${data.mbid}`}><span className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">{data.name}</span></Link> • {data.date}
         </div>
         <div>
           <p>{data.disambiguation}</p>
         </div>
         <div>
-          <button
-            className={styles.buttonFollow}
+        {isFollowed ? (
+        <Button gradientDuoTone="purpleToBlue" size="xs"
             onClick={() => handleFollow(mbid)}
-          >
-            {isFollowed ? "✅Followed" : "Follow"}
-          </button>
+          ><RxCheck /> Followed</Button>) 
+          : <Button gradientDuoTone="purpleToBlue"
+          onClick={() => handleFollow(mbid)}
+        >Follow</Button>}
         </div>
       </div>
     );

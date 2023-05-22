@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["coverartarchive.org"],
+    domains: ["coverartarchive.org", "assets.fanart.tv"],
   },
 };
 
