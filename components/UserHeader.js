@@ -9,8 +9,10 @@ import { TextField } from "@material-ui/core";
 import { useRouter } from "next/router";
 import { Dropdown, Navbar, Avatar, Button, Modal, Label,TextInput, Checkbox, Radio } from "flowbite-react";
 import LastFmModal from "./LastFmModal";
+import Profile from './Profile'
 import { AiOutlineHome, AiFillCalendar } from "react-icons/ai";
 import { logout } from "../reducers/user";
+import { deleteProfile } from "../reducers/profile";
 
 
 
@@ -58,6 +60,13 @@ function UserHeader() {
         }
     };
 
+    const handleLogOut = () => {
+        dispatch(logout())
+        dispatch(deleteProfile())
+        router.push("/home");
+
+    }
+
   return (
     <Navbar
       className="bg-white border-gray-200  items-center w-full dark:bg-gray-900"
@@ -97,7 +106,7 @@ function UserHeader() {
             Settings
           </Dropdown.Item>
           <Dropdown.Divider />
-          <Dropdown.Item onClick={() => {dispatch(logout())}}>
+          <Dropdown.Item onClick={() => {handleLogOut()}}>
             Sign out
           </Dropdown.Item>
         </Dropdown> 

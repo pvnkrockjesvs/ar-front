@@ -12,38 +12,55 @@
 }
 
 .leftPart {
-    height: 90%;
+    height: 70%;
     width: 15%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     border-radius: 10px;
-    margin-left: 3rem;
+    margin-left: 15rem;
     /*border: 2px solid gray;*/
     background-color: #ffffff;
     box-shadow: 0 0 60px 5px rgba(0, 0, 0, 0.25);
     color: #0d47a1;
 }
+
+.artistListContainer {
+    height: 100%;
+    width: 100%;
+}
+
+.artistListContainer h1 {
+    font-weight: bold;
+    text-align: center;
+    margin: 1rem
+}
+
 .artistList {
     list-style: none;
     height: 50%;
-    width: 100%;
+    width: 60%;
     overflow: hidden;
     overflow-y: scroll;
-    scroll-behavior: smooth;
     background-color: #d9e3f0;
     border-radius: 10px;
+    margin: auto;
 }
 
+.artistName {
+    font-size: 0.7rem;
+    text-align: left;
+    margin-left: 1rem
+}
 .tableContainer {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 90%;
-    width: 80%;
-    margin-right: 2rem;
+    height: 70%;
+    width: 60%;
+    margin-right: 15rem;
     margin-left: 2rem;
 }
 
@@ -65,14 +82,12 @@
 .tableWrapper {
     width: 100%;
     height: 85%;
-    overflow:hidden;
     overflow-y: scroll;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    /*background-color: rgb(219, 219, 219);*/
     background-color: #ffffff;
     box-shadow: 0 0 60px 5px rgba(0, 0, 0, 0.25);
-    /*border: 2px solid gray;*/
+    position: relative
     
 }
 
@@ -81,10 +96,10 @@
 }
 
 .textHeader {
-    top: 0;
     background-color: #0d47a1;
     color: #fff;
-    position: sticky
+    position: sticky;
+    text-align: left;
 }
 .iconButton {
     block-size: 30px;
@@ -99,20 +114,44 @@
 }
 
 .tableData {
-    border: 2px solid #f2f4f6;
+    border: 3px solid #f2f4f6;
     font-weight: bold;
     font-size: 1rem;
+    border-left: none;
+    border-right: none;
+    color: #0d47a1;
+    max-height: 3rem;
+    min-height: 3rem;
+    margin-left: 2rem
 }
 
 .table {
-    /*border-collapse: collapse;*/
     width: 100%;
     height: 100%;
     border-collapse: collapse;
-    /*background-color: aquamarine;*/
 }
 
 .textBody {
     overflow-y: scroll;
+}
+
+.calendarErrorContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.calendarErrorMessage {
+    font-family: BlinkMacSystemFont;
+    font-weight: bold;
+    font-size: 3rem;
+    color: #0d47a1;
+    text-align: center;
+    margin: 3rem
 }
 

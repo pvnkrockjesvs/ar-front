@@ -15,14 +15,15 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import LoaderMusic from "./LoaderMusic";
 
 function Calendar() {
 
     const dates = ['2023-05-26', '2023-05-21', '2023-05-11', '2023-04-19', '2023-03-25', '2023-04-23', '2023-05-23', '2023-04-05', '2023-04-12', '2023-04-07', '2023-04-10',
                    '2023-05-28', '2023-05-12', '2023-05-02', '2023-05-05', '2023-05-09', '2023-05-10', '2023-05-17', '2023-04-29', '2023-04-15', '2023-04-27', '2023-04-28']
 
-    const profile = useSelector((state) => state.profile.value);
     const user = useSelector((state) => state.user.value)
+    const profile = useSelector((state) => state.profile.value)
 
     const [artistList, setArtistList] = useState([])
     const [recentReleases, setRecentReleases] = useState([])
@@ -30,6 +31,7 @@ function Calendar() {
     const [next, setNext] = useState(1)
     const [startWeek, setStartWeek] = useState(new Date())
     const [endWeek, setEndWeek] = useState()
+    const [nbSearch, setNbSearch] = useState(0)
 
     
     // https://askjavascript.com/how-to-get-first-and-last-day-of-the-current-week-in-javascript/
@@ -59,96 +61,28 @@ function Calendar() {
         setNext(next + 1)
     }
     
-    // Research Example
-    //https://musicbrainz.org/ws/2/release?artist=494e8d09-f85b-4543-892f-a5096aed1cd4&fmt=json&inc=release-groups&type=album|ep|single&limit=100&offset=300
-    /*
-    
-    let artistList = [
-        {
-            name: 'John Williams-1',
-            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
-        },
-        {
-            name: 'John Williams-2',
-            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
-        },
-        {
-            name: 'John Williams-3',
-            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
-        },
-        {
-            name: 'John Williams-4',
-            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
-        },
-        {
-            name: 'John Williams-5',
-            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
-        },
-        {
-            name: 'John Williams-6',
-            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
-        },
-        {
-            name: 'John Williams-7',
-            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
-        },
-        {
-            name: 'John Williams-8',
-            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
-        },
-        {
-            name: 'John Williams-9',
-            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
-        },
-        {
-            name: 'John Williams-10',
-            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
-        },
-        {
-            name: 'John Williams-11',
-            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
-        },
-        {
-            name: 'John Williams-12',
-            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
-        },
-        {
-            name: 'John Williams-13',
-            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
-        },
-        {
-            name: 'John Williams-14',
-            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
-        },
-        {
-            name: 'John Williams-15',
-            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
-        },
-    ]
-    
-    let types = ['album', 'single']
-    */
-  
     // For each artist, search for releases that are associated with
     // types from the user profiles
+    
     const getRecentReleases = async () =>{
         const releaseStore = []
+        let nbFetches = 0
         let types = profile[0].releaseTypes
+        //let types = ['album', 'single']
         for (let artist of artistList){
-            console.log(artist.name)
             for (let type of types) {
                 const resp = await fetch(`http://localhost:3000/artists/${artist.mbid}/${type}`)
                 const data = await resp.json();
                 if (data.result) {
                     // Remove releases that have only year information in their date key
-                    const filtredData = data.releases.filter(release => release.date.split('-').length >= 2)
+                    const filtredData = data.releases.filter(release => (release.date && release.date.split('-').length >= 2))
                     if (filtredData){
                         // add the artist name and the release type to the data
                         const completedData = filtredData.map((ele) => (
                             {...ele,
                                 artist: artist.name,
                                 releaseType: type,
-                                date: dates[Math.floor(Math.random() * 22)]
+                                //date: dates[Math.floor(Math.random() * 22)]
                             }
                         ))
                         releaseStore.push(...completedData)
@@ -156,37 +90,46 @@ function Calendar() {
                 }  else {
                     console.log(`No release of ${type} for artist ${artist.name} was found`)
                 }
+                nbFetches = nbFetches + 1
+                
             }
+
         }
         // sort the release data by date
         releaseStore = releaseStore.sort(( a, b ) => {
             return new Date(a.date) - new Date(b.date)
         })
-        setRecentReleases([...recentReleases, ...releaseStore])  
+        console.log
+        setRecentReleases([...recentReleases, ...releaseStore])
+        setNbSearch(nbFetches)
     }
     
+        
     useEffect(() => {
         if (!user.token) {
             return;
         }
-        
+        const weekStarts = computeWeekStarts()
+        setStartWeek(weekStarts[next + 1])
+        setEndWeek(weekStarts[next])        
         fetch(`http://localhost:3000/profiles/myartists/${user.token}`)
         .then((response) => response.json())
         .then((data) => {
             if (data.result) {
-                //console.log(data.artists)
-                setArtistList(data.artists)
+                let sortedArtists = data.artists.sort( (a, b) => { return a.name.localeCompare(b.name)})
+                setArtistList(sortedArtists)
             }
         })
         .catch((error) => {
             console.error('Fetch error :' , error)
-        })
-        
-        getRecentReleases()
-        const weekStarts = computeWeekStarts()
-        setStartWeek(weekStarts[next + 1])
-        setEndWeek(weekStarts[next])
+        })        
+                
     },[])
+
+    useEffect(() => {
+        getRecentReleases()
+    }, [artistList])
+
 
     // update -- display the next or previous week
     useEffect(() => {
@@ -197,10 +140,10 @@ function Calendar() {
 
 
     let weekReleases = []
-    console.log()
     if (recentReleases.length != 0){
-        weekReleases = recentReleases.map((data, index) => {
-            if ( (new Date(data.date) >= startWeek) && (new Date(data.date) < endWeek) ) {
+        let filtredWeekReleases = recentReleases.filter(data => (new Date(data.date) >= startWeek) && (new Date(data.date) < endWeek) )
+        if (filtredWeekReleases.length != 0){
+            weekReleases = filtredWeekReleases.map((data, index) => {
                 let date = data.date.split('-').reverse().join('-')
                 let releaseStyle = {}
                 if (data.releaseType === 'album'){
@@ -217,25 +160,27 @@ function Calendar() {
                     title={data.title}
                     type={data.releaseType}
                     date={date}/>
-            }
-        })
+            })
+        }
     }
 
     let myArtistList = []
     if (artistList) {
         myArtistList = artistList.map((artist, i) => {
             const link = `/artist/${artist.mbid}`
-            return (<li key={i} className={styles.artist}>{artist.name}</li>
+            return (<li key={i} className={styles.artistName}>{artist.name}</li>
             )
         })
     }
+
+    let searchEnded = (nbSearch === (artistList.length *  profile[0].releaseTypes.length))
 
     return (
         <div className={styles.calendarContainer}>
             <div className={styles.leftPart}>
                 <div className={styles.artistListContainer}>
                     <h1> 
-                        {user.username.charAt(user.username.length-1) === 's' ? user.username+"' releases" : user.username+"'s releases"}
+                        {user.username}'s artist list
                     </h1>
                     <ul className={styles.artistList} >
                         {myArtistList}
@@ -249,7 +194,7 @@ function Calendar() {
                         <FontAwesomeIcon className={styles.iconButton} icon={faArrowLeft} style={{color: "#ff8080"}} onClick={() => handleLeftClick()}/>
                     ):
                     (
-                        <FontAwesomeIcon className={styles.iconButton} icon={faArrowLeft} style={{color: "#000000"}}/>
+                        <FontAwesomeIcon className={styles.iconButton} icon={faArrowLeft} style={{color: "#ffcdd2"}}/>
                     )}
                     <p className={styles.weekName}>
                         {startWeek.getUTCDate() > 9 ? startWeek.getUTCDate() : '0'+(startWeek.getUTCDate())}-
@@ -260,29 +205,35 @@ function Calendar() {
                     ( <FontAwesomeIcon className={styles.iconButton} icon={faArrowRight} style={{color: "#ff8080"}} onClick={() => handleRightClick()}/>
                     ):
                     (
-                        <FontAwesomeIcon className={styles.iconButton} icon={faArrowRight} style={{color: "#000000"}}/>
+                        <FontAwesomeIcon className={styles.iconButton} icon={faArrowRight} style={{color: "#ffcdd2"}}/>
                     )}
                 </div>
                 <div className={styles.tableWrapper}>
-                    {(weekReleases.length !== 0) ? 
+                    {!searchEnded ? 
+                    (
+                        <div className={styles.calendarErrorContainer}>
+                            <p className={styles.calendarErrorMessage}> Searching for possible recent releases</p>
+                            <LoaderMusic />
+                        </div>
+                    ) : ( weekReleases.length != 0) ? 
                     (
                         <table className={styles.table}>
                             <thead className={styles.tableHead}>
                                 <tr>
-                                    <th className={styles.textHeader} style={{'width': '20%', 'textAlign': 'center'}}>ARTIST</th>
-                                    <th className={styles.textHeader} style={{'width': '60%'}}>TITLE</th>
-                                    <th className={styles.textHeader} style={{'width': '10%'}}>RELEASE TYPE</th>
-                                    <th className={styles.textHeader} style={{'width': '10%'}}>DRELEASE DATE</th>
+                                    <th className={styles.textHeader} style={{'width': '20%'}}>ARTIST</th>
+                                    <th className={styles.textHeader} style={{'width': '50%'}}>TITLE</th>
+                                    <th className={styles.textHeader} style={{'width': '15%'}}>RELEASE TYPE</th>
+                                    <th className={styles.textHeader} style={{'width': '15%'}}>DRELEASE DATE</th>
                                 </tr>
                             </thead>
                             <tbody className={styles.textBody}>
                                 {weekReleases}
                             </tbody>
                         </table>
-                    ):
+                    ) :  
                     (
-                        <div className={styles.calendarError}>
-                            <p>Sorry</p>
+                        <div className={styles.calendarErrorContainer}>
+                            <p className={styles.calendarErrorMessage}> No release found for this week</p>
                         </div>
                     )}
                 </div>

@@ -97,10 +97,9 @@ function Profile(props) {
             const formFields = ['newsletter', 'releaseTypes','genres'];
             formFields.forEach(field => {
                 console.log('FIELD:', field, profile[0][field])
-
                 if (field === 'genres'){
-                    for(let genre of profile[0].genres){
-                        append({'name': genre})
+                    for( let i = 0; i < profile[0].genres.length; i++ ){
+                        setValue(`genres.${i}.genre`, profile[0].genres[i])
                     }
                 } else {
                     setValue(field, profile[0][field].toString())
