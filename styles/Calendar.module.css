@@ -40,7 +40,7 @@
 .artistList {
     list-style: none;
     height: 50%;
-    width: 60%;
+    width: 90%;
     overflow: hidden;
     overflow-y: scroll;
     background-color: #d9e3f0;
@@ -49,10 +49,11 @@
 }
 
 .artistName {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     text-align: left;
     margin-left: 1rem
 }
+
 .tableContainer {
     display: flex;
     flex-direction: column;
@@ -91,16 +92,6 @@
     
 }
 
-.tableHead {
-    position: sticky;
-}
-
-.textHeader {
-    background-color: #0d47a1;
-    color: #fff;
-    position: sticky;
-    text-align: left;
-}
 .iconButton {
     block-size: 30px;
     margin-left: 2rem;
@@ -113,26 +104,18 @@
     font-size: 3rem;
 }
 
-.tableData {
-    border: 3px solid #f2f4f6;
-    font-weight: bold;
+.calendarRow {
+    display: grid;
+    grid-template-columns: 2fr 6fr 2fr 2fr;
+    border-bottom: 3px solid white;
+    justify-content: center;
+    align-items: center;
+    height: 3rem;
+}
+
+.calendarCell   {
+    margin-left: 1rem;
     font-size: 1rem;
-    border-left: none;
-    border-right: none;
-    color: #0d47a1;
-    max-height: 3rem;
-    min-height: 3rem;
-    margin-left: 2rem
-}
-
-.table {
-    width: 100%;
-    height: 100%;
-    border-collapse: collapse;
-}
-
-.textBody {
-    overflow-y: scroll;
 }
 
 .calendarErrorContainer {

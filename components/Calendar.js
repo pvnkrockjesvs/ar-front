@@ -71,6 +71,7 @@ function Calendar() {
         //let types = ['album', 'single']
         for (let artist of artistList){
             for (let type of types) {
+                type= 'album'
                 const resp = await fetch(`http://localhost:3000/artists/${artist.mbid}/${type}`)
                 const data = await resp.json();
                 if (data.result) {
@@ -82,7 +83,7 @@ function Calendar() {
                             {...ele,
                                 artist: artist.name,
                                 releaseType: type,
-                                //date: dates[Math.floor(Math.random() * 22)]
+                                date: dates[Math.floor(Math.random() * 22)]
                             }
                         ))
                         releaseStore.push(...completedData)
@@ -147,11 +148,11 @@ function Calendar() {
                 let date = data.date.split('-').reverse().join('-')
                 let releaseStyle = {}
                 if (data.releaseType === 'album'){
-                    releaseStyle = { 'backgroundColor': '#b3e5d1' }
+                    releaseStyle = { 'backgroundColor': '#b3e5d1', 'color' : '#0d47a1' }
                 } else if ( data.releaseType === 'single') {
-                    releaseStyle = { 'backgroundColor': '#D9E3F0' }
+                    releaseStyle = { 'backgroundColor': '#D9E3F0', 'color' : '#0d47a1' }
                 } else {
-                    releaseStyle = { 'backgroundColor': '#FFCDD2' }
+                    releaseStyle = { 'backgroundColor': '#FFCDD2', 'color' : '#0d47a1' }
                 }
                 return <CalendarRow
                     style={releaseStyle}
@@ -217,19 +218,16 @@ function Calendar() {
                         </div>
                     ) : ( weekReleases.length != 0) ? 
                     (
-                        <table className={styles.table}>
-                            <thead className={styles.tableHead}>
-                                <tr>
-                                    <th className={styles.textHeader} style={{'width': '20%'}}>ARTIST</th>
-                                    <th className={styles.textHeader} style={{'width': '50%'}}>TITLE</th>
-                                    <th className={styles.textHeader} style={{'width': '15%'}}>RELEASE TYPE</th>
-                                    <th className={styles.textHeader} style={{'width': '15%'}}>DRELEASE DATE</th>
-                                </tr>
-                            </thead>
-                            <tbody className={styles.textBody}>
-                                {weekReleases}
-                            </tbody>
-                        </table>
+                        <div>
+                            <CalendarRow
+                                style={ {'backgroundColor': '#0d47a1', 'color': '#fff', 'fontWeight' : 'bold', 'top' : '0', 'position' : 'sticky'}}
+                                key={0}
+                                artist={'ARTIST'}
+                                title={'TITLE'}
+                                type={'RELEASE TYPE'}
+                                date={'RELEASE DATE'}/>
+                            {weekReleases}
+                        </div>
                     ) :  
                     (
                         <div className={styles.calendarErrorContainer}>

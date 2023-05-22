@@ -2,12 +2,12 @@ import styles from '../styles/Calendar.module.css'
 
 function CalendarRow (props) {
     return (
-        <tr className={styles.tableRow}>
-            <td style={props.style} className={styles.tableData}>{props.artist}</td>
-            <td style={props.style} className={styles.tableData}>{props.title}</td>
-            <td style={props.style} className={styles.tableData}>{props.type}</td>
-            <td style={props.style} className={styles.tableData}>{props.date}</td>
-        </tr>
+        <div style={props.style} className={styles.calendarRow}>
+            <span className={styles.calendarCell}>{props.artist}</span>
+            <span className={styles.calendarCell}>{props.title}</span>
+            <span className={styles.calendarCell}>{props.type}</span>
+            <span className={styles.calendarCell}>{props.date}</span>
+        </div>
     )
 }
 
