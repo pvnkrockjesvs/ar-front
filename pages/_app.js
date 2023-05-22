@@ -9,19 +9,6 @@ import { persistStore, persistReducer } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import storage from "redux-persist/lib/storage";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import Release from "../components/Release";
-import Artist from "../components/Artist";
-import MyArtists from "../components/MyArtists";
-import Home from "../components/Home";
-import Search from "../components/Search";
-import Calendar from "../components/Calendar";
-
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Routes,
-} from "react-router-dom";
 
 const reducers = combineReducers({ user, allreleases, profile });
 const persistConfig = { key: "albumRelease", storage };
@@ -59,18 +46,7 @@ function App({ Component, pageProps }) {
         </Head>
         <Header />
 
-        <Router>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/release/:mbid" element={<Release />} />
-            <Route path="/artist/:mbid" element={<Artist />} />
-            <Route path="/myartists" element={<MyArtists />} />
-            <Route path="/search/:name" element={<Search />} />
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path="*" element={<NoMatch />} />
-          </Routes>
-        </Router>
+        <Component {...pageProps} />
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
       </PersistGate>

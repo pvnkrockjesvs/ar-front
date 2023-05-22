@@ -1,5 +1,5 @@
 import React from "react";
-import Release from "../components/Release";
+import Release from "../../components/Release";
 import Head from "next/head";
 
 function ReleasePage() {

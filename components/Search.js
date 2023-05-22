@@ -5,18 +5,19 @@ import { useParams } from "react-router-dom";
 import Link from 'next/link';
 import { Button } from "flowbite-react";
 import { RxCheck } from "react-icons/rx";
+import {useRouter} from "next/router";
 
 function Search() {
-  const { name } = useParams();
   const [isFollowed, setIsFollowed] = useState(false);
   const [searchResult, setSearchResult] = useState([]);
   const user = useSelector((state) => state.user.value);
   const profile = useSelector((state) => state.profile.value);
+  const router = useRouter()
 
   useEffect(() => {
     setTimeout(() => {
-      if (name) {
-        fetch(`http://localhost:3000/artists/search/${name}`)
+      if (router.query.name) {
+        fetch(`http://localhost:3000/artists/search/${router.query.name}`)
           .then((response) => response.json())
           .then((data) => {
             console.log(data.artists);

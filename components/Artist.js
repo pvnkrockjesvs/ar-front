@@ -14,6 +14,7 @@ import moment from "moment";
 import Link from 'next/link';
 import { Button } from "flowbite-react";
 import { RxGear, RxCheck } from "react-icons/rx";
+import {useRouter} from "next/router";
 
 
 
@@ -33,7 +34,7 @@ function Artist() {
   const user = useSelector((state) => state.user.value);
   const profile = useSelector((state) => state.profile.value);
   const [lastUrl, setLastUrl] = useState('')
-  const { mbid } = useParams();
+  const router = useRouter()
 
   //Fonction de conversion du temps total d'un album avec momentjs
   const calculTotalDuration = (totalTime) => {
@@ -52,7 +53,7 @@ function Artist() {
     dispatch(removeAllAlbums());
     //Fetch pour infos artist & albums
     setTimeout(() => {
-      fetch(`http://localhost:3000/artists/${mbid}`)
+      fetch(`http://localhost:3000/artists/${router.query.arid}`)
         .then((response) => response.json())
         .then((data) => {
           data && setArtistInformation(data.art);
@@ -61,7 +62,7 @@ function Artist() {
 
     //Fetch pour récupérer le last album
     setTimeout(() => {
-      fetch(`http://localhost:3000/artists/${mbid}/lastalbum`)
+      fetch(`http://localhost:3000/artists/${router.query.arid}/lastalbum`)
         .then((response) => response.json())
         .then((data) => {
           if (data) {
@@ -76,7 +77,7 @@ function Artist() {
 
     //Fetch pour récupérer les infos d'albums
     setTimeout(() => {
-      fetch(`http://localhost:3000/artists/${mbid}/album`)
+      fetch(`http://localhost:3000/artists/${router.query.arid}/album`)
         .then((response) => response.json())
         .then((data) => {
           data && dispatch(addAlbums(data.releases));
@@ -89,7 +90,7 @@ function Artist() {
 
     //Fetch pour récupérer les infos d'eps
     setTimeout(() => {
-      fetch(`http://localhost:3000/artists/${mbid}/ep`)
+      fetch(`http://localhost:3000/artists/${router.query.arid}/ep`)
         .then((response) => response.json())
         .then((data) => {
           data && dispatch(addEps(data.releases));
@@ -121,7 +122,7 @@ function Artist() {
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
-            data.artists.some((mbidArtist) => mbidArtist.mbid === mbid) &&
+            data.artists.some((mbidArtist) => mbidArtist.mbid === router.query.mbid) &&
               setIsFollowed(true);
           }
         })
@@ -296,7 +297,7 @@ function Artist() {
               <LoaderMusic />
             </div>
           ) : ( artistInformation.image ? (
-            <img class="h-auto max-w-md rounded-lg" src={artistInformation.image} alt="image description"/>
+            <img className="h-auto max-w-md rounded-lg" src={artistInformation.image} alt="image description"/>
             ) : <Image
             src={artistInformation.image}
             alt="Artist picture"
@@ -312,11 +313,11 @@ function Artist() {
               <LoaderMusic />
             </div>
           ) : (
-            <figure class="relative max-w-xs transition-all duration-300 cursor-pointer filter grayscale hover:grayscale-0">
+            <figure className="relative max-w-xs transition-all duration-300 cursor-pointer filter grayscale hover:grayscale-0">
               <a href={lastUrl}>
-                <img class="rounded-lg" src={lastAlbum.cover} alt="image description"/>
+                <img className="rounded-lg" src={lastAlbum.cover} alt="image description"/>
               </a>
-              <figcaption class="absolute px-4 text-md text-white bottom-6">
+              <figcaption className="absolute px-4 text-md text-white bottom-6">
                   <p>{lastAlbum.title}</p>
                   <p>{lastAlbum.date}</p>
               </figcaption>

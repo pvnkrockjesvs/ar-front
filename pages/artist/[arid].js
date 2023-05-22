@@ -1,5 +1,5 @@
 import React from "react";
-import Artist from "../components/Artist";
+import Artist from "../../components/Artist";
 import Head from "next/head";
 
 function ArtistPage() {

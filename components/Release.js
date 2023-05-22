@@ -5,6 +5,7 @@ import Image from "next/image";
 import Moment from 'react-moment';
 import LoaderMusic from "./LoaderMusic";
 import { Spinner,Table, Button } from "flowbite-react";
+import {useRouter} from "next/router";
 
 
 function Release() {
@@ -13,9 +14,10 @@ function Release() {
   const [cover, setCover] = useState(null);
   const [track, setTrack] = useState()
   const [trackLengthFormat, setTrackLengthFormat] = useState('mm:ss')
+  const router = useRouter()
 
   useEffect(() => {
-    fetch(`http://localhost:3000/releases/${mbid}`)
+    fetch(`http://localhost:3000/releases/${router.query.mbid}`)
     .then((response) => response.json())
     .then((data) => {
       setAlbum(data);
@@ -26,7 +28,7 @@ function Release() {
           setTrackLengthFormat("mm:ss")
         }
         return (
-          <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+          <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={i}>
             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
               {i+1} - {track.title}
             </Table.Cell>
@@ -48,9 +50,9 @@ function Release() {
       }))
     });   
 
-    fetch(`http://coverartarchive.org/release-group/${mbid}?fmt=json`)
+    fetch(`http://coverartarchive.org/release-group/${router.query.mbid}?fmt=json`)
     .then(response => response.json()).then((cover) => {
-      setCover(cover.images[0].image)
+      setCover(cover.images[0].thumbnails['500'])
     })
   }, [])
 
@@ -67,11 +69,11 @@ function Release() {
               <Spinner aria-label="Center-aligned spinner example" />
             </div>
             ) : (
-              <figure class="relative max-w-sm transition-all duration-300 cursor-pointer">
+              <figure className="relative max-w-sm transition-all duration-300 cursor-pointer">
               
-                <img class="rounded-lg" src={cover} alt="image description"/>
+                <img className="rounded-lg" src={cover} alt="image description"/>
               
-              <figcaption class="absolute px-4 text-md text-white bottom-6">
+              <figcaption className="absolute px-4 text-md text-white bottom-6">
                   <p>{album.title}</p>
                   <Moment format="MMMM DD YYYY">{album.date}</Moment>
               </figcaption>
@@ -104,12 +106,10 @@ function Release() {
               {track}           
             </div>
           </div> */}
-          <Table className="w-full" >
-            <Table.Head>
-              <Table.Body className="divide-y w-full">
-                {track}
-              </Table.Body>
-            </Table.Head>
+          <Table >
+            <Table.Body className="divide-y w-full">
+              {track}
+            </Table.Body>
           </Table>
         </div>
       </div>
