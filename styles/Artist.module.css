@@ -5,7 +5,7 @@
   align-items: center;
   overflow: auto;
   font-family: "Montserrat", sans-serif;
-  background: linear-gradient(45deg, #CDF0EA 0%, #B9EDDD 100%);
+  background: linear-gradient(45deg, #cdf0ea 0%, #b9eddd 100%);
   background-size: 200% 200%;
   animation: background-animation 6s ease infinite;
 }
@@ -50,9 +50,8 @@
   -moz-box-shadow: 0 0 9px #878787;
   -webkit-box-shadow: 0 0 9px #878787;
   box-shadow: 0 0 9px #878787;
-  background-color: #F8F6F4;
-    font-size: small;
-
+  background-color: #f8f6f4;
+  font-size: small;
 }
 @media (max-width: 620px) {
   .leftContainer {
@@ -79,19 +78,17 @@
 }
 .loaderDiv1 {
   display: flex;
-  justify-content: center;
+
   align-items: center;
   width: 300px;
   height: 300px;
-  border: 1px solid #001c4f;
 }
 .loaderDiv2 {
   display: flex;
-  justify-content: center;
+
   align-items: center;
   width: 180px;
   height: 180px;
-  border: 1px solid #001c4f;
 }
 
 @media (max-width: 600px) {
@@ -121,8 +118,8 @@
   -moz-box-shadow: 0 0 9px #878787;
   -webkit-box-shadow: 0 0 9px #878787;
   box-shadow: 0 0 9px #878787;
-  background-color: #F8F6F4;
-  height: 280vh
+  background-color: #f8f6f4;
+  height: 280vh;
 }
 
 @media (max-width: 620px) {
@@ -194,7 +191,7 @@
   -moz-box-shadow: 0 0 9px #878787;
   -webkit-box-shadow: 0 0 9px #878787;
   box-shadow: 0 0 9px #878787;
-  background-color: #F8F6F4;
+  background-color: #f8f6f4;
 }
 @media (max-width: 620px) {
   .discographyContainer {
