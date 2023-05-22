@@ -15,17 +15,16 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import Link from 'next/link';
 
 function Calendar() {
 
     const dates = ['2023-05-26', '2023-05-21', '2023-05-11', '2023-04-19', '2023-03-25', '2023-04-23', '2023-05-23', '2023-04-05', '2023-04-12', '2023-04-07', '2023-04-10',
                    '2023-05-28', '2023-05-12', '2023-05-02', '2023-05-05', '2023-05-09', '2023-05-10', '2023-05-17', '2023-04-29', '2023-04-15', '2023-04-27', '2023-04-28']
+
     const profile = useSelector((state) => state.profile.value);
-    //console.log(profile[0].releaseTypes)
     const user = useSelector((state) => state.user.value)
 
-    //const [artistList, setArtistList] = useState([])
+    const [artistList, setArtistList] = useState([])
     const [recentReleases, setRecentReleases] = useState([])
     // to decide which week
     const [next, setNext] = useState(1)
@@ -62,6 +61,7 @@ function Calendar() {
     
     // Research Example
     //https://musicbrainz.org/ws/2/release?artist=494e8d09-f85b-4543-892f-a5096aed1cd4&fmt=json&inc=release-groups&type=album|ep|single&limit=100&offset=300
+    /*
     
     let artistList = [
         {
@@ -127,13 +127,13 @@ function Calendar() {
     ]
     
     let types = ['album', 'single']
-    
+    */
   
     // For each artist, search for releases that are associated with
     // types from the user profiles
     const getRecentReleases = async () =>{
         const releaseStore = []
-        //let types = profile[0].releaseTypes
+        let types = profile[0].releaseTypes
         for (let artist of artistList){
             console.log(artist.name)
             for (let type of types) {
@@ -153,6 +153,8 @@ function Calendar() {
                         ))
                         releaseStore.push(...completedData)
                     }
+                }  else {
+                    console.log(`No release of ${type} for artist ${artist.name} was found`)
                 }
             }
         }
@@ -167,7 +169,7 @@ function Calendar() {
         if (!user.token) {
             return;
         }
-        /*
+        
         fetch(`http://localhost:3000/profiles/myartists/${user.token}`)
         .then((response) => response.json())
         .then((data) => {
@@ -177,9 +179,9 @@ function Calendar() {
             }
         })
         .catch((error) => {
-            console.error("Error fetching data 1:", error)
+            console.error('Fetch error :' , error)
         })
-        */
+        
         getRecentReleases()
         const weekStarts = computeWeekStarts()
         setStartWeek(weekStarts[next + 1])
@@ -195,6 +197,7 @@ function Calendar() {
 
 
     let weekReleases = []
+    console.log()
     if (recentReleases.length != 0){
         weekReleases = recentReleases.map((data, index) => {
             if ( (new Date(data.date) >= startWeek) && (new Date(data.date) < endWeek) ) {
@@ -278,7 +281,9 @@ function Calendar() {
                         </table>
                     ):
                     (
-                        <p>Sorry</p>
+                        <div className={styles.calendarError}>
+                            <p>Sorry</p>
+                        </div>
                     )}
                 </div>
             </div>

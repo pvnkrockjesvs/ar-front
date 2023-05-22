@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 function ConnectionHeader(props) {
-  console.log('I am in the Connection Header.......................')
 
   const router = useRouter();
   const [value, setValue] = useState("");
