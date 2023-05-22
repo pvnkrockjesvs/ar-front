@@ -1,15 +1,17 @@
 import styles from '../styles/Profile.module.css'
-import React from "react";
+import React,  { useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux'
 import { setProfile } from '../reducers/user';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 
-  
 function Profile(props) {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.value)
-    const { register, handleSubmit, reset, watch, control } = useForm()
-    const { fields, append, remove} = useFieldArray({
+    const profile = user.isProfileCreated ? useSelector((state) => state.profile.value) : null
+    const { register, handleSubmit, setValue, reset, watch, control } = useForm()
+    const { fields, push, append, remove} = useFieldArray({
             control,
             name: 'genres'}
         )
@@ -30,7 +32,6 @@ function Profile(props) {
 
         return profileData
     }
-
 
     const createProfile = (data) => {
         const profileData = updateDataProfile(data)
@@ -56,12 +57,75 @@ function Profile(props) {
         })
     }
 
+    const updateProfile = (data) => {
+        const profileData = updateDataProfile(data)
+        // Check and extract the usefull data
+        fetch("http://localhost:3000/profiles/update", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: user.token,
+                releaseTypes: profileData.releaseTypes,
+                newsletter: profileData.newsletter,
+                genres: profileData.genres
+            }),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.result) {
+                dispatch(setProfile())
+                reset()
+                props.closeModal()
+            }
+        })
+    }
+
+    const onSubmit = (data) => {
+        if (profile){
+            updateProfile(data)
+        } else {
+            createProfile(data)
+        }
+    }
+
     const emailNotification = watch("emailNotification");
+
+    useEffect(() => {
+        // Check if the profile is already created, then we are in the
+        // update mode, otherwise we are in the create mode
+        if (user.isProfileCreated) {
+            const formFields = ['newsletter', 'releaseTypes','genres'];
+            formFields.forEach(field => {
+                console.log('FIELD:', field, profile[0][field])
+
+                if (field === 'genres'){
+                    for(let genre of profile[0].genres){
+                        append({'name': genre})
+                    }
+                } else {
+                    setValue(field, profile[0][field].toString())
+                }
+                console.log('GENRES:', fields)
+
+            });
+            if (profile[0].newsletter != 0){
+                setValue('emailNotification', true)
+            } else {
+                setValue('emailNotification', false)
+            }
+        }
+    }, [])
 
     return (
         <div className={styles.notifyContainer}>
-            <p className={styles.title}>Create your profile</p>
-            <form autoComplete='off' className={styles.formContainer} onSubmit={handleSubmit(createProfile)}>
+            { user.isProfileCreated ? 
+            (
+                <p className={styles.title}>Update your profile</p>
+            ):
+            (
+                <p className={styles.title}>Create your profile</p>
+            )}
+            <form autoComplete='off' className={styles.formContainer} onSubmit={handleSubmit(onSubmit)}>
                 <div  className={styles.itemType}>
                     <p className={styles.itemTitle}>Do you wante to be notified by email?</p>
                     <label className={styles.labelName} htmlFor="field-notify">
@@ -154,19 +218,23 @@ function Profile(props) {
                         />
                     </label>
                 </div>
-                <div>
-                    <span className={styles.itemTitle}> What music genres do you prefer (maximum 5 genres)?</span>
-                    {(fields.length < 5) && <button className={styles.addGenreButton} type="button" onClick={() => append('')}>+</button>}
+                <div className={styles.itemType}>
+                    <div className={styles.genreItem}>
+                        <span className={styles.itemTitle}> What music genres do you prefer (maximum 5 genres)?</span>
+                        {(fields.length < 5) &&
+                            <FontAwesomeIcon className={styles.addGenreButton} icon={faCirclePlus} style={{color: "#ff8080",}} onClick={() => append('')} />
+                        }
+                    </div>
                     <div>
-                    {fields.map((genre, index) => {
-                        return (
-                            <input
-                                className={styles.genreInput}
-                                key={genre.id}
-                                {...register(`genres.${index}.genre`)}
-                            />
-                        )
-                    })}
+                        {fields.map((genre, index) => {
+                            return (
+                                <input
+                                    className={styles.genreInput}
+                                    key={genre.id}
+                                    {...register(`genres.${index}.genre`)}
+                                />
+                            )
+                        })}
                     </div>
                 </div>
                 <button className={styles.saveButton} type="submit"> Save </button>

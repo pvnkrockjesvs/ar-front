@@ -20,6 +20,17 @@ function Calendar() {
 
     const dates = ['2023-05-26', '2023-05-21', '2023-05-11', '2023-04-19', '2023-03-25', '2023-04-23', '2023-05-23', '2023-04-05', '2023-04-12', '2023-04-07', '2023-04-10',
                    '2023-05-28', '2023-05-12', '2023-05-02', '2023-05-05', '2023-05-09', '2023-05-10', '2023-05-17', '2023-04-29', '2023-04-15', '2023-04-27', '2023-04-28']
+
+    const profile = useSelector((state) => state.profile.value);
+    const user = useSelector((state) => state.user.value)
+
+    const [artistList, setArtistList] = useState([])
+    const [recentReleases, setRecentReleases] = useState([])
+    // to decide which week
+    const [next, setNext] = useState(1)
+    const [startWeek, setStartWeek] = useState(new Date())
+    const [endWeek, setEndWeek] = useState()
+
     
     // https://askjavascript.com/how-to-get-first-and-last-day-of-the-current-week-in-javascript/
     const computeWeekStarts = () => {
@@ -39,16 +50,7 @@ function Calendar() {
         }
         return weeksStart
     }
-    
-    
-    const user = useSelector((state) => state.user.value)
-
-    const [recentReleases, setRecentReleases] = useState([])
-    // to decide which week
-    const [next, setNext] = useState(1)
-    const [startWeek, setStartWeek] = useState(new Date())
-    const [endWeek, setEndWeek] = useState()
-
+        
     const handleRightClick = () => {
         setNext(next - 1)
     }
@@ -59,28 +61,81 @@ function Calendar() {
     
     // Research Example
     //https://musicbrainz.org/ws/2/release?artist=494e8d09-f85b-4543-892f-a5096aed1cd4&fmt=json&inc=release-groups&type=album|ep|single&limit=100&offset=300
-
-    let artistsList = [
+    /*
+    
+    let artistList = [
         {
             name: 'John Williams-1',
+            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
+        },
+        {
+            name: 'John Williams-2',
             mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
         },
         {
             name: 'John Williams-3',
             mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
         },
+        {
+            name: 'John Williams-4',
+            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
+        },
+        {
+            name: 'John Williams-5',
+            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
+        },
+        {
+            name: 'John Williams-6',
+            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
+        },
+        {
+            name: 'John Williams-7',
+            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
+        },
+        {
+            name: 'John Williams-8',
+            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
+        },
+        {
+            name: 'John Williams-9',
+            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
+        },
+        {
+            name: 'John Williams-10',
+            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
+        },
+        {
+            name: 'John Williams-11',
+            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
+        },
+        {
+            name: 'John Williams-12',
+            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
+        },
+        {
+            name: 'John Williams-13',
+            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
+        },
+        {
+            name: 'John Williams-14',
+            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
+        },
+        {
+            name: 'John Williams-15',
+            mbid: '53b106e7-0cc6-42cc-ac95-ed8d30a3a98e'
+        },
     ]
-
+    
     let types = ['album', 'single']
-
-
-    
-    
+    */
+  
     // For each artist, search for releases that are associated with
     // types from the user profiles
     const getRecentReleases = async () =>{
         const releaseStore = []
-        for (let artist of artistsList){
+        let types = profile[0].releaseTypes
+        for (let artist of artistList){
+            console.log(artist.name)
             for (let type of types) {
                 const resp = await fetch(`http://localhost:3000/artists/${artist.mbid}/${type}`)
                 const data = await resp.json();
@@ -98,9 +153,15 @@ function Calendar() {
                         ))
                         releaseStore.push(...completedData)
                     }
+                }  else {
+                    console.log(`No release of ${type} for artist ${artist.name} was found`)
                 }
             }
         }
+        // sort the release data by date
+        releaseStore = releaseStore.sort(( a, b ) => {
+            return new Date(a.date) - new Date(b.date)
+        })
         setRecentReleases([...recentReleases, ...releaseStore])  
     }
     
@@ -108,6 +169,19 @@ function Calendar() {
         if (!user.token) {
             return;
         }
+        
+        fetch(`http://localhost:3000/profiles/myartists/${user.token}`)
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.result) {
+                //console.log(data.artists)
+                setArtistList(data.artists)
+            }
+        })
+        .catch((error) => {
+            console.error('Fetch error :' , error)
+        })
+        
         getRecentReleases()
         const weekStarts = computeWeekStarts()
         setStartWeek(weekStarts[next + 1])
@@ -123,11 +197,21 @@ function Calendar() {
 
 
     let weekReleases = []
+    console.log()
     if (recentReleases.length != 0){
         weekReleases = recentReleases.map((data, index) => {
             if ( (new Date(data.date) >= startWeek) && (new Date(data.date) < endWeek) ) {
                 let date = data.date.split('-').reverse().join('-')
+                let releaseStyle = {}
+                if (data.releaseType === 'album'){
+                    releaseStyle = { 'backgroundColor': '#b3e5d1' }
+                } else if ( data.releaseType === 'single') {
+                    releaseStyle = { 'backgroundColor': '#D9E3F0' }
+                } else {
+                    releaseStyle = { 'backgroundColor': '#FFCDD2' }
+                }
                 return <CalendarRow
+                    style={releaseStyle}
                     key={index}
                     artist={data.artist.charAt(0).toUpperCase() + data.artist.slice(1)}
                     title={data.title}
@@ -136,9 +220,27 @@ function Calendar() {
             }
         })
     }
+
+    let myArtistList = []
+    if (artistList) {
+        myArtistList = artistList.map((artist, i) => {
+            const link = `/artist/${artist.mbid}`
+            return (<li key={i} className={styles.artist}>{artist.name}</li>
+            )
+        })
+    }
+
     return (
         <div className={styles.calendarContainer}>
             <div className={styles.leftPart}>
+                <div className={styles.artistListContainer}>
+                    <h1> 
+                        {user.username.charAt(user.username.length-1) === 's' ? user.username+"' releases" : user.username+"'s releases"}
+                    </h1>
+                    <ul className={styles.artistList} >
+                        {myArtistList}
+                    </ul>
+                </div>
             </div>
             <div className={styles.tableContainer}>
                 <div className={styles.tableHeader}>
@@ -167,10 +269,10 @@ function Calendar() {
                         <table className={styles.table}>
                             <thead className={styles.tableHead}>
                                 <tr>
-                                    <th className={styles.textHeader}>Artist</th>
-                                    <th className={styles.textHeader}>Title</th>
-                                    <th className={styles.textHeader}>Release Type</th>
-                                    <th className={styles.textHeader}>Date</th>
+                                    <th className={styles.textHeader} style={{'width': '20%', 'textAlign': 'center'}}>ARTIST</th>
+                                    <th className={styles.textHeader} style={{'width': '60%'}}>TITLE</th>
+                                    <th className={styles.textHeader} style={{'width': '10%'}}>RELEASE TYPE</th>
+                                    <th className={styles.textHeader} style={{'width': '10%'}}>DRELEASE DATE</th>
                                 </tr>
                             </thead>
                             <tbody className={styles.textBody}>
@@ -179,7 +281,9 @@ function Calendar() {
                         </table>
                     ):
                     (
-                        <p>Sorry</p>
+                        <div className={styles.calendarError}>
+                            <p>Sorry</p>
+                        </div>
                     )}
                 </div>
             </div>

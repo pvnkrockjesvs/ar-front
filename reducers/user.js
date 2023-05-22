@@ -19,9 +19,11 @@ export const userSlice = createSlice({
         setProfile: (state, action) => {
             state.value.isProfileCreated = true
         },
-        logout: (state) => {
+        logout: (state, action) => {
+            console.log('IMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM')
             state.value.token = null;
             state.value.username = null;
+            state.value.isProfileCreated = false
         },
     },
 });
