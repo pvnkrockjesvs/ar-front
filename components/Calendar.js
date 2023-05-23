@@ -63,19 +63,36 @@ function Calendar() {
     
     // For each artist, search for releases that are associated with
     // types from the user profiles
+
+    let myArtist = [
+        {
+            name: 'abcd',
+            mbid: '42c34a84-0f8b-485e-b4d2-8b89a5a51419'
+        },
+        {
+            name: 'abcd',
+            mbid: 'f30fea51-fa9c-4067-bc49-fc43236e89ba'
+        },
+        {
+            name: 'abcd',
+            mbid: '97e69bd1-ed8c-42b6-b73c-941cc4bd342c'
+        }
+    ]
     
     const getRecentReleases = async () =>{
         const releaseStore = []
         let nbFetches = 0
-        let types = profile[0].releaseTypes
-        //let types = ['album', 'single']
+        //let types = profile[0].releaseTypes
+        let artistList2 = myArtist
+        let types = ['album', 'single']
         for (let artist of artistList){
+            console.log('ARTIST:', artist.name)
             for (let type of types) {
-                type= 'album'
                 const resp = await fetch(`http://localhost:3000/artists/${artist.mbid}/${type}`)
                 const data = await resp.json();
                 if (data.result) {
                     // Remove releases that have only year information in their date key
+                    console.log('DATA:', data)
                     const filtredData = data.releases.filter(release => (release.date && release.date.split('-').length >= 2))
                     if (filtredData){
                         // add the artist name and the release type to the data
@@ -92,7 +109,6 @@ function Calendar() {
                     console.log(`No release of ${type} for artist ${artist.name} was found`)
                 }
                 nbFetches = nbFetches + 1
-                
             }
 
         }

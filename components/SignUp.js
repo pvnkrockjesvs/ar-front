@@ -1,5 +1,5 @@
 import styles from '../styles/Sign.module.css'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../reducers/user';
 import { useForm } from "react-hook-form";
 
@@ -9,6 +9,7 @@ const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"
 function SignUp (props) {
 
     const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.value)
     const { register, handleSubmit, reset, formState: { errors }  } = useForm();
 
     const CreateUserAccount = (data) => {
