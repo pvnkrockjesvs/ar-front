@@ -19,9 +19,6 @@ import LoaderMusic from "./LoaderMusic";
 
 function Calendar() {
 
-    const dates = ['2023-05-26', '2023-05-21', '2023-05-11', '2023-04-19', '2023-03-25', '2023-04-23', '2023-05-23', '2023-04-05', '2023-04-12', '2023-04-07', '2023-04-10',
-                   '2023-05-28', '2023-05-12', '2023-05-02', '2023-05-05', '2023-05-09', '2023-05-10', '2023-05-17', '2023-04-29', '2023-04-15', '2023-04-27', '2023-04-28']
-
     const user = useSelector((state) => state.user.value)
     const profile = useSelector((state) => state.profile.value)
 
@@ -31,8 +28,6 @@ function Calendar() {
     const [next, setNext] = useState(1)
     const [startWeek, setStartWeek] = useState(new Date())
     const [endWeek, setEndWeek] = useState()
-    const [nbSearch, setNbSearch] = useState(0)
-
     
     // https://askjavascript.com/how-to-get-first-and-last-day-of-the-current-week-in-javascript/
     const computeWeekStarts = () => {
@@ -61,74 +56,12 @@ function Calendar() {
         setNext(next + 1)
     }
     
-    // For each artist, search for releases that are associated with
-    // types from the user profiles
-
-    let myArtist = [
-        {
-            name: 'abcd',
-            mbid: '42c34a84-0f8b-485e-b4d2-8b89a5a51419'
-        },
-        {
-            name: 'abcd',
-            mbid: 'f30fea51-fa9c-4067-bc49-fc43236e89ba'
-        },
-        {
-            name: 'abcd',
-            mbid: '97e69bd1-ed8c-42b6-b73c-941cc4bd342c'
-        }
-    ]
-    
-    const getRecentReleases = async () =>{
-        const releaseStore = []
-        let nbFetches = 0
-        //let types = profile[0].releaseTypes
-        let artistList2 = myArtist
-        let types = ['album', 'single']
-        for (let artist of artistList){
-            console.log('ARTIST:', artist.name)
-            for (let type of types) {
-                const resp = await fetch(`http://localhost:3000/artists/${artist.mbid}/${type}`)
-                const data = await resp.json();
-                if (data.result) {
-                    // Remove releases that have only year information in their date key
-                    console.log('DATA:', data)
-                    const filtredData = data.releases.filter(release => (release.date && release.date.split('-').length >= 2))
-                    if (filtredData){
-                        // add the artist name and the release type to the data
-                        const completedData = filtredData.map((ele) => (
-                            {...ele,
-                                artist: artist.name,
-                                releaseType: type,
-                                date: dates[Math.floor(Math.random() * 22)]
-                            }
-                        ))
-                        releaseStore.push(...completedData)
-                    }
-                }  else {
-                    console.log(`No release of ${type} for artist ${artist.name} was found`)
-                }
-                nbFetches = nbFetches + 1
-            }
-
-        }
-        // sort the release data by date
-        releaseStore = releaseStore.sort(( a, b ) => {
-            return new Date(a.date) - new Date(b.date)
-        })
-        console.log
-        setRecentReleases([...recentReleases, ...releaseStore])
-        setNbSearch(nbFetches)
-    }
-    
-        
+    // get the artist list
     useEffect(() => {
         if (!user.token) {
             return;
         }
-        const weekStarts = computeWeekStarts()
-        setStartWeek(weekStarts[next + 1])
-        setEndWeek(weekStarts[next])        
+              
         fetch(`http://localhost:3000/profiles/myartists/${user.token}`)
         .then((response) => response.json())
         .then((data) => {
@@ -138,15 +71,31 @@ function Calendar() {
             }
         })
         .catch((error) => {
-            console.error('Fetch error :' , error)
-        })        
-                
+            console.error('Fetch artist list error :' , error)
+        })
     },[])
 
+    // Get the recent releases    
     useEffect(() => {
-        getRecentReleases()
-    }, [artistList])
-
+        if (!user.token){
+            return;
+        }
+        const weekStarts = computeWeekStarts()
+        setStartWeek(weekStarts[next + 1])
+        setEndWeek(weekStarts[next])  
+        fetch(`http://localhost:3000/profiles/myreleases/${user.token}`)
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.result) {
+                console.log('Fetched Date:', data)
+                setRecentReleases([...data.data])
+            }
+        })
+        .catch((error) => {
+            console.error('Fetch recent release error :' , error)
+        })        
+                
+    },[artistList])
 
     // update -- display the next or previous week
     useEffect(() => {
@@ -155,17 +104,23 @@ function Calendar() {
         setEndWeek(weekStarts[next])
     }, [next])
 
-
+    let searchEnded = true
     let weekReleases = []
     if (recentReleases.length != 0){
-        let filtredWeekReleases = recentReleases.filter(data => (new Date(data.date) >= startWeek) && (new Date(data.date) < endWeek) )
+        let filtredWeekReleases = recentReleases.filter(data => (new Date(data[0].date) >= startWeek) && (new Date(data[0].date) < endWeek) )
         if (filtredWeekReleases.length != 0){
             weekReleases = filtredWeekReleases.map((data, index) => {
-                let date = data.date.split('-').reverse().join('-')
+                let releaseDate = new Date(data[0].date)
+                console.log('Release Date:', releaseDate)
+                let releaseYear = releaseDate.getUTCFullYear()
+                let releaseMonth = releaseDate.getUTCMonth() + 1 > 9? releaseDate.getUTCMonth() + 1 : '0'+(releaseDate.getUTCMonth() + 1)
+                let releaseDay = releaseDate.getUTCDate() > 9 ? releaseDate.getUTCDate() : '0'+(releaseDate.getUTCDate())
+                let date = `${releaseDay}-${releaseMonth}-${releaseYear}`
+
                 let releaseStyle = {}
-                if (data.releaseType === 'album'){
+                if (data[0].type === 'Album'){
                     releaseStyle = { 'backgroundColor': '#b3e5d1', 'color' : '#0d47a1' }
-                } else if ( data.releaseType === 'single') {
+                } else if ( data[0].type === 'Single') {
                     releaseStyle = { 'backgroundColor': '#D9E3F0', 'color' : '#0d47a1' }
                 } else {
                     releaseStyle = { 'backgroundColor': '#FFCDD2', 'color' : '#0d47a1' }
@@ -173,13 +128,14 @@ function Calendar() {
                 return <CalendarRow
                     style={releaseStyle}
                     key={index}
-                    artist={data.artist.charAt(0).toUpperCase() + data.artist.slice(1)}
-                    title={data.title}
-                    type={data.releaseType}
+                    artist={data[0].arname.charAt(0).toUpperCase() + data[0].arname.slice(1)}
+                    title={data[0].title}
+                    type={data[0].type}
                     date={date}/>
             })
         }
     }
+    console.log('WEEK RELEASE LENGTH:', weekReleases.length)
 
     let myArtistList = []
     if (artistList) {
@@ -190,8 +146,7 @@ function Calendar() {
         })
     }
 
-    let searchEnded = (nbSearch === (artistList.length *  profile[0].releaseTypes.length))
-
+    //let searchEnded = (nbSearch === (artistList.length *  profile[0].releaseTypes.length))
     return (
         <div className={styles.calendarContainer}>
             <div className={styles.leftPart}>
