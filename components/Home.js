@@ -27,13 +27,13 @@ function Home() {
     return (
       <div className="max-w-xs p-2.5">
         <Card href={`../release/${data.mbid}`} imgSrc={data.cover}>
-          <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h5 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
             {data.artist}
           </h5>
           <p className="font-normal text-gray-700 dark:text-gray-400">
             {data.title}
           </p>
-          <p className="font-normal text-gray-700 dark:text-gray-400">
+          <p className="text-sm font-normal text-gray-700 dark:text-gray-400">
             {dateAlbum}
           </p>
         </Card>
