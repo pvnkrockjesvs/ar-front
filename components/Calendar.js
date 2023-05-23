@@ -87,7 +87,6 @@ function Calendar() {
         .then((response) => response.json())
         .then((data) => {
             if (data.result) {
-                console.log('Fetched Date:', data)
                 setRecentReleases([...data.data])
             }
         })
@@ -111,7 +110,6 @@ function Calendar() {
         if (filtredWeekReleases.length != 0){
             weekReleases = filtredWeekReleases.map((data, index) => {
                 let releaseDate = new Date(data[0].date)
-                console.log('Release Date:', releaseDate)
                 let releaseYear = releaseDate.getUTCFullYear()
                 let releaseMonth = releaseDate.getUTCMonth() + 1 > 9? releaseDate.getUTCMonth() + 1 : '0'+(releaseDate.getUTCMonth() + 1)
                 let releaseDay = releaseDate.getUTCDate() > 9 ? releaseDate.getUTCDate() : '0'+(releaseDate.getUTCDate())
@@ -135,8 +133,7 @@ function Calendar() {
             })
         }
     }
-    console.log('WEEK RELEASE LENGTH:', weekReleases.length)
-
+    
     let myArtistList = []
     if (artistList) {
         myArtistList = artistList.map((artist, i) => {
@@ -181,7 +178,7 @@ function Calendar() {
                     )}
                 </div>
                 <div className={styles.tableWrapper}>
-                    {!searchEnded ? 
+                    {recentReleases.length === 0 ? 
                     (
                         <div className={styles.calendarErrorContainer}>
                             <p className={styles.calendarErrorMessage}> Searching for possible recent releases</p>
