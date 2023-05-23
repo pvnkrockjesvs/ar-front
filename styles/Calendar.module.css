@@ -5,22 +5,53 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    height: 90vh;
+    height: 100vh;
     width: 100vw;
+    background-color: #f2f4f6;
+    overflow: auto;
 }
 
 .leftPart {
-    height: 90%;
+    height: 70%;
     width: 15%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     border-radius: 10px;
-    margin-left: 3rem;
-    border: 2px solid gray;
-    background-color: rgb(219, 219, 219)
-    
+    margin-left: 15rem;
+    /*border: 2px solid gray;*/
+    background-color: #ffffff;
+    box-shadow: 0 0 60px 5px rgba(0, 0, 0, 0.25);
+    color: #0d47a1;
+}
+
+.artistListContainer {
+    height: 100%;
+    width: 100%;
+}
+
+.artistListContainer h1 {
+    font-weight: bold;
+    text-align: center;
+    margin: 1rem
+}
+
+.artistList {
+    list-style: none;
+    height: 50%;
+    width: 90%;
+    overflow: hidden;
+    overflow-y: scroll;
+    background-color: #d9e3f0;
+    border-radius: 10px;
+    margin: auto;
+}
+
+.artistName {
+    font-size: 0.8rem;
+    text-align: left;
+    margin-left: 1rem
 }
 
 .tableContainer {
@@ -28,11 +59,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 90%;
-    width: 80%;
-    margin-right: 2rem;
+    height: 70%;
+    width: 60%;
+    margin-right: 15rem;
     margin-left: 2rem;
 }
+
 .tableHeader {
     display: flex;
     justify-content: space-between;
@@ -43,23 +75,21 @@
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
     margin-bottom: 1rem;
-    background-color: black
+    /*background-color: black*/
+    background-color: #ffcdd2;
+    box-shadow: 0 0 60px 5px rgba(0, 0, 0, 0.25);
 }
 
 .tableWrapper {
     width: 100%;
     height: 85%;
-    overflow:hidden;
     overflow-y: scroll;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    background-color: rgb(219, 219, 219);
-    border: 2px solid gray;
+    background-color: #ffffff;
+    box-shadow: 0 0 60px 5px rgba(0, 0, 0, 0.25);
+    position: relative
     
-}
-
-.tableHead {
-    position: sticky;
 }
 
 .iconButton {
@@ -70,20 +100,41 @@
 
 .weekName {
     font-weight: bold;
-    color:  #f47373;
+    color:  #0d47a1;
     font-size: 3rem;
 }
 
-
-
-.table {
-    /*border-collapse: collapse;*/
-    width: 100%;
-    height: 100%;
-    /*background-color: aquamarine;*/
+.calendarRow {
+    display: grid;
+    grid-template-columns: 2fr 6fr 2fr 2fr;
+    border-bottom: 3px solid white;
+    justify-content: center;
+    align-items: center;
+    height: 3rem;
 }
 
-.textBody {
-    overflow-y: scroll;
+.calendarCell   {
+    margin-left: 1rem;
+    font-size: 1rem;
+}
+
+.calendarErrorContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.calendarErrorMessage {
+    font-family: BlinkMacSystemFont;
+    font-weight: bold;
+    font-size: 3rem;
+    color: #0d47a1;
+    text-align: center;
+    margin: 3rem
 }
 

@@ -18,18 +18,21 @@
     color: #f47373;
     font-size: 2rem;
     font-weight: bold;
+    font-family: BlinkMacSystemFont
 }
 
 .itemTitle {
     color: white;
     /*font-weight: bold;*/
-    font-size: 1rem
+    font-size: 1rem;
+    font-family: BlinkMacSystemFont
 }
 
 .labelName {
     color: white;
     margin: 30px;
     font-size: 0.8rem;
+    font-family: BlinkMacSystemFont
 }
 .buttonStyles {
     width: 15px;
@@ -40,14 +43,12 @@
 .addGenreButton {
     width: 1.7rem;
     height: 1.7rem;
-    border-radius: 50%;
     margin: 1rem;
-    background-color:#f47373;
     color: white;
-    border: none;
     font-weight: bold;
     font-size: 1.5rem;
 }
+
 .genreInput {
     border-radius: 5px;
     height: 1.2rem;
@@ -60,12 +61,21 @@
     border-radius: 10px;
     width:  10rem;
     height: 2rem;
+    border: none;
+    color: white;
+    font-weight: bold;
 }
 
 .itemType {
     border: 2px solod blue;
 }
 
+.genreItem {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
 .labelText {
     color: white;
     font-weight: bold;
