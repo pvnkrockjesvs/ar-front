@@ -34,16 +34,6 @@ function Release() {
               <Moment format={trackLengthFormat}>{track.trackLength}</Moment>
             </Table.Cell>
           </Table.Row>
-          // <div className={styles.tracksInfos} key={i}>
-          //   <div className={styles.trackTitle}>
-          //     <p>
-          //       {i+1} - {track.title}
-          //     </p>
-          //   </div>
-          //   <div className={styles.minuteTracks}>
-          //     <Moment format={trackLengthFormat}>{track.trackLength}</Moment>
-          //   </div>
-          // </div>
         )
       }))
     });   

@@ -21,9 +21,6 @@ import ConflictSearchModal from "./ConflictSearchModal";
 
 function Calendar() {
 
-    const dates = ['2023-05-26', '2023-05-21', '2023-05-11', '2023-04-19', '2023-03-25', '2023-04-23', '2023-05-23', '2023-04-05', '2023-04-12', '2023-04-07', '2023-04-10',
-                   '2023-05-28', '2023-05-12', '2023-05-02', '2023-05-05', '2023-05-09', '2023-05-10', '2023-05-17', '2023-04-29', '2023-04-15', '2023-04-27', '2023-04-28']
-
     const user = useSelector((state) => state.user.value)
     const profile = useSelector((state) => state.profile.value)
 
@@ -38,8 +35,12 @@ function Calendar() {
     const [nbSearch, setNbSearch] = useState(0)
     const [title, setTitle] = useState('')
     const [csModal, setCsModal] = useState(false);
+    const [arconf, setArconf] = useState('')
 
-    const toggleCsModal = () => setCsModal(!csModal);
+    const toggleCsModal = (ar) => { 
+        setArconf(ar)
+        setCsModal(!csModal) 
+    };
   
     function sleep(delay = 0) {
       return new Promise((resolve) => {
@@ -141,15 +142,31 @@ function Calendar() {
             }
         })
         .catch((error) => {
-            console.error('Fetch error :' , error)
-        })        
-                
+            console.error('Fetch artist list error :' , error)
+        })
     },[])
 
+    // Get the recent releases    
     useEffect(() => {
-        getRecentReleases()
-    }, [artistList])
-
+        if (!user.token){
+            return;
+        }
+        const weekStarts = computeWeekStarts()
+        setStartWeek(weekStarts[next + 1])
+        setEndWeek(weekStarts[next])  
+        fetch(`http://localhost:3000/profiles/myreleases/${user.token}`)
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.result) {
+                // console.log('Fetched Date:', data)
+                setRecentReleases([...data.data])
+            }
+        })
+        .catch((error) => {
+            console.error('Fetch recent release error :' , error)
+        })        
+                
+    },[artistList])
 
     // update -- display the next or previous week
     useEffect(() => {
@@ -158,17 +175,23 @@ function Calendar() {
         setEndWeek(weekStarts[next])
     }, [next])
 
-
+    let searchEnded = true
     let weekReleases = []
     if (recentReleases.length != 0){
-        let filtredWeekReleases = recentReleases.filter(data => (new Date(data.date) >= startWeek) && (new Date(data.date) < endWeek) )
+        let filtredWeekReleases = recentReleases.filter(data => (new Date(data[0].date) >= startWeek) && (new Date(data[0].date) < endWeek) )
         if (filtredWeekReleases.length != 0){
             weekReleases = filtredWeekReleases.map((data, index) => {
-                let date = data.date.split('-').reverse().join('-')
+                let releaseDate = new Date(data[0].date)
+                //console.log('Release Date:', releaseDate)
+                let releaseYear = releaseDate.getUTCFullYear()
+                let releaseMonth = releaseDate.getUTCMonth() + 1 > 9? releaseDate.getUTCMonth() + 1 : '0'+(releaseDate.getUTCMonth() + 1)
+                let releaseDay = releaseDate.getUTCDate() > 9 ? releaseDate.getUTCDate() : '0'+(releaseDate.getUTCDate())
+                let date = `${releaseDay}-${releaseMonth}-${releaseYear}`
+
                 let releaseStyle = {}
-                if (data.releaseType === 'album'){
+                if (data[0].type === 'Album'){
                     releaseStyle = { 'backgroundColor': '#b3e5d1', 'color' : '#0d47a1' }
-                } else if ( data.releaseType === 'single') {
+                } else if ( data[0].type === 'Single') {
                     releaseStyle = { 'backgroundColor': '#D9E3F0', 'color' : '#0d47a1' }
                 } else {
                     releaseStyle = { 'backgroundColor': '#FFCDD2', 'color' : '#0d47a1' }
@@ -176,13 +199,14 @@ function Calendar() {
                 return <CalendarRow
                     style={releaseStyle}
                     key={index}
-                    artist={data.artist.charAt(0).toUpperCase() + data.artist.slice(1)}
-                    title={data.title}
-                    type={data.releaseType}
+                    artist={data[0].arname.charAt(0).toUpperCase() + data[0].arname.slice(1)}
+                    title={data[0].title}
+                    type={data[0].type}
                     date={date}/>
             })
         }
     }
+    // console.log('WEEK RELEASE LENGTH:', weekReleases.length)
 
     let myArtistList = []
     if (artistList) {
@@ -201,36 +225,29 @@ function Calendar() {
 
     let myConflicts = []
     if (conflictList) {
-        myConflicts = conflictList.map((artist, i) => {
+        myConflicts = conflictList.map((artistConf, i) => {
             return (
                 <li key={i} className={styles.artistName}>
-                    <span onClick={toggleCsModal} className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
-                        {artist}
+                    <span onClick={() => toggleCsModal(artistConf)} className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+                        {artistConf}
                     </span>
-                    <ConflictSearchModal
-                        artistName={artist}
-                        show={csModal}
-                        dismissible={true}
-                        onClose={toggleCsModal}
-                    />
                  </li>
             )
         })
     }
 
-    let searchEnded = (nbSearch === (artistList.length *  profile[0].releaseTypes.length))
-
+    //let searchEnded = (nbSearch === (artistList.length *  profile[0].releaseTypes.length))
     return (
         <div className={styles.calendarContainer}>
             <div className={styles.leftPart}>
-                <div className={styles.artistListContainer}>
+                {/* <div className={styles.artistListContainer}>
                     <h1> 
                         {title} artist list
                     </h1>
                     <ul className={styles.artistList} >
                         {myArtistList}
                     </ul>
-                </div>
+                </div> */}
                 <div className={styles.artistListContainer}>
                     <h1> 
                         {title} artist conflicts
@@ -239,6 +256,12 @@ function Calendar() {
                         {myConflicts}
                     </ul>
                 </div>
+                <ConflictSearchModal
+                        artistName={arconf}
+                        show={csModal}
+                        dismissible={true}
+                        onClose={() => toggleCsModal('')}
+                    />
             </div>
             <div className={styles.tableContainer}>
                 <div className={styles.tableHeader}>

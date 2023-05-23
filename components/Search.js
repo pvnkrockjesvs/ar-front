@@ -104,7 +104,6 @@ function Search() {
               {data.name}
             </span>
           </Link>
-          • {data.date}
         </div>
         <div>
           <p>{data.disambiguation}</p>
@@ -121,6 +120,7 @@ function Search() {
           ) : (
             <Button
               gradientDuoTone="purpleToBlue"
+              size="xs"
               onClick={() => handleFollow(data)}
             >
               Follow
