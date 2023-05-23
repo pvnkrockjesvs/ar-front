@@ -16,6 +16,8 @@ import { useSelector } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import LoaderMusic from "./LoaderMusic";
+import Link from "next/link";
+import ConflictSearchModal from "./ConflictSearchModal";
 
 function Calendar() {
 
@@ -26,12 +28,25 @@ function Calendar() {
     const profile = useSelector((state) => state.profile.value)
 
     const [artistList, setArtistList] = useState([])
+    const [conflictList, setConflictList] = useState([])
+
     const [recentReleases, setRecentReleases] = useState([])
     // to decide which week
     const [next, setNext] = useState(1)
     const [startWeek, setStartWeek] = useState(new Date())
     const [endWeek, setEndWeek] = useState()
     const [nbSearch, setNbSearch] = useState(0)
+    const [title, setTitle] = useState('')
+    const [csModal, setCsModal] = useState(false);
+
+    const toggleCsModal = () => setCsModal(!csModal);
+  
+    function sleep(delay = 0) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, delay);
+      });
+    }
+    const username = user.username
 
     
     // https://askjavascript.com/how-to-get-first-and-last-day-of-the-current-week-in-javascript/
@@ -71,7 +86,7 @@ function Calendar() {
         //let types = ['album', 'single']
         for (let artist of artistList){
             for (let type of types) {
-                type= 'album'
+                // type= 'album'
                 const resp = await fetch(`http://localhost:3000/artists/${artist.mbid}/${type}`)
                 const data = await resp.json();
                 if (data.result) {
@@ -83,13 +98,13 @@ function Calendar() {
                             {...ele,
                                 artist: artist.name,
                                 releaseType: type,
-                                date: dates[Math.floor(Math.random() * 22)]
+                                // date: dates[Math.floor(Math.random() * 22)]
                             }
                         ))
                         releaseStore.push(...completedData)
                     }
                 }  else {
-                    console.log(`No release of ${type} for artist ${artist.name} was found`)
+                    // console.log(`No release of ${type} for artist ${artist.name} was found`)
                 }
                 nbFetches = nbFetches + 1
                 
@@ -100,7 +115,6 @@ function Calendar() {
         releaseStore = releaseStore.sort(( a, b ) => {
             return new Date(a.date) - new Date(b.date)
         })
-        console.log
         setRecentReleases([...recentReleases, ...releaseStore])
         setNbSearch(nbFetches)
     }
@@ -110,6 +124,11 @@ function Calendar() {
         if (!user.token) {
             return;
         }
+        const sortedConflicts = profile[0].conflicts.sort()
+        setConflictList(sortedConflicts)
+
+        username.charAt(username.length-1) === 's' ? setTitle(username+"'") : setTitle(username+"'s")
+
         const weekStarts = computeWeekStarts()
         setStartWeek(weekStarts[next + 1])
         setEndWeek(weekStarts[next])        
@@ -168,8 +187,33 @@ function Calendar() {
     let myArtistList = []
     if (artistList) {
         myArtistList = artistList.map((artist, i) => {
-            const link = `/artist/${artist.mbid}`
-            return (<li key={i} className={styles.artistName}>{artist.name}</li>
+            return (
+                <li key={i} className={styles.artistName}>
+                    <Link href={`/artist/${artist.mbid}`}>
+                        <span className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+                            {artist.name}
+                        </span>
+                    </Link>
+                 </li>
+            )
+        })
+    }
+
+    let myConflicts = []
+    if (conflictList) {
+        myConflicts = conflictList.map((artist, i) => {
+            return (
+                <li key={i} className={styles.artistName}>
+                    <span onClick={toggleCsModal} className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+                        {artist}
+                    </span>
+                    <ConflictSearchModal
+                        artistName={artist}
+                        show={csModal}
+                        dismissible={true}
+                        onClose={toggleCsModal}
+                    />
+                 </li>
             )
         })
     }
@@ -181,10 +225,18 @@ function Calendar() {
             <div className={styles.leftPart}>
                 <div className={styles.artistListContainer}>
                     <h1> 
-                        {user.username}'s artist list
+                        {title} artist list
                     </h1>
                     <ul className={styles.artistList} >
                         {myArtistList}
+                    </ul>
+                </div>
+                <div className={styles.artistListContainer}>
+                    <h1> 
+                        {title} artist conflicts
+                    </h1>
+                    <ul className={styles.artistList} >
+                        {myConflicts}
                     </ul>
                 </div>
             </div>
