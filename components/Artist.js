@@ -23,6 +23,7 @@ function Artist() {
   const [open, setOpen] = useState(false);
   const [artistInformation, setArtistInformation] = useState(null);
   const [lastAlbum, setLastAlbum] = useState(null);
+  const [cover, setCover] = useState(null);
   const [epsList, setEpsList] = useState([]);
   const [albumsList, setAlbumsList] = useState([]);
   const dispatch = useDispatch();
@@ -64,10 +65,21 @@ function Artist() {
           if (data) {
             setLastAlbum(data);
             setLastUrl(`../release/${data.mbid}`);
+            const albumMbid = data.mbid;
+
+            //Fetch pour récupérer la cover last album
+            console.log(albumMbid);
+            fetch(
+              `http://coverartarchive.org/release-group/${albumMbid}?fmt=json`
+            )
+              .then((response) => response.json())
+              .then((cover) => {
+                setCover(cover.images[0].image);
+              });
           }
         })
         .catch((error) => {
-          console.error("Error fetching data 1:", error);
+          console.error("Error fetching for Last Album:", error);
         });
     }, 2000);
 
@@ -129,11 +141,8 @@ function Artist() {
   }, []);
 
   //console log
-  // if (profile) {
-  //   console.log(profile);
-  // }
-  //   console.log(allreleases.eps);
-  //   console.log(filterEps);
+  // if (cover) {
+  //   console.log(cover);
   // }
 
   //Fonction Follow Artist
@@ -325,11 +334,7 @@ function Artist() {
           ) : (
             <figure class="relative max-w-xs transition-all duration-300 cursor-pointer filter grayscale hover:grayscale-0">
               <a href={lastUrl}>
-                <img
-                  class="rounded-lg"
-                  src={lastAlbum.cover}
-                  alt="image description"
-                />
+                <img class="rounded-lg" src={cover} alt="image description" />
               </a>
               <figcaption class="absolute px-4 text-md text-white bottom-6">
                 <p>{lastAlbum.title}</p>

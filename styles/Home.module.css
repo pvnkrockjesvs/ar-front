@@ -1,15 +1,57 @@
-.main {
+.mainContainer {
+  width: 100vw;
+  height: 96vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  padding: 4rem 0;
+  overflow: auto;
+  font-family: "Montserrat", sans-serif;
+  background: linear-gradient(45deg, #cdf0ea 0%, #b9eddd 100%);
+  background-size: 200% 200%;
+  animation: background-animation 6s ease infinite;
+}
+
+/* --MEDIA QUERIES-- */
+@media (max-width: 620px) {
+  .mainContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  .artistName {
+    font-size: 30px;
+  }
+}
+
+@keyframes background-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+.albumsContainer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 15px;
+  height: 95%;
 }
 
 .title {
+  font-weight: 500;
+  margin-top: 22px;
+  margin-bottom: 10px;
   line-height: 1.15;
-  font-size: 4rem;
+  font-size: 3.5rem;
 }
 
 .title a {
@@ -17,6 +59,8 @@
   text-decoration: none;
 }
 
-.title a:hover, .title a:focus, .title a:active {
+.title a:hover,
+.title a:focus,
+.title a:active {
   text-decoration: underline;
 }
