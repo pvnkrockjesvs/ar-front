@@ -3,6 +3,7 @@ import React,  { useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux'
 import { setProfile } from '../reducers/user';
+import { storeProfile } from '../reducers/profile';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { Button, Modal, Label, Checkbox, Radio, TextInput } from "flowbite-react";
@@ -30,7 +31,6 @@ function ProfileModal(props) {
         for (let genre of data.genres){
             profileData.genres.push(genre.genre)
         }
-
         return profileData
     }
 
@@ -51,6 +51,7 @@ function ProfileModal(props) {
         .then((response) => response.json())
         .then((data) => {
             if (data.result) {
+                dispatch(storeProfile(data.profile))
                 dispatch(setProfile())
                 reset()
                 props.closeModal()
@@ -95,18 +96,20 @@ function ProfileModal(props) {
         // Check if the profile is already created, then we are in the
         // update mode, otherwise we are in the create mode
         if (user.isProfileCreated) {
-            const formFields = ['newsletter', 'releaseTypes','genres'];
+            const formFields = ['newsletter', 'releaseTypes','genres', 'isPremium'];
+            console.log('PROFILE DATA:', profile[0])
+            console.log('NEWSLETTER DATA:', profile[0].newsletter)
+            console.log('RELEASE TYPE DATA:', profile[0].releaseTypes)
+            console.log('GENRES DATA:', profile[0].genres)
+            console.log('ISPREMIUM:', profile[0].isPremium)
             formFields.forEach(field => {
-                console.log('FIELD:', field, profile[0][field])
-                if (field === 'genres'){
+                if ((field === 'genres') && (profile[0][field].length != 0)){
                     for( let i = 0; i < profile[0].genres.length; i++ ){
                         setValue(`genres.${i}.genre`, profile[0].genres[i])
                     }
                 } else {
                     setValue(field, profile[0][field].toString())
                 }
-                console.log('GENRES:', fields)
-
             });
             if (profile[0].newsletter != 0){
                 setValue('emailNotification', true)
@@ -123,7 +126,7 @@ function ProfileModal(props) {
                 {updateCreateProfile}
             </Modal.Header>
             <Modal.Body>
-                <form className="flex flex-col gap-4" autoComplete='off' className={styles.formContainer} onSubmit={handleSubmit(onSubmit)}>
+                <form className="flex flex-col gap-8" autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
                     <div>
                         <div className="mb-2 block">
                             <Label
@@ -143,63 +146,59 @@ function ProfileModal(props) {
                         <div>
                             <Label htmlFor="field-fequency" value="How often to receive email notification?"/>
                             <div className="flex items-center gap-2">
-                                <Label htmlFor="field-oneWeek"> 1 week  </Label>
                                 <Radio
                                     id="field-oneweek"
                                     name="newsletter"
                                     value="1"
                                     {...register("newsletter")}
                                 />
-                                <Label htmlFor="field-twoWeek"> 2 week </Label>
+                                <Label htmlFor="field-oneWeek"> 1 week  </Label>
                                 <Radio
                                     id="field-twoweek"
                                     name="newsletter"
                                     value="2"
                                     {...register("newsletter")}
                                 />
-                                <Label htmlFor="field-oneMonth"> 1 month </Label>
+                                <Label htmlFor="field-twoWeek"> 2 week </Label>
                                 <Radio
                                     id="field-oneMonth"
                                     name="newsletter"
                                     value="3"
                                     {...register("newsletter")}
                                 />
+                                <Label htmlFor="field-oneMonth"> 1 month </Label>
                             </div>
                         </div>
                         )}
                         <div>
                             <Label htmlFor="release-types" value="What type of release do you prefer?"/>
                             <div className="flex items-center gap-2">
-                                <Label htmlFor="field-album"> Album  </Label>
                                 <Checkbox
                                     id="field-album"
                                     {...register("releaseTypes")}
                                     name="releaseTypes"
-                                    value="true"
+                                    value="Album"
                                 />
-                                <Label htmlFor="field-single"> Single  </Label>
+                                <Label htmlFor="field-album"> Album  </Label>
                                 <Checkbox
                                     id="field-single"
                                     {...register("releaseTypes")}
                                     name="releaseTypes"
-                                    value="true"
+                                    value="Single"
                                 />
-                                <Label htmlFor="field-ep"> EP  </Label>
+                                <Label htmlFor="field-single"> Single  </Label>
                                 <Checkbox
                                     id="field-ep"
                                     {...register("releaseTypes")}
                                     name="releaseTypes"
-                                    value="true"
+                                    value="EP"
                                 />
+                                <Label htmlFor="field-ep"> EP  </Label>
+                            </div>
                         </div>
                         <div>
-                            <div className="mb-2 block">
-                                <Label
-                                    htmlFor="field-support"
-                                    value="Do you wante to support us?"
-                                    className="mr-5"
-                                />
-                            </div>            
+                            <Label htmlFor="field-support" value="Do you wante to support us?"/>
+                            <div className="flex items-center gap-2">
                                 <Checkbox
                                     id="field-support"
                                     name="isPremium"

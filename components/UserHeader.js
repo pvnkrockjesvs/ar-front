@@ -42,7 +42,7 @@ function UserHeader() {
   const dispatch = useDispatch();
 
   const toggleLfModal = () => setLfModal(!lfModal);
-  const togglePrModal = () => setPrModal(true)
+  const togglePrModal = () => setPrModal(!prModal)
   // const letters =
   //     user.username.charAt(0).toUpperCase() +
   //     user.username.charAt(1).toUpperCase();
@@ -199,10 +199,10 @@ function UserHeader() {
             dismissible={true}
             onClose={toggleLfModal}
           />
-          <Dropdown.Item>Settings</Dropdown.Item>
+          <Dropdown.Item onClick={togglePrModal}>Settings</Dropdown.Item>
             <ProfileModal
               show={prModal}
-              dismissible={true}
+              dismissible={false}
               onClose={togglePrModal}
               closeModal={closeModal}
             />

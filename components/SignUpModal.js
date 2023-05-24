@@ -93,7 +93,6 @@ function SignUpModal (props) {
                             {...register("password", {required: "password is required" })}
                         />
                         <p>{errors.password?.message}</p>
-                        {/* className={styles.fieldError}*/}
                     </div>
                     <Button type="submit">
                         Create
