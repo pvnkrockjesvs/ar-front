@@ -36,6 +36,7 @@ function Calendar() {
     const [title, setTitle] = useState('')
     const [csModal, setCsModal] = useState(false);
     const [arconf, setArconf] = useState('')
+    const [myArtists, setMyArtists] = useState(false)
 
     const toggleCsModal = (ar) => { 
         setArconf(ar)
@@ -144,7 +145,7 @@ function Calendar() {
         .catch((error) => {
             console.error('Fetch artist list error :' , error)
         })
-    },[])
+    },[myArtists])
 
     // Get the recent releases    
     useEffect(() => {
@@ -160,6 +161,7 @@ function Calendar() {
             if (data.result) {
                 // console.log('Fetched Date:', data)
                 setRecentReleases([...data.data])
+                setMyArtists(true)
             }
         })
         .catch((error) => {
@@ -285,7 +287,7 @@ function Calendar() {
                     )}
                 </div>
                 <div className={styles.tableWrapper}>
-                    {!searchEnded ? 
+                    {recentReleases.length === 0 ? 
                     (
                         <div className={styles.calendarErrorContainer}>
                             <p className={styles.calendarErrorMessage}> Searching for possible recent releases</p>
