@@ -21,7 +21,7 @@ import {
   Radio,
 } from "flowbite-react";
 import LastFmModal from "./LastFmModal";
-import ProfilModale from './ProfileModal'
+import ProfileModal from './ProfileModal'
 import { AiOutlineHome, AiFillCalendar } from "react-icons/ai";
 import { logout } from "../reducers/user";
 import { deleteProfile } from '../reducers/profile'
@@ -37,11 +37,13 @@ function UserHeader() {
   const user = useSelector((state) => state.user.value);
   const [avatar, setAvatar] = useState();
   const [lfModal, setLfModal] = useState(false);
+  const [prModal, setPrModal] = useState(false);
   const loading = open && options.length === 0;
 
   const dispatch = useDispatch();
 
   const toggleLfModal = () => setLfModal(!lfModal);
+  const togglePrModal = () => setPrModal(true)
   // const letters =
   //     user.username.charAt(0).toUpperCase() +
   //     user.username.charAt(1).toUpperCase();
@@ -98,7 +100,10 @@ function UserHeader() {
     dispatch(logout())
     dispatch(deleteProfile())
     router.push("/home");
+  }
 
+  const closeModal = () => {
+    setProfileModalOpen(false)
   }
 
   return (
@@ -192,6 +197,12 @@ function UserHeader() {
             onClose={toggleLfModal}
           />
           <Dropdown.Item>Settings</Dropdown.Item>
+            <ProfileModal
+              show={prModal}
+              dismissible={true}
+              onClose={togglePrModal}
+              closeModal={closeModal}
+            />
           <Dropdown.Divider />
           <Dropdown.Item onClick={() => {handleLogOut()}}>
             Sign out

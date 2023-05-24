@@ -123,7 +123,7 @@ function ProfileModal(props) {
                 {updateCreateProfile}
             </Modal.Header>
             <Modal.Body>
-                <form autoComplete='off' className={styles.formContainer} onSubmit={handleSubmit(onSubmit)}>
+                <form className="flex flex-col gap-4" autoComplete='off' className={styles.formContainer} onSubmit={handleSubmit(onSubmit)}>
                     <div>
                         <div className="mb-2 block">
                             <Label
