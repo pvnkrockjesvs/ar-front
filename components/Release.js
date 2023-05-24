@@ -12,6 +12,7 @@ function Release() {
   const [cover, setCover] = useState(null);
   const [track, setTrack] = useState();
   const [trackLengthFormat, setTrackLengthFormat] = useState("mm:ss");
+  const [spotifyLink, setSpotifyLink] = useState("");
 
   useEffect(() => {
     fetch(`http://localhost:3000/releases/${mbid}`)
@@ -30,6 +31,7 @@ function Release() {
           .then((data) => {
             if (data.result) {
               //code to add
+              console.log(data.data[0].external_urls.spotify);
             }
           });
 
@@ -42,7 +44,7 @@ function Release() {
             }
             return (
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                <Table.Cell className="text-sm whitespace-nowrap font-medium text-gray-900 dark:text-white">
                   {i + 1} - {track.title}
                 </Table.Cell>
                 <Table.Cell>
@@ -94,7 +96,7 @@ function Release() {
               </figure>
             )}
           </div>
-          <h2 class="text-3xl">{album && album.artist}</h2>
+          <h2 class="text-3xl pl-2 pt-4">{album && album.artist}</h2>
         </div>
 
         {/* --RIGHT CONTAINER-- */}
