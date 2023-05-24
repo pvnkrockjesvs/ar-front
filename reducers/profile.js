@@ -17,6 +17,7 @@ export const profileSlice = createSlice({
     storeProfile: (state, action) => {
 
       state.value = action.payload;
+      console.log('THE PROFILE WAS CORRECTLY CREATED')
     },
     deleteProfile: (state) => {
       state.value = {}

@@ -68,11 +68,11 @@ function SignUpModal (props) {
                             />
                         </div>
                         <TextInput
-                            id="email"
+                            id="useremail"
                             type="email"
                             placeholder="Email"
                             {...register("email", {
-                                required: "username is required",
+                                required: "email is required",
                                 pattern: { value: EMAIL_REGEX, message: 'The required email shoud be valid'}
                             })}
                         />
@@ -87,13 +87,12 @@ function SignUpModal (props) {
                             />
                         </div>
                         <TextInput
-                            id="password"
+                            id="userpassword"
                             type="password"
                             placeholder="Password"
                             {...register("password", {required: "password is required" })}
                         />
                         <p>{errors.password?.message}</p>
-                        {/* className={styles.fieldError}*/}
                     </div>
                     <Button type="submit">
                         Create

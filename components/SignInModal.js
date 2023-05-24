@@ -26,7 +26,8 @@ function SignInModal(props) {
             .then((data) => {
                 if (!data.result) {
                     console.log("No profile Found");
-                } else {
+                }else {
+                    console.log('DATA*****:', data)
                     dispatch(storeProfile(data.profile));
                 }
             });
@@ -87,12 +88,12 @@ function SignInModal(props) {
                             />
                         </div>             
                         <TextInput
-                            id="password"
+                            id="userpassword"
                             type="password"
                             placeholder="Password"
                             {...register("password", { required: "The password is required" })}
                         />
-                        <p>{errors.username?.message}</p>
+                        <p>{errors.password?.message}</p>
                     </div>
                     <Button type="submit">
                         Connect

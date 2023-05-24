@@ -7,7 +7,7 @@ import SearchInput from "./SearchInput";
 import { useRouter } from "next/router";
 import { Dropdown, Navbar, Avatar, Button, Modal, Label } from "flowbite-react";
 import LastFmModal from "./LastFmModal";
-import ProfilModale from "./ProfileModal";
+import ProfileModal from "./ProfileModal";
 import { AiOutlineHome, AiFillCalendar } from "react-icons/ai";
 import { logout } from "../reducers/user";
 import { deleteProfile } from "../reducers/profile";
@@ -22,11 +22,13 @@ function UserHeader() {
 
   const [avatar, setAvatar] = useState();
   const [lfModal, setLfModal] = useState(false);
+  const [prModal, setPrModal] = useState(false);
   const loading = open && options.length === 0;
 
   const dispatch = useDispatch();
 
   const toggleLfModal = () => setLfModal(!lfModal);
+  const togglePrModal = () => setPrModal(!prModal);
 
   const handleLogOut = () => {
 
@@ -34,7 +36,12 @@ function UserHeader() {
     dispatch(deleteProfile());
     router.push("/")
 
+
   };
+
+  const closeModal = () => {
+    setPrModal(false)
+  }
 
   return (
     <Navbar
@@ -73,7 +80,13 @@ function UserHeader() {
             dismissible={true}
             onClose={toggleLfModal}
           />
-          <Dropdown.Item>Settings</Dropdown.Item>
+          <Dropdown.Item onClick={togglePrModal}>Settings</Dropdown.Item>
+            <ProfileModal
+              show={prModal}
+              dismissible={false}
+              onClose={togglePrModal}
+              closeModal={closeModal}
+            />
           <Dropdown.Divider />
           <Dropdown.Item
             onClick={() => {
