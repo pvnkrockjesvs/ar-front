@@ -111,8 +111,8 @@ function Artist() {
     }, 7000); // Ajouter une pause de 2 secondes (2000 millisecondes) avant cette requête
 
     //Vérifier les releaseTypes d'albums depuis le store + filtrage des albums avec selectedOption
-    if (profile[0]) {
-      const typesArray = profile[0].releaseTypes;
+    if (profile) {
+      const typesArray = profile.releaseTypes;
       if (
         typesArray === 3 ||
         (typesArray.includes("ep") && typesArray.includes("album"))

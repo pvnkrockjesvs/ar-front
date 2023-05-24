@@ -1,14 +1,21 @@
 import { Dropdown, Avatar, Button, Modal, Label,TextInput, Checkbox, Radio } from "flowbite-react";
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import { storeProfile } from "../reducers/profile";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
 
 const ConflictSearchModal = (props) => {
   const [searchResult,setSearchResult] = useState([])
   const user = useSelector((state) => state.user.value);
   const [myArtistsList, setMyArtistsList] = useState([]);
+  const dispatch = useDispatch();
+  const [start, setStart] = useState(0)
+
+  const profile = useSelector((state) => state.profile.value);
+
 
   const handleFollow = (data) => {
     const artistData = { name: data.name, mbid: data.mbid };
@@ -29,12 +36,14 @@ const ConflictSearchModal = (props) => {
             console.log(artistData);
             console.log("Artist is now Followed !");
             setMyArtistsList([...myArtistsList, artistData]);
-            
           }
         })
         .catch((error) => {
           console.error("Error fetching data 1:", error);
         });
+
+        handleDelete({props: props});
+
     } else if (user.token && isFollowed) {
       fetch(`http://localhost:3000/artists`, {
         method: "DELETE",
@@ -55,25 +64,49 @@ const ConflictSearchModal = (props) => {
           }
         });
     }
-  };
+};
+
+  const handleDelete = (data) => {
+    console.log(data)
+    fetch(`http://localhost:3000/profiles/conflict`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        conflict: data.props.artistName,
+        token: user.token,
+      })
+    }).then((response) => response.json()).then((res) => {
+
+      fetch(`http://localhost:3000/profiles/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: user.token }),
+      })
+      .then((response) => response.json())
+      .then((res) => {
+          if (!res.result) {
+            console.log("No profile Found");
+          } else {
+            dispatch(storeProfile(res.profile));
+          }
+      });
+    })
+
+    data.button ? props.onClose() : console.log('')
+
+
+  }
 
   useEffect(() => {
-    if (user.token) {
-      fetch(`http://localhost:3000/profiles/myartists/${user.token}`)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.result) {
-            setMyArtistsList(data.artists);
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching data 1:", error);
-        });
+    if (start = 0) {
+      setMyArtistsList(props.myArtists)
+      setStart(1)
     }
-  }, [handleFollow]);
 
+  }, [start])
   useEffect(() => {
     if (props.artistName !== '') {
+      console.log(myArtistsList)
       fetch(`http://localhost:3000/artists/search/${props.artistName}`)
       .then((response) => response.json()).then((data) => {
 
@@ -129,7 +162,7 @@ const ConflictSearchModal = (props) => {
         <Button onClick={props.onClose}>
           Close
         </Button >
-        <Button onClick={props.onClose}>
+        <Button onClick={() => handleDelete({props, button : 'delete'})}>
           Delete artist
         </Button >
       </Modal.Footer>

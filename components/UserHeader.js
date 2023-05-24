@@ -96,9 +96,10 @@ function UserHeader() {
   };
 
   const handleLogOut = () => {
+    router.push("/home")
+
     dispatch(logout());
     dispatch(deleteProfile());
-    router.push("/home");
   };
 
   return (

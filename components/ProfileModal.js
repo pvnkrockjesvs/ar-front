@@ -97,18 +97,18 @@ function ProfileModal(props) {
         if (user.isProfileCreated) {
             const formFields = ['newsletter', 'releaseTypes','genres'];
             formFields.forEach(field => {
-                console.log('FIELD:', field, profile[0][field])
+                console.log('FIELD:', field, profile[field])
                 if (field === 'genres'){
-                    for( let i = 0; i < profile[0].genres.length; i++ ){
-                        setValue(`genres.${i}.genre`, profile[0].genres[i])
+                    for( let i = 0; i < profile.genres.length; i++ ){
+                        setValue(`genres.${i}.genre`, profile.genres[i])
                     }
                 } else {
-                    setValue(field, profile[0][field].toString())
+                    setValue(field, profile[field].toString())
                 }
                 console.log('GENRES:', fields)
 
             });
-            if (profile[0].newsletter != 0){
+            if (profile.newsletter != 0){
                 setValue('emailNotification', true)
             } else {
                 setValue('emailNotification', false)
@@ -118,7 +118,7 @@ function ProfileModal(props) {
 
     let updateCreateProfile = user.isProfileCreated ? 'Update your profile' : 'Create your profile'
     return (
-        <Modal show={props.show} onClose={props.onClose} dismissible={true}>
+        <Modal show={props.show} onClose={props.onClose} dismissible={false}>
             <Modal.Header>
                 {updateCreateProfile}
             </Modal.Header>

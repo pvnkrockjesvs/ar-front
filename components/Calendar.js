@@ -84,7 +84,7 @@ function Calendar() {
     const getRecentReleases = async () =>{
         const releaseStore = []
         let nbFetches = 0
-        let types = profile[0].releaseTypes
+        let types = profile.releaseTypes
         //let types = ['album', 'single']
         for (let artist of artistList){
             for (let type of types) {
@@ -126,7 +126,7 @@ function Calendar() {
         if (!user.token) {
             return;
         }
-        const sortedConflicts = profile[0].conflicts.sort()
+        const sortedConflicts = profile.conflicts.sort()
         setConflictList(sortedConflicts)
 
         username.charAt(username.length-1) === 's' ? setTitle(username+"'") : setTitle(username+"'s")
@@ -230,7 +230,9 @@ function Calendar() {
         myConflicts = conflictList.map((artistConf, i) => {
             return (
                 <li key={i} className={styles.artistName}>
-                    <span onClick={() => toggleCsModal(artistConf)} className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+                    <span onClick={() => toggleCsModal(artistConf)} 
+                    className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 
+                    hover:underline cursor-pointer">
                         {artistConf}
                     </span>
                  </li>
@@ -238,7 +240,7 @@ function Calendar() {
         })
     }
 
-    //let searchEnded = (nbSearch === (artistList.length *  profile[0].releaseTypes.length))
+    //let searchEnded = (nbSearch === (artistList.length *  profile.releaseTypes.length))
     return (
         <div className={styles.calendarContainer}>
             <div className={styles.leftPart}>
@@ -263,6 +265,8 @@ function Calendar() {
                         show={csModal}
                         dismissible={true}
                         onClose={() => toggleCsModal('')}
+                        myArtists={artistList}
+                    
                     />
             </div>
             <div className={styles.tableContainer}>
