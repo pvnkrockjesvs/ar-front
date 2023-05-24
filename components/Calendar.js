@@ -17,6 +17,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import LoaderMusic from "./LoaderMusic";
 import ConflictSearchModal from "./ConflictSearchModal";
+import { useDispatch } from "react-redux";
+import { storeProfile } from "../reducers/profile";
 
 function Calendar() {
 
@@ -36,8 +38,9 @@ function Calendar() {
     const [csModal, setCsModal] = useState(false);
     const [arconf, setArconf] = useState('')
     const [myArtists, setMyArtists] = useState(false)
+    const dispatch = useDispatch();
 
-    const toggleCsModal = (ar) => { 
+    const toggleCsModal = (ar) => {
         setArconf(ar)
         setCsModal(!csModal) 
     };

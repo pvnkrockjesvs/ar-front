@@ -15,6 +15,7 @@ function Release() {
   const [trackLengthFormat, setTrackLengthFormat] = useState("mm:ss");
   const [spotifyLink, setSpotifyLink] = useState("");
   const [deezerLink, setDeezerLink] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     if (router.query.mbid) {

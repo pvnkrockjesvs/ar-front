@@ -1,7 +1,7 @@
 import { Dropdown, Avatar, Button, Modal, Label,TextInput, Checkbox, Radio } from "flowbite-react";
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import { storeProfile } from "../reducers/profile";
+import { updateArtists, updateConflicts } from "../reducers/profile";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import Link from "next/link";
@@ -18,6 +18,7 @@ const ConflictSearchModal = (props) => {
 
 
   const handleFollow = (data) => {
+    dispatch(updateConflicts(data.name));
     const artistData = { name: data.name, mbid: data.mbid };
     const isFollowed = myArtistsList.some((objet) => objet.mbid === data.mbid);
     if (user.token && !isFollowed) {
@@ -67,7 +68,7 @@ const ConflictSearchModal = (props) => {
 };
 
   const handleDelete = (data) => {
-    console.log(data)
+    dispatch(updateConflicts(data.props.artistName));
     fetch(`http://localhost:3000/profiles/conflict`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -76,20 +77,6 @@ const ConflictSearchModal = (props) => {
         token: user.token,
       })
     }).then((response) => response.json()).then((res) => {
-
-      fetch(`http://localhost:3000/profiles/`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token: user.token }),
-      })
-      .then((response) => response.json())
-      .then((res) => {
-          if (!res.result) {
-            console.log("No profile Found");
-          } else {
-            dispatch(storeProfile(res.profile));
-          }
-      });
     })
 
     data.button ? props.onClose() : console.log('')

@@ -29,10 +29,11 @@ function UserHeader() {
   const toggleLfModal = () => setLfModal(!lfModal);
 
   const handleLogOut = () => {
-    router.push("/")
 
     dispatch(logout());
     dispatch(deleteProfile());
+    router.push("/")
+
   };
 
   return (
@@ -51,7 +52,7 @@ function UserHeader() {
         <Navbar.Link onClick={() => router.push("/")} className="cursor-pointer">
           <AiOutlineHome className="h-11 w-10" />
         </Navbar.Link>
-        <Navbar.Link onClick={() => router.push("/calendar")} className="cursor-pointer">
+        <Navbar.Link href={"/calendar"}>
           <AiFillCalendar className="h-11 w-10" />
         </Navbar.Link>
         <Dropdown
