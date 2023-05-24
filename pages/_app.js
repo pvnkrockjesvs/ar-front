@@ -58,7 +58,7 @@ function App({ Component, pageProps }) {
           <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet" />
         </Head>
         <Header />
-
+{/*  
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -71,7 +71,8 @@ function App({ Component, pageProps }) {
             <Route path="/home" element={<Home />} />
             <Route path="*" element={<NoMatch />} />
           </Routes>
-        </Router>
+        </Router> */}
+        <Component {...pageProps} />
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
       </PersistGate>

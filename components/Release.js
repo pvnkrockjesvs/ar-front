@@ -5,6 +5,7 @@ import Image from "next/image";
 import Moment from "react-moment";
 import LoaderMusic from "./LoaderMusic";
 import { Spinner, Table, Button, Card } from "flowbite-react";
+import { useRouter } from 'next/router';
 
 function Release() {
   const { mbid } = useParams();
@@ -12,66 +13,59 @@ function Release() {
   const [cover, setCover] = useState(null);
   const [track, setTrack] = useState();
   const [trackLengthFormat, setTrackLengthFormat] = useState("mm:ss");
+  const router = useRouter();
 
   useEffect(() => {
-    fetch(`http://localhost:3000/releases/${mbid}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setAlbum(data);
-        //console.log(data);
+    if (router.query.mbid) {
+      fetch(`http://localhost:3000/releases/${router.query.mbid}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setAlbum(data);
+          //console.log(data);
 
-        //Ajout du fetch pour récupérer le lien spotify
-        // fetch("http://localhost:3000/streaming/spotify/album", {
-        //   method: "POST",
-        //   headers: { "Content-Type": "application/json" },
-        //   body: JSON.stringify({ album: data.title, artist: data.artist }),
-        // })
-        //   .then((response) => response.json())
-        //   .then((data) => {
-        //     if (data.result) {
-        //       //code to add
-        //     }
-        //   });
+          //Ajout du fetch pour récupérer le lien spotify
+          // fetch("http://localhost:3000/streaming/spotify/album", {
+          //   method: "POST",
+          //   headers: { "Content-Type": "application/json" },
+          //   body: JSON.stringify({ album: data.title, artist: data.artist }),
+          // })
+          //   .then((response) => response.json())
+          //   .then((data) => {
+          //     if (data.result) {
+          //       //code to add
+          //     }
+          //   });
 
-        setTrack(
-          data.tracks.map((track, i) => {
-            if (track.trackLength > 3_600_000) {
-              setTrackLengthFormat("hh:mm:ss");
-            } else {
-              setTrackLengthFormat("mm:ss");
-            }
-            return (
-              <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {i + 1} - {track.title}
-                </Table.Cell>
-                <Table.Cell>
-                  <Moment format={trackLengthFormat}>
-                    {track.trackLength}
-                  </Moment>
-                </Table.Cell>
-              </Table.Row>
-              // <div className={styles.tracksInfos} key={i}>
-              //   <div className={styles.trackTitle}>
-              //     <p>
-              //       {i+1} - {track.title}
-              //     </p>
-              //   </div>
-              //   <div className={styles.minuteTracks}>
-              //     <Moment format={trackLengthFormat}>{track.trackLength}</Moment>
-              //   </div>
-              // </div>
-            );
-          })
-        );
-      });
+          setTrack(
+            data.tracks.map((track, i) => {
+              if (track.trackLength > 3_600_000) {
+                setTrackLengthFormat("hh:mm:ss");
+              } else {
+                setTrackLengthFormat("mm:ss");
+              }
+              return (
+                <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {i + 1} - {track.title}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Moment format={trackLengthFormat}>
+                      {track.trackLength}
+                    </Moment>
+                  </Table.Cell>
+                </Table.Row>
+              );
+            })
+          );
+        });
 
-    fetch(`http://coverartarchive.org/release-group/${mbid}?fmt=json`)
-      .then((response) => response.json())
-      .then((cover) => {
-        setCover(cover.images[0].thumbnails.large);
-      });
-  }, []);
+      fetch(`http://coverartarchive.org/release-group/${router.query.mbid}?fmt=json`)
+        .then((response) => response.json())
+        .then((cover) => {
+          setCover(cover.images[0].thumbnails.large);
+        });
+    }
+  }, [router.query.mbid]);
 
   return (
     <div>

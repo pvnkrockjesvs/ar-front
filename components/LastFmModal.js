@@ -2,7 +2,8 @@ import { Dropdown, Avatar, Button, Modal, Label,TextInput, Checkbox, Radio } fro
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { storeProfile } from "../reducers/profile";
 
 const LastFmModal = (props) => {
   const [username, setUsername] = useState('')
@@ -10,11 +11,11 @@ const LastFmModal = (props) => {
   const [limit, setLimit] = useState('100')
   const [min, setMin] = useState('0')
   const [required, setRequired] = useState({ display : 'none'})
+  const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user.value);
 
   const importLFM = (data) => {
-    console.log(data)
     fetch('http://localhost:3000/profiles/import-last-fm', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -27,9 +28,23 @@ const LastFmModal = (props) => {
       }),
     })
     .then(response => response.json()).then(data => {
-      console.log(data)
-      props.onClose()  
+      fetch(`http://localhost:3000/profiles/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: user.token }),
+      })
+      .then((response) => response.json())
+      .then((res) => {
+          if (!res.result) {
+            console.log("No profile Found");
+          } else {
+            dispatch(storeProfile(res.profile));
+            props.onClose()
+          }
+      });
     })
+
+
   }
 
   const {
