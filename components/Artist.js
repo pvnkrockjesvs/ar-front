@@ -14,7 +14,7 @@ import allreleases, {
 import moment from "moment";
 import { Button } from "flowbite-react";
 import { RxGear, RxCheck } from "react-icons/rx";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
 function Artist() {
   const [selectedOption, setSelectedOption] = useState("all");
@@ -133,8 +133,9 @@ function Artist() {
           .then((response) => response.json())
           .then((data) => {
             if (data.result) {
-              data.artists.some((mbidArtist) => mbidArtist.mbid === router.query.arid) &&
-                setIsFollowed(true);
+              data.artists.some(
+                (mbidArtist) => mbidArtist.mbid === router.query.arid
+              ) && setIsFollowed(true);
             }
           })
           .catch((error) => {
@@ -255,10 +256,12 @@ function Artist() {
       <div className={styles.albumsInfos} key={i}>
         <div className={styles.albumTitle}>
           <p>
-            <span onClick={() => router.push(url)} className="cursor-pointer inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+            <span
+              onClick={() => router.push(url)}
+              className="cursor-pointer inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+            >
               {data.title}
-            </span>
-            {" "}
+            </span>{" "}
             • {data.date}
           </p>
         </div>
@@ -271,28 +274,34 @@ function Artist() {
   });
 
   //.map du tableau d'eps filtrés pour l'afficher
-  const epsToShow = epsList.map((data, i) => {
-    const albumLength = calculTotalDuration(data.length);
+  let epsToShow = null;
+  if (epsList) {
+    epsToShow = epsList.map((data, i) => {
+      const albumLength = calculTotalDuration(data.length);
 
-    const url = `../release/${data.mbid}`;
+      const url = `../release/${data.mbid}`;
 
-    return (
-      <div className={styles.albumsInfos} key={i}>
-        <div className={styles.albumTitle}>
-          <p>
-            <span onClick={() => router.push(url)} className="cursor-pointer inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
-              {data.title}
-            </span>
-            • {data.date}
-          </p>
-        </div>
-        {/* <div className={styles.minuteTracks}>
+      return (
+        <div className={styles.albumsInfos} key={i}>
+          <div className={styles.albumTitle}>
+            <p>
+              <span
+                onClick={() => router.push(url)}
+                className="cursor-pointer inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+              >
+                {data.title}
+              </span>
+              • {data.date}
+            </p>
+          </div>
+          {/* <div className={styles.minuteTracks}>
           <p>{albumLength}</p>
           <p>{data.numberTracks} tracks</p>
         </div> */}
-      </div>
-    );
-  });
+        </div>
+      );
+    });
+  }
 
   //Fonction pour changer open à true ou false sur le popover
   const handleOpenChange = () => {
@@ -340,8 +349,10 @@ function Artist() {
               </div>
             ) : (
               <figure class="relative max-w-xs transition-all duration-300 cursor-pointer filter grayscale hover:grayscale-0">
-                <a onClick={() => router.push(lastUrl)} className="cursor-pointer">
-
+                <a
+                  onClick={() => router.push(lastUrl)}
+                  className="cursor-pointer"
+                >
                   <img class="rounded-lg" src={cover} alt="image description" />
                 </a>
                 <figcaption class="absolute px-4 text-md text-white bottom-6">
@@ -416,7 +427,7 @@ function Artist() {
                 {albumsToShow}
               </div>
             )}
-            {epsList.length === 0 && (
+            {(!epsList || epsList.length === 0) && (
               <div className={styles.loader}>
                 <span className={styles.loaderText}>loading</span>
                 <span className={styles.load}></span>

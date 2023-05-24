@@ -5,7 +5,7 @@ import Image from "next/image";
 import Moment from "react-moment";
 import LoaderMusic from "./LoaderMusic";
 import { Spinner, Table, Button, Card } from "flowbite-react";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
 function Release() {
   const { mbid } = useParams();
@@ -13,7 +13,8 @@ function Release() {
   const [cover, setCover] = useState(null);
   const [track, setTrack] = useState();
   const [trackLengthFormat, setTrackLengthFormat] = useState("mm:ss");
-  const router = useRouter();
+  const [spotifyLink, setSpotifyLink] = useState("");
+  const [deezerLink, setDeezerLink] = useState("");
 
   useEffect(() => {
     if (router.query.mbid) {
@@ -24,17 +25,39 @@ function Release() {
           //console.log(data);
 
           //Ajout du fetch pour récupérer le lien spotify
-          // fetch("http://localhost:3000/streaming/spotify/album", {
-          //   method: "POST",
-          //   headers: { "Content-Type": "application/json" },
-          //   body: JSON.stringify({ album: data.title, artist: data.artist }),
-          // })
-          //   .then((response) => response.json())
-          //   .then((data) => {
-          //     if (data.result) {
-          //       //code to add
-          //     }
-          //   });
+          if (data.title && data.artist) {
+            fetch("http://localhost:3000/streaming/spotify/album", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ album: data.title, artist: data.artist }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.result) {
+                  data.data[0] &&
+                    setSpotifyLink(data.data[0].external_urls.spotify);
+                }
+              });
+
+            //Ajout du fetch pour récupérer le lien deezer
+            fetch(`http://localhost:3000/streaming/deezer/album`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ album: data.title, artist: data.artist }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                const urlTrackList = data.data.tracklist;
+                const modifiedUrl = urlTrackList.replace("api.", "");
+                setDeezerLink(modifiedUrl);
+              })
+              .catch((error) => {
+                console.error(
+                  "Une erreur s'est produite lors de la recherche Deezer:",
+                  error
+                );
+              });
+          }
 
           setTrack(
             data.tracks.map((track, i) => {
@@ -45,7 +68,7 @@ function Release() {
               }
               return (
                 <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  <Table.Cell className="text-sm whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {i + 1} - {track.title}
                   </Table.Cell>
                   <Table.Cell>
@@ -54,18 +77,56 @@ function Release() {
                     </Moment>
                   </Table.Cell>
                 </Table.Row>
+                // <div className={styles.tracksInfos} key={i}>
+                //   <div className={styles.trackTitle}>
+                //     <p>
+                //       {i+1} - {track.title}
+                //     </p>
+                //   </div>
+                //   <div className={styles.minuteTracks}>
+                //     <Moment format={trackLengthFormat}>{track.trackLength}</Moment>
+                //   </div>
+                // </div>
               );
             })
           );
         });
 
-      fetch(`http://coverartarchive.org/release-group/${router.query.mbid}?fmt=json`)
+      fetch(
+        `http://coverartarchive.org/release-group/${router.query.mbid}?fmt=json`
+      )
         .then((response) => response.json())
         .then((cover) => {
           setCover(cover.images[0].thumbnails.large);
         });
     }
   }, [router.query.mbid]);
+
+  function Spotify() {
+    if (spotifyLink) {
+      return (
+        <div class="pt-4 mx-3">
+          <a class="flex flex-row" href={spotifyLink} target="_blank">
+            <img class="h-6 mr-1" src="/spotify_logo.png" />
+            <p>Listen on Spotify</p>
+          </a>
+        </div>
+      );
+    }
+  }
+
+  function Deezer() {
+    if (deezerLink) {
+      return (
+        <div class="pt-4 mx-3">
+          <a class="flex flex-row" href={deezerLink} target="_blank">
+            <img class="h-6 mr-1" src="/deezer_logo.png" />
+            <p>Listen on Deezer</p>
+          </a>
+        </div>
+      );
+    }
+  }
 
   return (
     <div>
@@ -87,7 +148,11 @@ function Release() {
               //   </figcaption>
               // </figure>
               <div>
-                <img class="h-auto rounded-lg" src={cover} alt="image description"></img>
+                <img
+                  class="h-auto rounded-lg"
+                  src={cover}
+                  alt="image description"
+                ></img>
                 <p className="font-normal text-gray-700 dark:text-gray-400">
                   {album.title}
                 </p>
@@ -95,10 +160,13 @@ function Release() {
                   <Moment format="MMMM DD YYYY">{album.date}</Moment>
                 </p>
               </div>
-
             )}
           </div>
-          {/* <h2 class="text-3xl">{album && album.artist}</h2> */}
+          <a href={`/artist/${album.arid}`}>
+            <h2 class="text-3xl pl-2 pt-4 hover:text-indigo-600">
+              {album && album.artist}
+            </h2>
+          </a>
         </div>
 
         {/* --RIGHT CONTAINER-- */}
@@ -121,6 +189,10 @@ function Release() {
             <div className={styles.releaseTitleInfos}>
               {album.trackCount} tracks <br />
               {Math.floor(album.albumLength / 60000)} minutes
+            </div>
+            <div class="flex flex-row m-4">
+              <Spotify />
+              <Deezer />
             </div>
           </div>
           {/* --DISCOGRAPHY CONTAINER-- */}
