@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 import { storeProfile } from "../reducers/profile";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-import Link from "next/link";
 import { useDispatch } from "react-redux";
 
 const ConflictSearchModal = (props) => {

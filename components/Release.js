@@ -21,6 +21,7 @@ function Release() {
         .then((response) => response.json())
         .then((data) => {
           setAlbum(data);
+          console.log(data);
           //console.log(data);
 
           //Ajout du fetch pour récupérer le lien spotify
@@ -78,16 +79,16 @@ function Release() {
                 <Spinner aria-label="Center-aligned spinner example" />
               </div>
             ) : (
-              // <figure class="relative max-w-sm transition-all duration-300 cursor-pointer">
-              //   <img class="rounded-lg" src={cover} alt="image description" />
+              // <figure className="relative max-w-sm transition-all duration-300 cursor-pointer">
+              //   <img className="rounded-lg" src={cover} alt="image description" />
 
-              //   <figcaption class="absolute px-4 text-md text-white bottom-6">
+              //   <figcaption className="absolute px-4 text-md text-white bottom-6">
               //     <p>{album.title}</p>
               //     <Moment format="MMMM DD YYYY">{album.date}</Moment>
               //   </figcaption>
               // </figure>
               <div>
-                <img class="h-auto rounded-lg" src={cover} alt="image description"></img>
+                <img className="h-auto rounded-lg" src={cover} alt="image description"></img>
                 <p className="font-normal text-gray-700 dark:text-gray-400">
                   {album.title}
                 </p>
@@ -98,7 +99,7 @@ function Release() {
 
             )}
           </div>
-          {/* <h2 class="text-3xl">{album && album.artist}</h2> */}
+          {/* <h2 className="text-3xl">{album && album.artist}</h2> */}
         </div>
 
         {/* --RIGHT CONTAINER-- */}
@@ -117,7 +118,7 @@ function Release() {
                 Followed
               </Button> */}
             </div>
-            <p>{album.artist}</p>
+            <p onClick={() => router.push(`/artist/${album.arid}`)} className="cursor-pointer items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">{album.artist}</p>
             <div className={styles.releaseTitleInfos}>
               {album.trackCount} tracks <br />
               {Math.floor(album.albumLength / 60000)} minutes

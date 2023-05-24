@@ -164,7 +164,7 @@ function UserHeader() {
         />
       </div>
       <div className={styles.title}>
-        <Navbar.Brand href="/">Album Release</Navbar.Brand>
+        <Navbar.Brand onClick={() => router.push("/")} className="cursor-pointer">Album Release</Navbar.Brand>
       </div>
       <Navbar.Collapse>
         <Navbar.Link onClick={() => router.push("/")} className="cursor-pointer">
