@@ -336,7 +336,7 @@ function Artist() {
             ) : (
               artistInformation.image && (
                 <img
-                  class="w-96 rounded-lg"
+                  className="w-96 rounded-lg"
                   src={artistInformation.image}
                   alt="image description"
                 />
@@ -357,14 +357,18 @@ function Artist() {
                 <LoaderMusic />
               </div>
             ) : (
-              <figure class="relative max-w-xs transition-all duration-300 cursor-pointer filter grayscale hover:grayscale-0">
+              <figure className="relative max-w-xs transition-all duration-300 cursor-pointer filter grayscale hover:grayscale-0">
                 <a
                   onClick={() => router.push(lastUrl)}
                   className="cursor-pointer"
                 >
-                  <img class="rounded-lg" src={cover} alt="image description" />
+                  <img
+                    className="rounded-lg"
+                    src={cover}
+                    alt="image description"
+                  />
                 </a>
-                <figcaption class="absolute px-4 text-md text-white bottom-6">
+                <figcaption className="absolute px-4 text-md text-white bottom-6">
                   <p>{lastAlbum.title}</p>
                   <p>{lastAlbum.date}</p>
                 </figcaption>
