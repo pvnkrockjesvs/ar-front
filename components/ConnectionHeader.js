@@ -1,6 +1,17 @@
 import styles from "../styles/Header.module.css";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import {
+  Dropdown,
+  Navbar,
+  Avatar,
+  Button,
+  Modal,
+  Label,
+  TextInput,
+  Checkbox,
+  Radio,
+} from "flowbite-react";
 
 function ConnectionHeader(props) {
 
@@ -34,22 +45,16 @@ function ConnectionHeader(props) {
       <div className={styles.title}>
         <span>Album Release</span>
       </div>
-      <div className={styles.navMenu}>
-        <button
-          type="primary"
-          className={styles.signupButton}
-          onClick={(e) => handleClick("signup")}
-        >
+      <Navbar>
+      <Navbar.Collapse>
+        <Navbar.Link onClick={(e) => handleClick("signup")}>
           Create an account
-        </button>
-        <button
-          type="primary"
-          className={styles.signinButton}
-          onClick={(e) => handleClick("signin")}
-        >
-          Connection
-        </button>
-      </div>
+        </Navbar.Link>
+        <Navbar.Link onClick={(e) => handleClick("signin")}>
+          Connect
+        </Navbar.Link>
+        </Navbar.Collapse>
+      </Navbar>
     </header>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Head from "next/head";
 import { useParams } from "react-router-dom";
 import LoaderMusic from "./LoaderMusic";
 import styles from "../styles/Artist.module.css";
@@ -23,6 +24,7 @@ function Artist() {
   const [open, setOpen] = useState(false);
   const [artistInformation, setArtistInformation] = useState(null);
   const [lastAlbum, setLastAlbum] = useState(null);
+  const [cover, setCover] = useState(null);
   const [epsList, setEpsList] = useState([]);
   const [albumsList, setAlbumsList] = useState([]);
   const dispatch = useDispatch();
@@ -64,10 +66,21 @@ function Artist() {
           if (data) {
             setLastAlbum(data);
             setLastUrl(`../release/${data.mbid}`);
+            const albumMbid = data.mbid;
+
+            //Fetch pour récupérer la cover last album
+            console.log(albumMbid);
+            fetch(
+              `http://coverartarchive.org/release-group/${albumMbid}?fmt=json`
+            )
+              .then((response) => response.json())
+              .then((cover) => {
+                setCover(cover.images[0].image);
+              });
           }
         })
         .catch((error) => {
-          console.error("Error fetching data 1:", error);
+          console.error("Error fetching for Last Album:", error);
         });
     }, 2000);
 
@@ -129,11 +142,8 @@ function Artist() {
   }, []);
 
   //console log
-  // if (profile) {
-  //   console.log(profile);
-  // }
-  //   console.log(allreleases.eps);
-  //   console.log(filterEps);
+  // if (cover) {
+  //   console.log(cover);
   // }
 
   //Fonction Follow Artist
@@ -290,134 +300,137 @@ function Artist() {
   };
 
   return (
-    <div className={styles.mainContainer}>
-      {/* --LEFT CONTAINER-- */}
-      <div className={styles.leftContainer}>
-        <h2 className={styles.artistNameLeft}>
-          {artistInformation && artistInformation.name}
-        </h2>
-        <div className={styles.artistPic}>
-          {!artistInformation ? (
-            <div className={styles.loaderDiv1}>
-              <LoaderMusic />
-            </div>
-          ) : artistInformation.image ? (
-            <img
-              class="h-auto max-w-md rounded-lg"
-              src={artistInformation.image}
-              alt="image description"
-            />
-          ) : (
-            <Image
-              src={artistInformation.image}
-              alt="Artist picture"
-              width={300}
-              height={300}
-            />
-          )}
-        </div>
-        <p className={styles.releaseTxt}>Last Release : </p>
-        <div>
-          {!lastAlbum ? (
-            <div className={styles.loaderDiv2}>
-              <LoaderMusic />
-            </div>
-          ) : (
-            <figure class="relative max-w-xs transition-all duration-300 cursor-pointer filter grayscale hover:grayscale-0">
-              <a href={lastUrl}>
-                <img
-                  class="rounded-lg"
-                  src={lastAlbum.cover}
-                  alt="image description"
-                />
-              </a>
-              <figcaption class="absolute px-4 text-md text-white bottom-6">
-                <p>{lastAlbum.title}</p>
-                <p>{lastAlbum.date}</p>
-              </figcaption>
-            </figure>
-          )}
-        </div>
-      </div>
-
-      {/* --RIGHT CONTAINER-- */}
-      <div className={styles.rightContainer}>
-        {/* --TEXT CONTAINER-- */}
-        <div className={styles.textContainer}>
-          <div className={styles.topText}>
-            <h2 className={styles.artistName}>
-              {artistInformation && artistInformation.name}
-            </h2>
-            {isFollowed ? (
-              <Button
-                gradientDuoTone="purpleToBlue"
-                onClick={() => handleFollow(mbid)}
-              >
-                <RxCheck /> Followed
-              </Button>
+    <>
+      <Head>
+        <title>
+          Artist Page - {artistInformation && artistInformation.name}
+        </title>
+      </Head>
+      <div className={styles.mainContainer}>
+        {/* --LEFT CONTAINER-- */}
+        <div className={styles.leftContainer}>
+          <h2 className={styles.artistNameLeft}>
+            {artistInformation && artistInformation.name}
+          </h2>
+          <div className={styles.artistPic}>
+            {!artistInformation ? (
+              <div className={styles.loaderDiv1}>
+                <LoaderMusic />
+              </div>
+            ) : artistInformation.image ? (
+              <img
+                class="h-auto max-w-md rounded-lg"
+                src={artistInformation.image}
+                alt="image description"
+              />
             ) : (
-              <Button
-                gradientDuoTone="purpleToBlue"
-                onClick={() => handleFollow(mbid)}
-              >
-                Follow
-              </Button>
+              <Image
+                src={artistInformation.image}
+                alt="Artist picture"
+                width={300}
+                height={300}
+              />
             )}
           </div>
-
-          <p className={styles.artistDescription}>
-            {artistInformation && artistInformation.bio}
-          </p>
-        </div>
-        {/* --DISCOGRAPHY CONTAINER-- */}
-        <div
-          className={styles.discographyContainer}
-          onScroll={() => setOpen(false)}
-        >
-          <div className={styles.discoFilter}>
-            <p className={styles.discoTxt}>Discography : </p>
-            <Popover
-              title="Filter types"
-              content={popoverContent}
-              className={styles.popover}
-              trigger="click"
-              open={open}
-              onOpenChange={handleOpenChange}
-            >
-              <Button gradientMonochrome="teal" size="xs">
-                <RxGear className="mr-2 h-5 w-5" />
-                Filter types
-              </Button>
-            </Popover>
+          <p className={styles.releaseTxt}>Last Release : </p>
+          <div>
+            {!lastAlbum ? (
+              <div className={styles.loaderDiv2}>
+                <LoaderMusic />
+              </div>
+            ) : (
+              <figure class="relative max-w-xs transition-all duration-300 cursor-pointer filter grayscale hover:grayscale-0">
+                <a href={lastUrl}>
+                  <img class="rounded-lg" src={cover} alt="image description" />
+                </a>
+                <figcaption class="absolute px-4 text-md text-white bottom-6">
+                  <p>{lastAlbum.title}</p>
+                  <p>{lastAlbum.date}</p>
+                </figcaption>
+              </figure>
+            )}
           </div>
-          {/* LOADER */}
-          {albumsList.length === 0 && (
-            <div className={styles.loader}>
-              <span className={styles.loaderText}>loading</span>
-              <span className={styles.load}></span>
+        </div>
+
+        {/* --RIGHT CONTAINER-- */}
+        <div className={styles.rightContainer}>
+          {/* --TEXT CONTAINER-- */}
+          <div className={styles.textContainer}>
+            <div className={styles.topText}>
+              <h2 className={styles.artistName}>
+                {artistInformation && artistInformation.name}
+              </h2>
+              {isFollowed ? (
+                <Button
+                  gradientDuoTone="purpleToBlue"
+                  onClick={() => handleFollow(mbid)}
+                >
+                  <RxCheck /> Followed
+                </Button>
+              ) : (
+                <Button
+                  gradientDuoTone="purpleToBlue"
+                  onClick={() => handleFollow(mbid)}
+                >
+                  Follow
+                </Button>
+              )}
             </div>
-          )}
-          {filterAlbums && (
-            <div className={styles.albumsContainer}>
-              <p className={styles.albumTxt}>Albums</p>
-              {albumsToShow}
+
+            <p className={styles.artistDescription}>
+              {artistInformation && artistInformation.bio}
+            </p>
+          </div>
+          {/* --DISCOGRAPHY CONTAINER-- */}
+          <div
+            className={styles.discographyContainer}
+            onScroll={() => setOpen(false)}
+          >
+            <div className={styles.discoFilter}>
+              <p className={styles.discoTxt}>Discography : </p>
+              <Popover
+                title="Filter types"
+                content={popoverContent}
+                className={styles.popover}
+                trigger="click"
+                open={open}
+                onOpenChange={handleOpenChange}
+              >
+                <Button gradientMonochrome="teal" size="xs">
+                  <RxGear className="mr-2 h-5 w-5" />
+                  Filter types
+                </Button>
+              </Popover>
             </div>
-          )}
-          {epsList.length === 0 && (
-            <div className={styles.loader}>
-              <span className={styles.loaderText}>loading</span>
-              <span className={styles.load}></span>
-            </div>
-          )}
-          {filterEps && (
-            <div className={styles.albumsContainer}>
-              <p className={styles.albumTxt}>EPs</p>
-              {epsToShow}
-            </div>
-          )}
+            {/* LOADER */}
+            {albumsList.length === 0 && (
+              <div className={styles.loader}>
+                <span className={styles.loaderText}>loading</span>
+                <span className={styles.load}></span>
+              </div>
+            )}
+            {filterAlbums && (
+              <div className={styles.albumsContainer}>
+                <p className={styles.albumTxt}>Albums</p>
+                {albumsToShow}
+              </div>
+            )}
+            {epsList.length === 0 && (
+              <div className={styles.loader}>
+                <span className={styles.loaderText}>loading</span>
+                <span className={styles.load}></span>
+              </div>
+            )}
+            {filterEps && (
+              <div className={styles.albumsContainer}>
+                <p className={styles.albumTxt}>EPs</p>
+                {epsToShow}
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
