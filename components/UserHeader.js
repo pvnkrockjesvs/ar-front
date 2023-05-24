@@ -21,7 +21,7 @@ import {
   Radio,
 } from "flowbite-react";
 import LastFmModal from "./LastFmModal";
-import Profile from './Profile'
+import ProfilModale from './ProfileModal'
 import { AiOutlineHome, AiFillCalendar } from "react-icons/ai";
 import { logout } from "../reducers/user";
 import { deleteProfile } from '../reducers/profile'
