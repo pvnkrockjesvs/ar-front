@@ -42,6 +42,7 @@ function UserHeader() {
   const dispatch = useDispatch();
 
   const toggleLfModal = () => setLfModal(!lfModal);
+  const togglePrModal = () => setPrModal(!prModal);
 
   function sleep(delay = 0) {
     return new Promise((resolve) => {
@@ -101,6 +102,10 @@ function UserHeader() {
     dispatch(logout());
     dispatch(deleteProfile());
   };
+
+  const closeModal = () => {
+    setPrModal(false)
+  }
 
   return (
     <Navbar

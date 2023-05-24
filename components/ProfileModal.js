@@ -107,11 +107,13 @@ function ProfileModal(props) {
                     for( let i = 0; i < profile[0].genres.length; i++ ){
                         setValue(`genres.${i}.genre`, profile[0].genres[i])
                     }
+                } else if (field === 'releaseTypes'){
+                    setValue(field, profile[0][field])
                 } else {
-                    setValue(field, profile[field].toString())
+                    setValue(field, profile[0][field].toString())
                 }
             });
-            if (profile.newsletter != 0){
+            if (profile[0].newsletter != 0){
                 setValue('emailNotification', true)
             } else {
                 setValue('emailNotification', false)
@@ -178,6 +180,7 @@ function ProfileModal(props) {
                                     {...register("releaseTypes")}
                                     name="releaseTypes"
                                     value="Album"
+                                    defaultChecked='false'
                                 />
                                 <Label htmlFor="field-album"> Album  </Label>
                                 <Checkbox
@@ -185,6 +188,7 @@ function ProfileModal(props) {
                                     {...register("releaseTypes")}
                                     name="releaseTypes"
                                     value="Single"
+                                    defaultChecked='false'
                                 />
                                 <Label htmlFor="field-single"> Single  </Label>
                                 <Checkbox
@@ -192,6 +196,7 @@ function ProfileModal(props) {
                                     {...register("releaseTypes")}
                                     name="releaseTypes"
                                     value="EP"
+                                    defaultChecked="false"
                                 />
                                 <Label htmlFor="field-ep"> EP  </Label>
                             </div>
