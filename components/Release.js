@@ -13,6 +13,7 @@ function Release() {
   const [track, setTrack] = useState();
   const [trackLengthFormat, setTrackLengthFormat] = useState("mm:ss");
   const [spotifyLink, setSpotifyLink] = useState("");
+  const [deezerLink, setDeezerLink] = useState("");
 
   useEffect(() => {
     fetch(`http://localhost:3000/releases/${mbid}`)
@@ -34,6 +35,25 @@ function Release() {
                 data.data[0] &&
                   setSpotifyLink(data.data[0].external_urls.spotify);
               }
+            });
+
+          //Ajout du fetch pour récupérer le lien deezer
+          fetch(`http://localhost:3000/streaming/deezer/album`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ album: data.title, artist: data.artist }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              const urlTrackList = data.data.tracklist;
+              const modifiedUrl = urlTrackList.replace("api.", "");
+              setDeezerLink(modifiedUrl);
+            })
+            .catch((error) => {
+              console.error(
+                "Une erreur s'est produite lors de la recherche Deezer:",
+                error
+              );
             });
         }
 
@@ -80,10 +100,23 @@ function Release() {
   function Spotify() {
     if (spotifyLink) {
       return (
-        <div class="pt-4">
+        <div class="pt-4 mx-3">
           <a class="flex flex-row" href={spotifyLink} target="_blank">
             <img class="h-6 mr-1" src="/spotify_logo.png" />
             <p>Listen on Spotify</p>
+          </a>
+        </div>
+      );
+    }
+  }
+
+  function Deezer() {
+    if (deezerLink) {
+      return (
+        <div class="pt-4 mx-3">
+          <a class="flex flex-row" href={deezerLink} target="_blank">
+            <img class="h-6 mr-1" src="/deezer_logo.png" />
+            <p>Listen on Deezer</p>
           </a>
         </div>
       );
@@ -138,7 +171,10 @@ function Release() {
               {album.trackCount} tracks <br />
               {Math.floor(album.albumLength / 60000)} minutes
             </div>
-            <Spotify />
+            <div class="flex flex-row m-4">
+              <Spotify />
+              <Deezer />
+            </div>
           </div>
           {/* --DISCOGRAPHY CONTAINER-- */}
           <div className={styles.discographyContainer}>
