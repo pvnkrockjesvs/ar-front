@@ -21,11 +21,10 @@ import {
   Radio,
 } from "flowbite-react";
 import LastFmModal from "./LastFmModal";
-import ProfileModal from './ProfileModal'
+import ProfileModal from "./ProfileModal";
 import { AiOutlineHome, AiFillCalendar } from "react-icons/ai";
 import { logout } from "../reducers/user";
-import { deleteProfile } from '../reducers/profile'
-
+import { deleteProfile } from "../reducers/profile";
 
 function UserHeader() {
   const router = useRouter();
@@ -96,9 +95,13 @@ function UserHeader() {
     }
   };
 
+  const handleSelect = (artistMbid) => {
+    router.push(`/artist/${artistMbid}`);
+  };
+
   const handleLogOut = () => {
-    dispatch(logout())
-    dispatch(deleteProfile())
+    dispatch(logout());
+    dispatch(deleteProfile());
     router.push("/home");
   }
 
@@ -204,7 +207,11 @@ function UserHeader() {
               closeModal={closeModal}
             />
           <Dropdown.Divider />
-          <Dropdown.Item onClick={() => {handleLogOut()}}>
+          <Dropdown.Item
+            onClick={() => {
+              handleLogOut();
+            }}
+          >
             Sign out
           </Dropdown.Item>
         </Dropdown>
