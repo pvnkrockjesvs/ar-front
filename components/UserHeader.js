@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styles from "../styles/Header.module.css";
-import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faHome, faCalendar } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,6 +33,7 @@ function UserHeader() {
   const [disambiguation, setDisambiguation] = useState("");
   const profile = useSelector((state) => state.profile.value);
   const user = useSelector((state) => state.user.value);
+
   const [avatar, setAvatar] = useState();
   const [lfModal, setLfModal] = useState(false);
   const [prModal, setPrModal] = useState(false);
@@ -42,10 +42,6 @@ function UserHeader() {
   const dispatch = useDispatch();
 
   const toggleLfModal = () => setLfModal(!lfModal);
-  const togglePrModal = () => setPrModal(!prModal)
-  // const letters =
-  //     user.username.charAt(0).toUpperCase() +
-  //     user.username.charAt(1).toUpperCase();
 
   function sleep(delay = 0) {
     return new Promise((resolve) => {
@@ -100,14 +96,11 @@ function UserHeader() {
   };
 
   const handleLogOut = () => {
+    router.push("/")
+
     dispatch(logout());
     dispatch(deleteProfile());
-    router.push("/home");
-  }
-
-  const closeModal = () => {
-    setProfileModalOpen(false)
-  }
+  };
 
   return (
     <Navbar
@@ -175,10 +168,10 @@ function UserHeader() {
         <Navbar.Brand href="/">Album Release</Navbar.Brand>
       </div>
       <Navbar.Collapse>
-        <Navbar.Link href="/">
+        <Navbar.Link onClick={() => router.push("/")} className="cursor-pointer">
           <AiOutlineHome className="h-11 w-10" />
         </Navbar.Link>
-        <Navbar.Link href="/calendar">
+        <Navbar.Link onClick={() => router.push("/calendar")} className="cursor-pointer">
           <AiFillCalendar className="h-11 w-10" />
         </Navbar.Link>
         <Dropdown
@@ -186,7 +179,7 @@ function UserHeader() {
             <Avatar
               alt="User settings"
               className="h-11 w-11 mr-3"
-              img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+              img={profile.avatar}
               rounded={true}
             />
           }
@@ -217,59 +210,6 @@ function UserHeader() {
         </Dropdown>
       </Navbar.Collapse>
     </Navbar>
-    // <header className={styles.header}>
-    //   <div className={styles.searchContainer}>
-
-    //     <input type="text" onKeyDown={handleKeyDown}
-    //         onChange={(e) => setValue(e.target.value)}
-    //         value={value}
-    //         class="block p-2.5 w-full z-20 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-    //         placeholder="🔎 Search artist" required/>
-
-    //     {/* <input
-    //       className={styles.messageContainer}
-    //       type="text"
-    //       placeholder="🔎 Search artist"
-    //       onKeyDown={handleKeyDown}
-    //       onChange={(e) => setValue(e.target.value)}
-    //       value={value}
-    //     /> */}
-    //   </div>
-    //   <div className={styles.title}>
-    //     <span>Album Release</span>
-    //   </div>
-    //   <div className={styles.navMenu}>
-    //     <div className={styles.linkContainer}>
-    //       <FontAwesomeIcon className={styles.linkIcon} icon={faCalendar} />
-    //       <Link href="/calendar">
-    //         <span className={styles.linkText}>Calendar</span>
-    //       </Link>
-    //     </div>
-    //     <div className={styles.linkContainer}>
-    //       <FontAwesomeIcon className={styles.linkIcon} icon={faHome} />
-    //       <Link href="/home">
-    //         <span className={styles.linkText}>Home</span>
-    //       </Link>
-    //     </div>
-    //     <Dropdown
-    //       label={<Avatar alt="User settings" img="https://flowbite.com/docs/images/people/profile-picture-5.jpg" rounded={true}/>}
-    //       arrowIcon={false}
-    //       inline={true}
-    //     >
-    //       <Dropdown.Item onClick={toggleLfModal} >
-    //           Import
-    //       </Dropdown.Item>
-    //       <LastFmModal show={lfModal} dismissible={true}  onClose={toggleLfModal}/>
-    //       <Dropdown.Item>
-    //         Settings
-    //       </Dropdown.Item>
-    //       <Dropdown.Divider />
-    //       <Dropdown.Item>
-    //         Sign out
-    //       </Dropdown.Item>
-    //     </Dropdown>
-    //   </div>
-    // </header>
   );
 }
 

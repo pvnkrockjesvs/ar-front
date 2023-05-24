@@ -3,9 +3,11 @@ import styles from "../styles/Home.module.css";
 import moment from "moment";
 import { Card } from "flowbite-react";
 import LoaderMusic from "./LoaderMusic";
+import { useRouter } from "next/router";
 
 function Home() {
   const [popularAlbums, setPopularAlbums] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     fetch(`http://localhost:3000/topreleases`)
@@ -25,8 +27,8 @@ function Home() {
     const date = moment(data.date);
     const dateAlbum = date.format("DD-MM-YYYY");
     return (
-      <div className="max-w-xs p-2.5">
-        <Card href={`../release/${data.mbid}`} imgSrc={data.cover}>
+      <div className="max-w-xs p-2.5" key={i}>
+        <Card className="cursor-pointer" onClick={() => router.push(`../release/${data.mbid}`)} imgSrc={data.cover}>
           <h5 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
             {data.artist}
           </h5>

@@ -1,16 +1,16 @@
 import React from "react";
-import Release from "../components/Release";
+import Search from "../../components/Search";
 import Head from "next/head";
 
-function ReleasePage() {
+function SearchPage() {
   return (
     <>
       <Head>
         <title>Release Page</title>
       </Head>
-      <Release />
+      <Search />
     </>
   );
 }
 
-export default ReleasePage;
+export default SearchPage;

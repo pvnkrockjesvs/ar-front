@@ -5,17 +5,19 @@ import { useParams } from "react-router-dom";
 import Link from "next/link";
 import { Button } from "flowbite-react";
 import { RxCheck } from "react-icons/rx";
+import { useRouter } from 'next/router';
 
 function Search() {
   const { name } = useParams();
   const [myArtistsList, setMyArtistsList] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
   const user = useSelector((state) => state.user.value);
+  const router = useRouter();
 
   useEffect(() => {
     setTimeout(() => {
-      if (name) {
-        fetch(`http://localhost:3000/artists/search/${name}`)
+      if (router.query.name) {
+        fetch(`http://localhost:3000/artists/search/${router.query.name}`)
           .then((response) => response.json())
           .then((data) => {
             setSearchResult(data.artists);
@@ -25,7 +27,7 @@ function Search() {
           });
       }
     }, 300);
-  }, []);
+  }, [router.query.name]);
 
   //Vérifier si l'artiste est follow ou pas :
   useEffect(() => {
@@ -104,7 +106,6 @@ function Search() {
               {data.name}
             </span>
           </Link>
-          • {data.date}
         </div>
         <div>
           <p>{data.disambiguation}</p>
@@ -121,6 +122,7 @@ function Search() {
           ) : (
             <Button
               gradientDuoTone="purpleToBlue"
+              size="xs"
               onClick={() => handleFollow(data)}
             >
               Follow

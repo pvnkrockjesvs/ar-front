@@ -11,7 +11,6 @@ import storage from "redux-persist/lib/storage";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import Release from "../components/Release";
 import Artist from "../components/Artist";
-import MyArtists from "../components/MyArtists";
 import Home from "../components/Home";
 import Search from "../components/Search";
 import Calendar from "../components/Calendar";
@@ -58,7 +57,7 @@ function App({ Component, pageProps }) {
           <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet" />
         </Head>
         <Header />
-
+{/*  
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -71,7 +70,8 @@ function App({ Component, pageProps }) {
             <Route path="/home" element={<Home />} />
             <Route path="*" element={<NoMatch />} />
           </Routes>
-        </Router>
+        </Router> */}
+        <Component {...pageProps} />
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
       </PersistGate>

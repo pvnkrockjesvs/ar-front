@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import LoaderMusic from "./LoaderMusic";
+import ConflictSearchModal from "./ConflictSearchModal";
 
 function Calendar() {
 
@@ -23,11 +24,31 @@ function Calendar() {
     const profile = useSelector((state) => state.profile.value)
 
     const [artistList, setArtistList] = useState([])
+    const [conflictList, setConflictList] = useState([])
+
     const [recentReleases, setRecentReleases] = useState([])
     // to decide which week
     const [next, setNext] = useState(1)
     const [startWeek, setStartWeek] = useState(new Date())
     const [endWeek, setEndWeek] = useState()
+    const [nbSearch, setNbSearch] = useState(0)
+    const [title, setTitle] = useState('')
+    const [csModal, setCsModal] = useState(false);
+    const [arconf, setArconf] = useState('')
+    const [myArtists, setMyArtists] = useState(false)
+
+    const toggleCsModal = (ar) => { 
+        setArconf(ar)
+        setCsModal(!csModal) 
+    };
+  
+    function sleep(delay = 0) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, delay);
+      });
+    }
+    const username = user.username
+
     
     // https://askjavascript.com/how-to-get-first-and-last-day-of-the-current-week-in-javascript/
     const computeWeekStarts = () => {
@@ -56,12 +77,62 @@ function Calendar() {
         setNext(next + 1)
     }
     
-    // get the artist list
+    // For each artist, search for releases that are associated with
+    // types from the user profiles
+    
+    const getRecentReleases = async () =>{
+        const releaseStore = []
+        let nbFetches = 0
+        let types = profile.releaseTypes
+        //let types = ['album', 'single']
+        for (let artist of artistList){
+            for (let type of types) {
+                // type= 'album'
+                const resp = await fetch(`http://localhost:3000/artists/${artist.mbid}/${type}`)
+                const data = await resp.json();
+                if (data.result) {
+                    // Remove releases that have only year information in their date key
+                    const filtredData = data.releases.filter(release => (release.date && release.date.split('-').length >= 2))
+                    if (filtredData){
+                        // add the artist name and the release type to the data
+                        const completedData = filtredData.map((ele) => (
+                            {...ele,
+                                artist: artist.name,
+                                releaseType: type,
+                                // date: dates[Math.floor(Math.random() * 22)]
+                            }
+                        ))
+                        releaseStore.push(...completedData)
+                    }
+                }  else {
+                    // console.log(`No release of ${type} for artist ${artist.name} was found`)
+                }
+                nbFetches = nbFetches + 1
+                
+            }
+
+        }
+        // sort the release data by date
+        releaseStore = releaseStore.sort(( a, b ) => {
+            return new Date(a.date) - new Date(b.date)
+        })
+        setRecentReleases([...recentReleases, ...releaseStore])
+        setNbSearch(nbFetches)
+    }
+    
+        
     useEffect(() => {
         if (!user.token) {
             return;
         }
-              
+        const sortedConflicts = profile.conflicts.sort()
+        setConflictList(sortedConflicts)
+
+        username.charAt(username.length-1) === 's' ? setTitle(username+"'") : setTitle(username+"'s")
+
+        const weekStarts = computeWeekStarts()
+        setStartWeek(weekStarts[next + 1])
+        setEndWeek(weekStarts[next])        
         fetch(`http://localhost:3000/profiles/myartists/${user.token}`)
         .then((response) => response.json())
         .then((data) => {
@@ -73,7 +144,7 @@ function Calendar() {
         .catch((error) => {
             console.error('Fetch artist list error :' , error)
         })
-    },[])
+    },[myArtists])
 
     // Get the recent releases    
     useEffect(() => {
@@ -87,7 +158,9 @@ function Calendar() {
         .then((response) => response.json())
         .then((data) => {
             if (data.result) {
+                // console.log('Fetched Date:', data)
                 setRecentReleases([...data.data])
+                setMyArtists(true)
             }
         })
         .catch((error) => {
@@ -110,6 +183,7 @@ function Calendar() {
         if (filtredWeekReleases.length != 0){
             weekReleases = filtredWeekReleases.map((data, index) => {
                 let releaseDate = new Date(data[0].date)
+                //console.log('Release Date:', releaseDate)
                 let releaseYear = releaseDate.getUTCFullYear()
                 let releaseMonth = releaseDate.getUTCMonth() + 1 > 9? releaseDate.getUTCMonth() + 1 : '0'+(releaseDate.getUTCMonth() + 1)
                 let releaseDay = releaseDate.getUTCDate() > 9 ? releaseDate.getUTCDate() : '0'+(releaseDate.getUTCDate())
@@ -133,28 +207,64 @@ function Calendar() {
             })
         }
     }
-    
+    // console.log('WEEK RELEASE LENGTH:', weekReleases.length)
+
     let myArtistList = []
     if (artistList) {
         myArtistList = artistList.map((artist, i) => {
-            const link = `/artist/${artist.mbid}`
-            return (<li key={i} className={styles.artistName}>{artist.name}</li>
+            return (
+                <li key={i} className={styles.artistName}>
+                    <span onClick={() => router.push(`/artist/${artist.mbid}`)} className="cursor-pointer items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+                        {artist.name}
+                    </span>
+                 </li>
             )
         })
     }
 
-    //let searchEnded = (nbSearch === (artistList.length *  profile[0].releaseTypes.length))
+    let myConflicts = []
+    if (conflictList) {
+        myConflicts = conflictList.map((artistConf, i) => {
+            return (
+                <li key={i} className={styles.artistName}>
+                    <span onClick={() => toggleCsModal(artistConf)} 
+                    className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 
+                    hover:underline cursor-pointer">
+                        {artistConf}
+                    </span>
+                 </li>
+            )
+        })
+    }
+
+    //let searchEnded = (nbSearch === (artistList.length *  profile.releaseTypes.length))
     return (
         <div className={styles.calendarContainer}>
             <div className={styles.leftPart}>
-                <div className={styles.artistListContainer}>
+                {/* <div className={styles.artistListContainer}>
                     <h1> 
-                        {user.username}'s artist list
+                        {title} artist list
                     </h1>
                     <ul className={styles.artistList} >
                         {myArtistList}
                     </ul>
+                </div> */}
+                <div className={styles.artistListContainer}>
+                    <h1> 
+                        {title} artist conflicts
+                    </h1>
+                    <ul className={styles.artistList} >
+                        {myConflicts}
+                    </ul>
                 </div>
+                <ConflictSearchModal
+                        artistName={arconf}
+                        show={csModal}
+                        dismissible={true}
+                        onClose={() => toggleCsModal('')}
+                        myArtists={artistList}
+                    
+                    />
             </div>
             <div className={styles.tableContainer}>
                 <div className={styles.tableHeader}>

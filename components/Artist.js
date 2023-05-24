@@ -12,9 +12,9 @@ import allreleases, {
   removeAllAlbums,
 } from "../reducers/allreleases";
 import moment from "moment";
-import Link from "next/link";
 import { Button } from "flowbite-react";
 import { RxGear, RxCheck } from "react-icons/rx";
+import { useRouter } from 'next/router';
 
 function Artist() {
   const [selectedOption, setSelectedOption] = useState("all");
@@ -33,6 +33,7 @@ function Artist() {
   const profile = useSelector((state) => state.profile.value);
   const [lastUrl, setLastUrl] = useState("");
   const { mbid } = useParams();
+  const router = useRouter();
 
   //Fonction de conversion du temps total d'un album avec momentjs
   const calculTotalDuration = (totalTime) => {
@@ -48,98 +49,100 @@ function Artist() {
   };
 
   useEffect(() => {
-    dispatch(removeAllAlbums());
-    //Fetch pour infos artist & albums
-    setTimeout(() => {
-      fetch(`http://localhost:3000/artists/${mbid}`)
-        .then((response) => response.json())
-        .then((data) => {
-          data && setArtistInformation(data.art);
-        });
-    }, 2000);
+    if (router.query.arid) {
+      dispatch(removeAllAlbums());
+      //Fetch pour infos artist & albums
+      setTimeout(() => {
+        fetch(`http://localhost:3000/artists/${router.query.arid}`)
+          .then((response) => response.json())
+          .then((data) => {
+            data && setArtistInformation(data.art);
+          });
+      }, 2000);
 
-    //Fetch pour récupérer le last album
-    setTimeout(() => {
-      fetch(`http://localhost:3000/artists/${mbid}/lastalbum`)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data) {
-            setLastAlbum(data);
-            setLastUrl(`../release/${data.mbid}`);
-            const albumMbid = data.mbid;
+      //Fetch pour récupérer le last album
+      setTimeout(() => {
+        fetch(`http://localhost:3000/artists/${router.query.arid}/lastalbum`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data) {
+              setLastAlbum(data);
+              setLastUrl(`../release/${data.mbid}`);
+              const albumMbid = data.mbid;
 
-            //Fetch pour récupérer la cover last album
-            console.log(albumMbid);
-            fetch(
-              `http://coverartarchive.org/release-group/${albumMbid}?fmt=json`
-            )
-              .then((response) => response.json())
-              .then((cover) => {
-                setCover(cover.images[0].image);
-              });
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching for Last Album:", error);
-        });
-    }, 2000);
+              //Fetch pour récupérer la cover last album
+              console.log(albumMbid);
+              fetch(
+                `http://coverartarchive.org/release-group/${albumMbid}?fmt=json`
+              )
+                .then((response) => response.json())
+                .then((cover) => {
+                  setCover(cover.images[0].image);
+                });
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching for Last Album:", error);
+          });
+      }, 2000);
 
-    //Fetch pour récupérer les infos d'albums
-    setTimeout(() => {
-      fetch(`http://localhost:3000/artists/${mbid}/album`)
-        .then((response) => response.json())
-        .then((data) => {
-          data && dispatch(addAlbums(data.releases));
-          setAlbumsList(data.releases);
-        })
-        .catch((error) => {
-          console.error("Error fetching data 1:", error);
-        });
-    }, 4500); // Ajouter une pause de 1 seconde (1000 millisecondes) avant cette requête
+      //Fetch pour récupérer les infos d'albums
+      setTimeout(() => {
+        fetch(`http://localhost:3000/artists/${router.query.arid}/album`)
+          .then((response) => response.json())
+          .then((data) => {
+            data && dispatch(addAlbums(data.releases));
+            setAlbumsList(data.releases);
+          })
+          .catch((error) => {
+            console.error("Error fetching data 1:", error);
+          });
+      }, 4500); // Ajouter une pause de 1 seconde (1000 millisecondes) avant cette requête
 
-    //Fetch pour récupérer les infos d'eps
-    setTimeout(() => {
-      fetch(`http://localhost:3000/artists/${mbid}/ep`)
-        .then((response) => response.json())
-        .then((data) => {
-          data && dispatch(addEps(data.releases));
-          setEpsList(data.releases);
-        })
-        .catch((error) => {
-          console.error("Error fetching data 1:", error);
-        });
-    }, 7000); // Ajouter une pause de 2 secondes (2000 millisecondes) avant cette requête
+      //Fetch pour récupérer les infos d'eps
+      setTimeout(() => {
+        fetch(`http://localhost:3000/artists/${router.query.arid}/ep`)
+          .then((response) => response.json())
+          .then((data) => {
+            data && dispatch(addEps(data.releases));
+            setEpsList(data.releases);
+          })
+          .catch((error) => {
+            console.error("Error fetching data 1:", error);
+          });
+      }, 7000); // Ajouter une pause de 2 secondes (2000 millisecondes) avant cette requête
 
-    //Vérifier les releaseTypes d'albums depuis le store + filtrage des albums avec selectedOption
-    if (profile[0]) {
-      const typesArray = profile[0].releaseTypes;
-      if (
-        typesArray === 3 ||
-        (typesArray.includes("ep") && typesArray.includes("album"))
-      ) {
-        setSelectedOption("all");
-      } else if (typesArray.includes("album")) {
-        setSelectedOption("albums");
-      } else if (typesArray.includes("ep")) {
-        setSelectedOption("eps");
+      //Vérifier les releaseTypes d'albums depuis le store + filtrage des albums avec selectedOption
+      if (profile) {
+        const typesArray = profile.releaseTypes;
+        if (
+          typesArray === 3 ||
+          (typesArray.includes("ep") && typesArray.includes("album"))
+        ) {
+          setSelectedOption("all");
+        } else if (typesArray.includes("album")) {
+          setSelectedOption("albums");
+        } else if (typesArray.includes("ep")) {
+          setSelectedOption("eps");
+        }
+      }
+
+      //Vérifier si l'artiste est follow ou pas :
+      if (user.token) {
+        fetch(`http://localhost:3000/profiles/myartists/${user.token}`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.result) {
+              data.artists.some((mbidArtist) => mbidArtist.mbid === router.query.arid) &&
+                setIsFollowed(true);
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching data 1:", error);
+          });
       }
     }
-
-    //Vérifier si l'artiste est follow ou pas :
-    if (user.token) {
-      fetch(`http://localhost:3000/profiles/myartists/${user.token}`)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.result) {
-            data.artists.some((mbidArtist) => mbidArtist.mbid === mbid) &&
-              setIsFollowed(true);
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching data 1:", error);
-        });
-    }
-  }, []);
+  }, [router.query.arid]);
 
   //console log
   // if (cover) {
@@ -252,11 +255,10 @@ function Artist() {
       <div className={styles.albumsInfos} key={i}>
         <div className={styles.albumTitle}>
           <p>
-            <Link href={url}>
-              <span className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
-                {data.title}
-              </span>
-            </Link>{" "}
+            <span onClick={() => router.push(url)} className="cursor-pointer inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+              {data.title}
+            </span>
+            {" "}
             • {data.date}
           </p>
         </div>
@@ -278,11 +280,9 @@ function Artist() {
       <div className={styles.albumsInfos} key={i}>
         <div className={styles.albumTitle}>
           <p>
-            <Link href={url}>
-              <span className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
-                {data.title}
-              </span>
-            </Link>{" "}
+            <span onClick={() => router.push(url)} className="cursor-pointer inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+              {data.title}
+            </span>
             • {data.date}
           </p>
         </div>
@@ -340,7 +340,8 @@ function Artist() {
               </div>
             ) : (
               <figure class="relative max-w-xs transition-all duration-300 cursor-pointer filter grayscale hover:grayscale-0">
-                <a href={lastUrl}>
+                <a onClick={() => router.push(lastUrl)} className="cursor-pointer">
+
                   <img class="rounded-lg" src={cover} alt="image description" />
                 </a>
                 <figcaption class="absolute px-4 text-md text-white bottom-6">
@@ -363,14 +364,14 @@ function Artist() {
               {isFollowed ? (
                 <Button
                   gradientDuoTone="purpleToBlue"
-                  onClick={() => handleFollow(mbid)}
+                  onClick={() => handleFollow(router.query.arid)}
                 >
                   <RxCheck /> Followed
                 </Button>
               ) : (
                 <Button
                   gradientDuoTone="purpleToBlue"
-                  onClick={() => handleFollow(mbid)}
+                  onClick={() => handleFollow(router.query.arid)}
                 >
                   Follow
                 </Button>
