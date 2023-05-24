@@ -16,7 +16,6 @@ import { useSelector } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import LoaderMusic from "./LoaderMusic";
-import Link from "next/link";
 import ConflictSearchModal from "./ConflictSearchModal";
 
 function Calendar() {
@@ -215,11 +214,9 @@ function Calendar() {
         myArtistList = artistList.map((artist, i) => {
             return (
                 <li key={i} className={styles.artistName}>
-                    <Link href={`/artist/${artist.mbid}`}>
-                        <span className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
-                            {artist.name}
-                        </span>
-                    </Link>
+                    <span onClick={() => router.push(`/artist/${artist.mbid}`)} className="cursor-pointer items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+                        {artist.name}
+                    </span>
                  </li>
             )
         })

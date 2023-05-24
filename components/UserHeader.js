@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styles from "../styles/Header.module.css";
-import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faHome, faCalendar } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -96,7 +95,7 @@ function UserHeader() {
   };
 
   const handleLogOut = () => {
-    router.push("/home")
+    router.push("/")
 
     dispatch(logout());
     dispatch(deleteProfile());
@@ -168,10 +167,10 @@ function UserHeader() {
         <Navbar.Brand href="/">Album Release</Navbar.Brand>
       </div>
       <Navbar.Collapse>
-        <Navbar.Link href="/">
+        <Navbar.Link onClick={() => router.push("/")} className="cursor-pointer">
           <AiOutlineHome className="h-11 w-10" />
         </Navbar.Link>
-        <Navbar.Link href="/calendar">
+        <Navbar.Link onClick={() => router.push("/calendar")} className="cursor-pointer">
           <AiFillCalendar className="h-11 w-10" />
         </Navbar.Link>
         <Dropdown

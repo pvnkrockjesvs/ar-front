@@ -12,7 +12,6 @@ import allreleases, {
   removeAllAlbums,
 } from "../reducers/allreleases";
 import moment from "moment";
-import Link from "next/link";
 import { Button } from "flowbite-react";
 import { RxGear, RxCheck } from "react-icons/rx";
 import { useRouter } from 'next/router';
@@ -256,11 +255,10 @@ function Artist() {
       <div className={styles.albumsInfos} key={i}>
         <div className={styles.albumTitle}>
           <p>
-            <Link href={url}>
-              <span className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
-                {data.title}
-              </span>
-            </Link>{" "}
+            <span onClick={() => router.push(url)} className="cursor-pointer inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+              {data.title}
+            </span>
+            {" "}
             • {data.date}
           </p>
         </div>
@@ -282,11 +280,9 @@ function Artist() {
       <div className={styles.albumsInfos} key={i}>
         <div className={styles.albumTitle}>
           <p>
-            <Link href={url}>
-              <span className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
-                {data.title}
-              </span>
-            </Link>{" "}
+            <span onClick={() => router.push(url)} className="cursor-pointer inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+              {data.title}
+            </span>
             • {data.date}
           </p>
         </div>
@@ -344,7 +340,8 @@ function Artist() {
               </div>
             ) : (
               <figure class="relative max-w-xs transition-all duration-300 cursor-pointer filter grayscale hover:grayscale-0">
-                <a href={lastUrl}>
+                <a onClick={() => router.push(lastUrl)} className="cursor-pointer">
+
                   <img class="rounded-lg" src={cover} alt="image description" />
                 </a>
                 <figcaption class="absolute px-4 text-md text-white bottom-6">
