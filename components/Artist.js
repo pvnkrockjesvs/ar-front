@@ -269,30 +269,33 @@ function Artist() {
   });
 
   //.map du tableau d'eps filtrés pour l'afficher
-  const epsToShow = epsList.map((data, i) => {
-    const albumLength = calculTotalDuration(data.length);
+  let epsToShow = null;
+  if (epsList) {
+    epsToShow = epsList.map((data, i) => {
+      const albumLength = calculTotalDuration(data.length);
 
-    const url = `../release/${data.mbid}`;
+      const url = `../release/${data.mbid}`;
 
-    return (
-      <div className={styles.albumsInfos} key={i}>
-        <div className={styles.albumTitle}>
-          <p>
-            <Link href={url}>
-              <span className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
-                {data.title}
-              </span>
-            </Link>{" "}
-            • {data.date}
-          </p>
-        </div>
-        {/* <div className={styles.minuteTracks}>
+      return (
+        <div className={styles.albumsInfos} key={i}>
+          <div className={styles.albumTitle}>
+            <p>
+              <Link href={url}>
+                <span className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+                  {data.title}
+                </span>
+              </Link>
+              • {data.date}
+            </p>
+          </div>
+          {/* <div className={styles.minuteTracks}>
           <p>{albumLength}</p>
           <p>{data.numberTracks} tracks</p>
         </div> */}
-      </div>
-    );
-  });
+        </div>
+      );
+    });
+  }
 
   //Fonction pour changer open à true ou false sur le popover
   const handleOpenChange = () => {
@@ -415,7 +418,7 @@ function Artist() {
                 {albumsToShow}
               </div>
             )}
-            {epsList.length === 0 && (
+            {(!epsList || epsList.length === 0) && (
               <div className={styles.loader}>
                 <span className={styles.loaderText}>loading</span>
                 <span className={styles.load}></span>

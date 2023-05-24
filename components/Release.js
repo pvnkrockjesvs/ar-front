@@ -22,18 +22,20 @@ function Release() {
         //console.log(data);
 
         //Ajout du fetch pour récupérer le lien spotify
-        fetch("http://localhost:3000/streaming/spotify/album", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ album: data.title, artist: data.artist }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.result) {
-              //code to add
-              console.log(data.data[0].external_urls.spotify);
-            }
-          });
+        if (data.title && data.artist) {
+          fetch("http://localhost:3000/streaming/spotify/album", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ album: data.title, artist: data.artist }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.result) {
+                data.data[0] &&
+                  setSpotifyLink(data.data[0].external_urls.spotify);
+              }
+            });
+        }
 
         setTrack(
           data.tracks.map((track, i) => {
@@ -75,6 +77,19 @@ function Release() {
       });
   }, []);
 
+  function Spotify() {
+    if (spotifyLink) {
+      return (
+        <div class="pt-4">
+          <a class="flex flex-row" href={spotifyLink} target="_blank">
+            <img class="h-6 mr-1" src="/spotify_logo.png" />
+            <p>Listen on Spotify</p>
+          </a>
+        </div>
+      );
+    }
+  }
+
   return (
     <div>
       <div className={styles.mainContainer}>
@@ -96,7 +111,11 @@ function Release() {
               </figure>
             )}
           </div>
-          <h2 class="text-3xl pl-2 pt-4">{album && album.artist}</h2>
+          <a href={`/artist/${album.arid}`}>
+            <h2 class="text-3xl pl-2 pt-4 hover:text-indigo-600">
+              {album && album.artist}
+            </h2>
+          </a>
         </div>
 
         {/* --RIGHT CONTAINER-- */}
@@ -119,6 +138,7 @@ function Release() {
               {album.trackCount} tracks <br />
               {Math.floor(album.albumLength / 60000)} minutes
             </div>
+            <Spotify />
           </div>
           {/* --DISCOGRAPHY CONTAINER-- */}
           <div className={styles.discographyContainer}>
