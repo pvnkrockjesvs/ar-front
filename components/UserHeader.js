@@ -31,10 +31,9 @@ function UserHeader() {
   const togglePrModal = () => setPrModal(!prModal);
 
   const handleLogOut = () => {
-    router.push("/")
-
     dispatch(logout());
     dispatch(deleteProfile());
+    router.push("/")
   };
 
   const closeModal = () => {
