@@ -80,16 +80,6 @@ function Release() {
                     </Moment>
                   </Table.Cell>
                 </Table.Row>
-                // <div className={styles.tracksInfos} key={i}>
-                //   <div className={styles.trackTitle}>
-                //     <p>
-                //       {i+1} - {track.title}
-                //     </p>
-                //   </div>
-                //   <div className={styles.minuteTracks}>
-                //     <Moment format={trackLengthFormat}>{track.trackLength}</Moment>
-                //   </div>
-                // </div>
               );
             })
           );
@@ -142,14 +132,6 @@ function Release() {
                 <Spinner aria-label="Center-aligned spinner example" />
               </div>
             ) : (
-              // <figure className="relative max-w-sm transition-all duration-300 cursor-pointer">
-              //   <img className="rounded-lg" src={cover} alt="image description" />
-
-              //   <figcaption className="absolute px-4 text-md text-white bottom-6">
-              //     <p>{album.title}</p>
-              //     <Moment format="MMMM DD YYYY">{album.date}</Moment>
-              //   </figcaption>
-              // </figure>
               <div>
                 <img
                   class="h-auto rounded-lg"
