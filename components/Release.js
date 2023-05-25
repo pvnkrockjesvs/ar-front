@@ -75,9 +75,6 @@ function Release() {
                     {i + 1} - {track.title}
                   </Table.Cell>
                   <Table.Cell className="text-sm whitespace-nowrap font-medium text-white dark:text-white">
-                    {i + 1} - {track.title}
-                  </Table.Cell>
-                  <Table.Cell className="text-sm whitespace-nowrap font-medium text-white dark:text-white">
                     <div className="select-none">Divider that show the full tab</div>
                   </Table.Cell>
                   <Table.Cell>
@@ -199,8 +196,9 @@ function Release() {
           </div>
           {/* --DISCOGRAPHY CONTAINER-- */}
           <div className={styles.discographyContainer}>
+          <p className=" text-2xl font-medium text-gray-700 dark:text-gray-400 pb-5">Album tracks:</p>
+
             {/* <div className={styles.albumsContainer}>
-            <p className={styles.albumTxt}>Tracks:</p>
             <div className={styles.trackContainer}>
               {track}           
             </div>
