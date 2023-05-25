@@ -478,7 +478,7 @@ function Artist() {
                 {epsToShow}
               </div>
             )}
-            {(!epsList || epsList.length === 0) && showMessage && (
+            {(!epsList || epsList.length === 0) && filterEps && showMessage && (
               <div>This artist has no Eps</div>
             )}
           </div>
