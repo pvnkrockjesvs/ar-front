@@ -1,7 +1,7 @@
 import { Dropdown, Avatar, Button, Modal, Label,TextInput, Checkbox, Radio } from "flowbite-react";
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import { updateArtists, updateConflicts } from "../reducers/profile";
+import { storeProfile } from "../reducers/profile";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -17,7 +17,6 @@ const ConflictSearchModal = (props) => {
 
 
   const handleFollow = (data) => {
-    dispatch(updateConflicts(data.name));
     const artistData = { name: data.name, mbid: data.mbid };
     const isFollowed = myArtistsList.some((objet) => objet.mbid === data.mbid);
     if (user.token && !isFollowed) {
@@ -67,7 +66,7 @@ const ConflictSearchModal = (props) => {
 };
 
   const handleDelete = (data) => {
-    dispatch(updateConflicts(data.props.artistName));
+    console.log(data)
     fetch(`http://localhost:3000/profiles/conflict`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -76,22 +75,31 @@ const ConflictSearchModal = (props) => {
         token: user.token,
       })
     }).then((response) => response.json()).then((res) => {
+
+      fetch(`http://localhost:3000/profiles/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: user.token }),
+      })
+      .then((response) => response.json())
+      .then((res) => {
+          if (!res.result) {
+            console.log("No profile Found");
+          } else {
+            dispatch(storeProfile(res.profile));
+          }
+      });
     })
 
     data.button ? props.onClose() : console.log('')
-
-
   }
 
   useEffect(() => {
-    if (start = 0) {
-      setMyArtistsList(props.myArtists)
-      setStart(1)
-    }
-
-  }, [start])
-  useEffect(() => {
     if (props.artistName !== '') {
+      if (props.myArtists.length > 0) {
+        setMyArtistsList(props.myArtists)
+      }    
+
       console.log(myArtistsList)
       fetch(`http://localhost:3000/artists/search/${props.artistName}`)
       .then((response) => response.json()).then((data) => {

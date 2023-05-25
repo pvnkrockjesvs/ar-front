@@ -66,8 +66,10 @@ function UserHeader() {
           }
           arrowIcon={false}
           inline={true}
-        >
-          <Dropdown.Item onClick={toggleLfModal}>Import</Dropdown.Item>
+          placement="left-start">
+            <Dropdown.Item onClick={toggleLfModal}
+
+          >Import</Dropdown.Item>
           <LastFmModal
             show={lfModal}
             dismissible={true}

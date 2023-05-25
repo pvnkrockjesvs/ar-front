@@ -22,7 +22,9 @@ function Home() {
   }, []);
 
   //Map du tableau d'albums populaires :
+  
   popularAlbums.sort((a, b) => new Date(b.date) - new Date(a.date));
+
   const albumsToShow = popularAlbums.map((data, i) => {
     const date = moment(data.date);
     const dateAlbum = date.format("DD-MM-YYYY");
