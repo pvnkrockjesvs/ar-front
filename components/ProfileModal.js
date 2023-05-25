@@ -7,21 +7,13 @@ import { storeProfile, updateProfile } from '../reducers/profile';
 import { Button, Modal, Label, Checkbox, Radio, TextInput } from "flowbite-react";
 import { useRouter } from 'next/router';
 function ProfileModal(props) {
-    console.log('I AM IN THE PROFILE MODAL')
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.value)
-<<<<<<< HEAD
     //const profile = user.isProfileCreated ? useSelector((state) => state.profile.value) : null
     const profile =  useSelector((state) => state.profile.value)
-=======
-    const profile = user.isProfileCreated ? useSelector((state) => state.profile.value) : null
-    const { register, handleSubmit, setValue, reset, watch, control } = useForm()
-    const { fields, push, append, remove} = useFieldArray({
-            control,
-            name: 'genres'}
-        )
->>>>>>> main
 
+    const { register, handleSubmit, setValue, reset, watch } = useForm()
+    
     const updateDataProfile = (data) => {
         const profileData = {}
         profileData.releaseTypes = data.releaseTypes
@@ -90,12 +82,7 @@ function ProfileModal(props) {
         if (user.isProfileCreated){
             updateUserProfile(data)
         } else {
-<<<<<<< HEAD
             createUserProfile(data)
-=======
-            createProfile(data)
-            router.push('/')
->>>>>>> main
         }
     }
 
