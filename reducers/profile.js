@@ -9,8 +9,7 @@ export const profileSlice = createSlice({
   initialState,
   reducers: {
     storeProfile: (state, action) => {
-
-      state.value = action.payload;
+      state.value = action.payload
     },
     deleteProfile: (state) => {
       state.value = {}
@@ -18,8 +17,13 @@ export const profileSlice = createSlice({
     updateConflicts: (state, action) => {
       state.value.conflicts = state.value.conflicts.filter(conflicts => conflicts !== action.payload)
     },
+    updateProfile: (state, action) => {
+      for(const prop in action.payload){
+        state.value[prop] = action.payload[prop]
+      }
+    }
   },
 });
 
-export const { storeProfile, deleteProfile, updateConflicts } = profileSlice.actions;
+export const { storeProfile, deleteProfile, updateConflicts, updateProfile } = profileSlice.actions;
 export default profileSlice.reducer;

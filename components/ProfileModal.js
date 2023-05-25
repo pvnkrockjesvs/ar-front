@@ -3,39 +3,33 @@ import React,  { useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux'
 import { setProfile } from '../reducers/user';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { storeProfile, updateProfile } from '../reducers/profile';
 import { Button, Modal, Label, Checkbox, Radio, TextInput } from "flowbite-react";
 import { useRouter } from 'next/router';
 function ProfileModal(props) {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.value)
-    const profile = user.isProfileCreated ? useSelector((state) => state.profile.value) : null
-    const { register, handleSubmit, setValue, reset, watch, control } = useForm()
-    const { fields, push, append, remove} = useFieldArray({
-            control,
-            name: 'genres'}
-        )
-        const router = useRouter()
+    //const profile = user.isProfileCreated ? useSelector((state) => state.profile.value) : null
+    const profile =  useSelector((state) => state.profile.value)
 
+    const { register, handleSubmit, setValue, reset, watch } = useForm()
+    
     const updateDataProfile = (data) => {
         const profileData = {}
         profileData.releaseTypes = data.releaseTypes
         profileData.newsletter = data.newsletter
         profileData.isPremium = data.isPremium
+        console.log(data.genres)
 
-        if (data.emailNotification == false){
+        if (data.emailNotification === false){
             profileData.newsletter = 0
         }
-        profileData.genres = []
-        for (let genre of data.genres){
-            profileData.genres.push(genre.genre)
-        }
-
+        profileData.genres = data.genres.split(',')
+        console.log(profileData.genres)
         return profileData
     }
 
-    const createProfile = (data) => {
+    const createUserProfile = (data) => {
         const profileData = updateDataProfile(data)
         // Check and extract the usefull data
         fetch("http://localhost:3000/profiles/create", {
@@ -52,6 +46,7 @@ function ProfileModal(props) {
         .then((response) => response.json())
         .then((data) => {
             if (data.result) {
+                dispatch(storeProfile(data.profile))
                 dispatch(setProfile())
                 reset()
                 props.closeModal()
@@ -59,7 +54,7 @@ function ProfileModal(props) {
         })
     }
 
-    const updateProfile = (data) => {
+    const updateUserProfile = (data) => {
         const profileData = updateDataProfile(data)
         // Check and extract the usefull data
         fetch("http://localhost:3000/profiles/update", {
@@ -75,6 +70,7 @@ function ProfileModal(props) {
         .then((response) => response.json())
         .then((data) => {
             if (data.result) {
+                dispatch(updateProfile(profileData))
                 dispatch(setProfile())
                 reset()
                 props.closeModal()
@@ -83,11 +79,10 @@ function ProfileModal(props) {
     }
 
     const onSubmit = (data) => {
-        if (profile){
-            updateProfile(data)
+        if (user.isProfileCreated){
+            updateUserProfile(data)
         } else {
-            createProfile(data)
-            router.push('/')
+            createUserProfile(data)
         }
     }
 
@@ -96,27 +91,26 @@ function ProfileModal(props) {
     useEffect(() => {
         // Check if the profile is already created, then we are in the
         // update mode, otherwise we are in the create mode
-        if (user.isProfileCreated) {
-            const formFields = ['newsletter', 'releaseTypes','genres'];
+        if ((user.isProfileCreated)  && (profile && profile.user)){
+            const formFields = ['newsletter', 'releaseTypes','genres', 'isPremium'];
             formFields.forEach(field => {
-                console.log('FIELD:', field, profile[field])
-                if (field === 'genres'){
-                    for( let i = 0; i < profile.genres.length; i++ ){
-                        setValue(`genres.${i}.genre`, profile.genres[i])
-                    }
-                } else {
+                if (field === 'newsletter'){
                     setValue(field, profile[field].toString())
+                    if (profile[field] != 0){
+                        setValue('emailNotification', true)
+                    } else {
+                        setValue('emailNotification', false)
+                    }
+                } else if (field === 'genres'){
+                    setValue(field, profile[field].join(','))
+                } else {
+                    setValue(field, profile[field])
                 }
-                console.log('GENRES:', fields)
-
             });
-            if (profile.newsletter != 0){
-                setValue('emailNotification', true)
-            } else {
-                setValue('emailNotification', false)
-            }
+        } else {
+            return
         }
-    }, [])
+    }, [profile])
 
     let updateCreateProfile = user.isProfileCreated ? 'Update your profile' : 'Create your profile'
     return (
@@ -125,7 +119,7 @@ function ProfileModal(props) {
                 {updateCreateProfile}
             </Modal.Header>
             <Modal.Body>
-                <form autoComplete='off' className={styles.formContainer} onSubmit={handleSubmit(onSubmit)}>
+                <form className="flex flex-col gap-8" autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
                     <div>
                         <div className="mb-2 block">
                             <Label
@@ -145,63 +139,62 @@ function ProfileModal(props) {
                         <div>
                             <Label htmlFor="field-fequency" value="How often to receive email notification?"/>
                             <div className="flex items-center gap-2">
-                                <Label htmlFor="field-oneWeek"> 1 week  </Label>
                                 <Radio
                                     id="field-oneweek"
                                     name="newsletter"
-                                    value="1"
-                                    {...register("newsletter")}
+                                    value='1'
+                                    {...register("newsletter", { required: "news letter frequency is required" })}
                                 />
-                                <Label htmlFor="field-twoWeek"> 2 week </Label>
+                                <Label htmlFor="field-oneWeek"> 1 week  </Label>
                                 <Radio
                                     id="field-twoweek"
                                     name="newsletter"
-                                    value="2"
-                                    {...register("newsletter")}
+                                    value='2'
+                                    {...register("newsletter", { required: "news letter frequency is required" })}
                                 />
-                                <Label htmlFor="field-oneMonth"> 1 month </Label>
+                                <Label htmlFor="field-twoWeek"> 2 week </Label>
                                 <Radio
                                     id="field-oneMonth"
                                     name="newsletter"
-                                    value="3"
-                                    {...register("newsletter")}
+                                    value='3'
+                                    {...register("newsletter", { required: "news letter frequency is required" })}
                                 />
+                                <Label htmlFor="field-oneMonth"> 1 month </Label>
                             </div>
                         </div>
                         )}
                         <div>
                             <Label htmlFor="release-types" value="What type of release do you prefer?"/>
                             <div className="flex items-center gap-2">
-                                <Label htmlFor="field-album"> Album  </Label>
                                 <Checkbox
                                     id="field-album"
-                                    {...register("releaseTypes")}
+                                    {...register("releaseTypes", { required: "release type is required" })}
                                     name="releaseTypes"
-                                    value="true"
+                                    value="album"
+                                    checked={user.isprofileCreated ? profile.releaseTypes.includes('album'): undefined}
+                                />
+                                <Label htmlFor="field-album"> Album  </Label>
+                                <Checkbox
+                                    id="field-single"
+                                    {...register("releaseTypes", { required: "release type  is required" })}
+                                    name="releaseTypes"
+                                    value="single"
+                                    checked={user.isprofileCreated ? profile.releaseTypes.includes('single') : undefined}
                                 />
                                 <Label htmlFor="field-single"> Single  </Label>
                                 <Checkbox
-                                    id="field-single"
-                                    {...register("releaseTypes")}
+                                    id="field-ep"
+                                    {...register("releaseTypes", { required: "release type is required" })}
                                     name="releaseTypes"
-                                    value="true"
+                                    value="ep"
+                                    checked={user.isprofileCreated ? profile.releaseTypes.includes('ep'): undefined}
                                 />
                                 <Label htmlFor="field-ep"> EP  </Label>
-                                <Checkbox
-                                    id="field-ep"
-                                    {...register("releaseTypes")}
-                                    name="releaseTypes"
-                                    value="true"
-                                />
+                            </div>
                         </div>
                         <div>
-                            <div className="mb-2 block">
-                                <Label
-                                    htmlFor="field-support"
-                                    value="Do you wante to support us?"
-                                    className="mr-5"
-                                />
-                            </div>            
+                            <Label htmlFor="field-support" value="Do you wante to support us?"/>
+                            <div className="flex items-center gap-2">
                                 <Checkbox
                                     id="field-support"
                                     name="isPremium"
@@ -211,24 +204,21 @@ function ProfileModal(props) {
                             </div>
                         </div>
                         <div>
-                            <div>
-                                <Label htmlFor="release-types" value="What music genres do you prefer (maximum 5 genres)?"/>
-                                {(fields.length < 5) &&
-                                    <FontAwesomeIcon className={styles.addGenreButton} icon={faCirclePlus} style={{color: "#ff8080",}} onClick={() => append('')} />
-                                }
-                            </div>
-                            <div className="flex gap-4">
-                                {fields.map((genre, index) => {
-                                    return (
-                                        <TextInput
-                                            sizing="sm"
-                                            key={genre.id}
-                                            {...register(`genres.${index}.genre`)}
-                                        />
-                                    )
-                                })}
-                            </div>
-                        </div>
+                            <div className="mb-2 block">
+                                <Label
+                                    htmlFor="genres"
+                                    value="What music genres do you prefer (maximum 5 genres)?"
+                                    className="mr-5"
+                                />
+                            </div>             
+                            <TextInput
+                                id="genres"
+                                type="text"
+                                placeholder="Music genres"
+                                {...register('genres')}
+                                helperText={<React.Fragment><span className="font-normal text-xs text-blue-500">A list of your preferred music genres separated by comma (e.g: genre1,genre2,...)</span></React.Fragment>}
+                              />
+                        </div>                                
                         <Button type="submit">
                         Save
                     </Button>
