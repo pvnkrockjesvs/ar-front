@@ -32,6 +32,7 @@ function Artist() {
   const user = useSelector((state) => state.user.value);
   const profile = useSelector((state) => state.profile.value);
   const [lastUrl, setLastUrl] = useState("");
+  const [showMessage, setShowMessage] = useState(false);
   const { mbid } = useParams();
   const router = useRouter();
 
@@ -57,6 +58,7 @@ function Artist() {
           .then((response) => response.json())
           .then((data) => {
             data && setArtistInformation(data.art);
+            console.log(data.art.bio);
           });
       }, 2000);
 
@@ -71,7 +73,6 @@ function Artist() {
               const albumMbid = data.mbid;
 
               //Fetch pour récupérer la cover last album
-              console.log(albumMbid);
               fetch(
                 `http://coverartarchive.org/release-group/${albumMbid}?fmt=json`
               )
@@ -110,7 +111,7 @@ function Artist() {
           .catch((error) => {
             console.error("Error fetching data 1:", error);
           });
-      }, 7000); // Ajouter une pause de 2 secondes (2000 millisecondes) avant cette requête
+      }, 6000); // Ajouter une pause de 2 secondes (2000 millisecondes) avant cette requête
 
       //Vérifier les releaseTypes d'albums depuis le store + filtrage des albums avec selectedOption
       if (profile) {
@@ -143,6 +144,12 @@ function Artist() {
           });
       }
     }
+
+    const timeout = setTimeout(() => {
+      setShowMessage(true);
+    }, 20000); // 20sec en millisecondes
+
+    return () => clearTimeout(timeout);
   }, [router.query.arid]);
 
   //console log
@@ -326,19 +333,21 @@ function Artist() {
               <div className={styles.loaderDiv1}>
                 <LoaderMusic />
               </div>
-            ) : artistInformation.image ? (
-              <img
-                class="h-auto max-w-md rounded-lg"
-                src={artistInformation.image}
-                alt="image description"
-              />
             ) : (
-              <Image
-                src={artistInformation.image}
-                alt="Artist picture"
-                width={300}
-                height={300}
-              />
+              artistInformation.image && (
+                <img
+                  className="w-96 rounded-lg"
+                  src={artistInformation.image}
+                  alt="image description"
+                />
+                // ) : (
+                //   <Image
+                //     src={artistInformation.image}
+                //     alt="Artist picture"
+                //     width={300}
+                //     height={300}
+                //   />
+              )
             )}
           </div>
           <p className={styles.releaseTxt}>Last Release : </p>
@@ -348,14 +357,18 @@ function Artist() {
                 <LoaderMusic />
               </div>
             ) : (
-              <figure class="relative max-w-xs transition-all duration-300 cursor-pointer filter grayscale hover:grayscale-0">
+              <figure className="relative max-w-xs transition-all duration-300 cursor-pointer filter grayscale hover:grayscale-0">
                 <a
                   onClick={() => router.push(lastUrl)}
                   className="cursor-pointer"
                 >
-                  <img class="rounded-lg" src={cover} alt="image description" />
+                  <img
+                    className="rounded-lg"
+                    src={cover}
+                    alt="image description"
+                  />
                 </a>
-                <figcaption class="absolute px-4 text-md text-white bottom-6">
+                <figcaption className="absolute px-4 text-md text-white bottom-6">
                   <p>{lastAlbum.title}</p>
                   <p>{lastAlbum.date}</p>
                 </figcaption>
@@ -427,17 +440,21 @@ function Artist() {
                 {albumsToShow}
               </div>
             )}
-            {(!epsList || epsList.length === 0) && (
+            {(!epsList || epsList.length === 0) && !showMessage && (
               <div className={styles.loader}>
                 <span className={styles.loaderText}>loading</span>
                 <span className={styles.load}></span>
               </div>
             )}
+
             {filterEps && (
               <div className={styles.albumsContainer}>
                 <p className={styles.albumTxt}>EPs</p>
                 {epsToShow}
               </div>
+            )}
+            {(!epsList || epsList.length === 0) && showMessage && (
+              <div>Cet artiste n'a pas d'EPs</div>
             )}
           </div>
         </div>

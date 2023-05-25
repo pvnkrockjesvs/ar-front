@@ -13,7 +13,7 @@ function Home() {
     fetch(`http://localhost:3000/topreleases`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.releases);
+        //console.log(data.releases);
         setPopularAlbums(data.releases);
       })
       .catch((error) => {
@@ -28,7 +28,11 @@ function Home() {
     const dateAlbum = date.format("DD-MM-YYYY");
     return (
       <div className="max-w-xs p-2.5" key={i}>
-        <Card className="cursor-pointer" onClick={() => router.push(`../release/${data.mbid}`)} imgSrc={data.cover}>
+        <Card
+          className="cursor-pointer"
+          onClick={() => router.push(`../release/${data.mbid}`)}
+          imgSrc={data.cover}
+        >
           <h5 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
             {data.artist}
           </h5>

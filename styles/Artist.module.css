@@ -278,8 +278,8 @@
 .loaderText {
   font-family: "Montserrat";
   font-weight: 600;
-  position: absolute;
-  left: -15px;
+  /* position: absolute; */
+  left: -25px;
   top: 0;
   padding: 0px;
   margin: 15px;
@@ -296,7 +296,7 @@
   height: 20px;
   width: 20px;
   bottom: 0;
-  position: absolute;
+  /* position: absolute; */
   transform: translateX(64px);
   animation: loading_713 3.5s ease both infinite;
 }

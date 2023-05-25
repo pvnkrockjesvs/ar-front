@@ -164,11 +164,14 @@ function Release() {
               </div>
             )}
           </div>
-          <a href={`/artist/${album.arid}`}>
-            <h2 class="text-3xl pl-2 pt-4 hover:text-indigo-600">
+          <span>
+            <h2
+              onClick={() => router.push(`/artist/${album.arid}`)}
+              class=" cursor-pointer text-3xl pl-2 pt-4 hover:text-indigo-600"
+            >
               {album && album.artist}
             </h2>
-          </a>
+          </span>
         </div>
 
         {/* --RIGHT CONTAINER-- */}
