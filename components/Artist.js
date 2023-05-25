@@ -74,7 +74,7 @@ function Artist() {
               setArtistLink(link);
             }
           });
-      }, 2000);
+      }, 2200);
 
       //Fetch pour récupérer le last album
       setTimeout(() => {
@@ -92,7 +92,10 @@ function Artist() {
               )
                 .then((response) => response.json())
                 .then((cover) => {
-                  setCover(cover.images[0].image);
+                  if (cover) {
+                    const coverImage = cover.images[0].thumbnails.large;
+                    setCover(coverImage);
+                  }
                 });
             }
           })
@@ -128,12 +131,12 @@ function Artist() {
       }, 6000); // Ajouter une pause de 2 secondes (2000 millisecondes) avant cette requête
 
       //Vérifier les releaseTypes d'albums depuis le store + filtrage des albums avec selectedOption
-      if (user.token && profile) {
+      if (!user.token && !profile) {
+        return;
+      } else if (user.token && profile) {
+        console.log(profile.releaseTypes);
         const typesArray = profile.releaseTypes;
-        if (
-          typesArray.length === 3 ||
-          (typesArray.includes("ep") && typesArray.includes("album"))
-        ) {
+        if (typesArray.includes("ep") && typesArray.includes("album")) {
           setSelectedOption("all");
         } else if (typesArray.includes("album")) {
           setSelectedOption("albums");
@@ -161,7 +164,7 @@ function Artist() {
 
     const timeout = setTimeout(() => {
       setShowMessage(true);
-    }, 20000); // 20sec en millisecondes
+    }, 8000); // 20sec en millisecondes
 
     return () => clearTimeout(timeout);
   }, [router.query.arid]);
@@ -267,7 +270,8 @@ function Artist() {
   );
 
   //.map du tableau d'albums filtrés pour l'afficher
-  const albumsToShow = albumsList.map((data, i) => {
+  let albumsToShow;
+  albumsToShow = albumsList.map((data, i) => {
     const albumLength = calculTotalDuration(data.length);
     const url = `../release/${data.mbid}`;
 
@@ -331,7 +335,7 @@ function Artist() {
     if (artistInformation && artistBio) {
       return (
         <>
-          <a className={styles.artLink} href={artistLink}>
+          <a className={styles.artLink} href={artistLink} target="_blank">
             - Read more on Last.fm
           </a>
         </>

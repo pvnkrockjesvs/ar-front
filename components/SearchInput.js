@@ -62,13 +62,14 @@ function SearchInput() {
         router.push(`/search/${value}`);
         console.log("Recherche effectuée avec la valeur :", value);
         setOpen(false);
-        setValue("");
       }
-    }, 500);
+    }, 1000);
   };
 
   const handleSelect = (artistMbid) => {
-    router.push(`/artist/${artistMbid}`);
+    setTimeout(() => {
+      router.push(`/artist/${artistMbid}`);
+    }, 1000);
   };
 
   return (
