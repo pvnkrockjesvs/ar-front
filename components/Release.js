@@ -75,7 +75,9 @@ function Release() {
                     {i + 1} - {track.title}
                   </Table.Cell>
                   <Table.Cell className="text-sm whitespace-nowrap font-medium text-white dark:text-white">
-                    <div className="select-none">Divider that show the full tab</div>
+                    <div className="select-none">
+                      Divider that show the full tab
+                    </div>
                   </Table.Cell>
                   <Table.Cell>
                     <Moment format={trackLengthFormat}>
@@ -145,7 +147,8 @@ function Release() {
                   {album.title}
                 </p>
                 <p className="font-normal italic text-base text-gray-700 dark:text-gray-400">
-                  <Moment format="MMMM DD YYYY">{album.date}</Moment> - {album.label}
+                  <Moment format="MMMM DD YYYY">{album.date}</Moment> -{" "}
+                  {album.label}
                 </p>
                 {/* <p className="text-sm font-normal text-gray-700 dark:text-gray-400">
                   {album.genre[0].name}
@@ -157,6 +160,8 @@ function Release() {
             <h2
               onClick={() => router.push(`/artist/${album.arid}`)}
               class=" cursor-pointer text-3xl pl-2 pt-4 hover:text-indigo-600"
+            ></h2>
+          </span>
             >
               {album && album.artist}
             </h2>
@@ -196,7 +201,9 @@ function Release() {
           </div>
           {/* --DISCOGRAPHY CONTAINER-- */}
           <div className={styles.discographyContainer}>
-          <p className=" text-2xl font-medium text-gray-700 dark:text-gray-400 pb-5">Album tracks:</p>
+            <p className=" text-2xl font-medium text-gray-700 dark:text-gray-400 pb-5">
+              Album tracks:
+            </p>
 
             {/* <div className={styles.albumsContainer}>
             <div className={styles.trackContainer}>
