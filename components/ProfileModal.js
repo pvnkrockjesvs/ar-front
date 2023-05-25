@@ -7,17 +7,16 @@ import { storeProfile, updateProfile } from '../reducers/profile';
 import { Button, Modal, Label, Checkbox, Radio, TextInput } from "flowbite-react";
 
 function ProfileModal(props) {
+    console.log('I AM IN THE PROFILE MODAL')
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.value)
-    const profile = user.isProfileCreated ? useSelector((state) => state.profile.value) : null
-    console.log('USER IN PROFIEL MODAL:', user)
-    console.log('PROFILE IN PROFIEL MODAL:', profile)
+    //const profile = user.isProfileCreated ? useSelector((state) => state.profile.value) : null
+    const profile =  useSelector((state) => state.profile.value)
 
     const { register, handleSubmit, setValue, reset, watch } = useForm()
     
     const updateDataProfile = (data) => {
         const profileData = {}
-        console.log(data,'************************************')
         profileData.releaseTypes = data.releaseTypes
         profileData.newsletter = data.newsletter
         profileData.isPremium = data.isPremium
@@ -93,16 +92,10 @@ function ProfileModal(props) {
     useEffect(() => {
         // Check if the profile is already created, then we are in the
         // update mode, otherwise we are in the create mode
-        if (user.isProfileCreated) {
+        if ((user.isProfileCreated)  && (profile && profile.user)){
             const formFields = ['newsletter', 'releaseTypes','genres', 'isPremium'];
-            console.log('PROFILE DATA:', profile)
-            console.log('NEWSLETTER DATA:', profile.newsletter)
-            console.log('RELEASE TYPE DATA:', profile.releaseTypes)
-            console.log('GENRES DATA:', profile.genres)
-            console.log('ISPREMIUM:', profile.isPremium)
             formFields.forEach(field => {
                 if (field === 'newsletter'){
-                    console.log('FIELD:', field)
                     setValue(field, profile[field].toString())
                     if (profile[field] != 0){
                         setValue('emailNotification', true)
@@ -111,15 +104,14 @@ function ProfileModal(props) {
                     }
                 } else if (field === 'genres'){
                     setValue(field, profile[field].join(','))
-                    console.log('GENRE***********************************:', profile[field].join(','))
                 } else {
                     setValue(field, profile[field])
                 }
             });
         } else {
-            console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+            return
         }
-    }, [])
+    }, [profile])
 
     let updateCreateProfile = user.isProfileCreated ? 'Update your profile' : 'Create your profile'
     return (
@@ -152,21 +144,21 @@ function ProfileModal(props) {
                                     id="field-oneweek"
                                     name="newsletter"
                                     value='1'
-                                    {...register("newsletter")}
+                                    {...register("newsletter", { required: "news letter frequency is required" })}
                                 />
                                 <Label htmlFor="field-oneWeek"> 1 week  </Label>
                                 <Radio
                                     id="field-twoweek"
                                     name="newsletter"
                                     value='2'
-                                    {...register("newsletter")}
+                                    {...register("newsletter", { required: "news letter frequency is required" })}
                                 />
                                 <Label htmlFor="field-twoWeek"> 2 week </Label>
                                 <Radio
                                     id="field-oneMonth"
                                     name="newsletter"
                                     value='3'
-                                    {...register("newsletter")}
+                                    {...register("newsletter", { required: "news letter frequency is required" })}
                                 />
                                 <Label htmlFor="field-oneMonth"> 1 month </Label>
                             </div>
@@ -177,7 +169,7 @@ function ProfileModal(props) {
                             <div className="flex items-center gap-2">
                                 <Checkbox
                                     id="field-album"
-                                    {...register("releaseTypes")}
+                                    {...register("releaseTypes", { required: "release type is required" })}
                                     name="releaseTypes"
                                     value="album"
                                     checked={user.isprofileCreated ? profile.releaseTypes.includes('album'): undefined}
@@ -185,7 +177,7 @@ function ProfileModal(props) {
                                 <Label htmlFor="field-album"> Album  </Label>
                                 <Checkbox
                                     id="field-single"
-                                    {...register("releaseTypes")}
+                                    {...register("releaseTypes", { required: "release type  is required" })}
                                     name="releaseTypes"
                                     value="single"
                                     checked={user.isprofileCreated ? profile.releaseTypes.includes('single') : undefined}
@@ -193,7 +185,7 @@ function ProfileModal(props) {
                                 <Label htmlFor="field-single"> Single  </Label>
                                 <Checkbox
                                     id="field-ep"
-                                    {...register("releaseTypes")}
+                                    {...register("releaseTypes", { required: "release type is required" })}
                                     name="releaseTypes"
                                     value="ep"
                                     checked={user.isprofileCreated ? profile.releaseTypes.includes('ep'): undefined}

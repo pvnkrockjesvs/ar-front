@@ -24,20 +24,20 @@ function SignUpModal (props) {
         .then((response) => response.json())
         .then((data) => {
             if (data.result) {
-                console.log(data)
                 dispatch(login({ username, token: data.token }))
                 // reset the value of the form to the defautl values
                 reset()          
                 // reverse data flow to close the signup model
                 props.closeModal('signup')
             } else {
+                reset()
                 console.log(data)
             }           
         });
     };
 
     return (
-        <Modal show={props.show} onClose={props.onClose} dismissible={true}>
+        <Modal show={props.show} onClose={props.onClose} dismissible={false}>
             <Modal.Header>
                 Create your account
             </Modal.Header>

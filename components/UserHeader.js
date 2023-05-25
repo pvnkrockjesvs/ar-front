@@ -12,7 +12,7 @@ import { AiOutlineHome, AiFillCalendar } from "react-icons/ai";
 import { logout } from "../reducers/user";
 import { deleteProfile } from "../reducers/profile";
 
-function UserHeader() {
+function UserHeader(props) {
   const router = useRouter();
   const [value, setValue] = useState("");
   const [open, setOpen] = useState(false);
@@ -31,12 +31,10 @@ function UserHeader() {
   const togglePrModal = () => setPrModal(!prModal);
 
   const handleLogOut = () => {
-
     dispatch(logout());
     dispatch(deleteProfile());
+    props.closeModal('profile')
     router.push("/")
-
-
   };
 
   const closeModal = () => {

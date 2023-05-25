@@ -1,13 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  value: {
+  value: { },
+  /*
     avatar: null,
     releaseTypes: [],
     artists: [],
     conflicts: [],
     user: null,
   },
+  */
 };
 
 export const profileSlice = createSlice({
@@ -15,9 +17,7 @@ export const profileSlice = createSlice({
   initialState,
   reducers: {
     storeProfile: (state, action) => {
-      console.log('ACTION:', action.payload)
       state.value = action.payload
-      console.log('VALUE:', state.value)
     },
     deleteProfile: (state) => {
       state.value = {}
