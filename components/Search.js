@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import Link from "next/link";
 import { Button } from "flowbite-react";
 import { RxCheck } from "react-icons/rx";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
 function Search() {
   const { name } = useParams();
@@ -26,7 +26,7 @@ function Search() {
             console.error("Error fetching data 1:", error);
           });
       }
-    }, 300);
+    }, 800);
   }, [router.query.name]);
 
   //Vérifier si l'artiste est follow ou pas :
@@ -96,42 +96,47 @@ function Search() {
   //console.log(myArtistsList);
 
   //map de la liste de résultat de recherche
-  const artistsResearchList = searchResult.map((data, i) => {
-    const isFollowed = myArtistsList.some((objet) => objet.mbid === data.mbid);
-    return (
-      <div className={styles.artistContainer} key={i}>
-        <div>
-          <Link href={`/artist/${data.mbid}`}>
-            <span className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
-              {data.name}
-            </span>
-          </Link>
+  let artistsResearchList = null;
+  if (searchResult) {
+    artistsResearchList = searchResult.map((data, i) => {
+      const isFollowed = myArtistsList.some(
+        (objet) => objet.mbid === data.mbid
+      );
+      return (
+        <div className={styles.artistContainer} key={i}>
+          <div>
+            <Link href={`/artist/${data.mbid}`}>
+              <span className="mx-3 inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+                {data.name}
+              </span>
+            </Link>
+          </div>
+          <div>
+            <p>{data.disambiguation}</p>
+          </div>
+          <div class="mx-2">
+            {isFollowed ? (
+              <Button
+                gradientDuoTone="purpleToBlue"
+                size="xs"
+                onClick={() => handleFollow(data)}
+              >
+                <RxCheck /> Followed
+              </Button>
+            ) : (
+              <Button
+                gradientDuoTone="purpleToBlue"
+                size="xs"
+                onClick={() => handleFollow(data)}
+              >
+                Follow
+              </Button>
+            )}
+          </div>
         </div>
-        <div>
-          <p>{data.disambiguation}</p>
-        </div>
-        <div>
-          {isFollowed ? (
-            <Button
-              gradientDuoTone="purpleToBlue"
-              size="xs"
-              onClick={() => handleFollow(data)}
-            >
-              <RxCheck /> Followed
-            </Button>
-          ) : (
-            <Button
-              gradientDuoTone="purpleToBlue"
-              size="xs"
-              onClick={() => handleFollow(data)}
-            >
-              Follow
-            </Button>
-          )}
-        </div>
-      </div>
-    );
-  });
+      );
+    });
+  }
 
   return (
     <div className={styles.mainContainer}>
