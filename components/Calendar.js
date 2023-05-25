@@ -128,8 +128,11 @@ function Calendar() {
         if (!user.token) {
             return;
         }
-        const sortedConflicts = profile.conflicts.sort()
-        setConflictList(sortedConflicts)
+        if (profile.conflicts) {
+            const sortedConflicts = profile.conflicts.sort()
+            setConflictList(sortedConflicts)
+        }
+
 
         username.charAt(username.length-1) === 's' ? setTitle(username+"'") : setTitle(username+"'s")
 
@@ -244,14 +247,14 @@ function Calendar() {
     return (
         <div className={styles.calendarContainer}>
             <div className={styles.leftPart}>
-                {/* <div className={styles.artistListContainer}>
+                <div className={styles.artistListContainer}>
                     <h1> 
                         {title} artist list
                     </h1>
                     <ul className={styles.artistList} >
                         {myArtistList}
                     </ul>
-                </div> */}
+                </div>
                 <div className={styles.artistListContainer}>
                     <h1> 
                         {title} artist conflicts

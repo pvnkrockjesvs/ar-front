@@ -6,7 +6,7 @@ import { setProfile } from '../reducers/user';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { Button, Modal, Label, Checkbox, Radio, TextInput } from "flowbite-react";
-
+import { useRouter } from 'next/router';
 function ProfileModal(props) {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.value)
@@ -16,6 +16,7 @@ function ProfileModal(props) {
             control,
             name: 'genres'}
         )
+        const router = useRouter()
 
     const updateDataProfile = (data) => {
         const profileData = {}
@@ -86,6 +87,7 @@ function ProfileModal(props) {
             updateProfile(data)
         } else {
             createProfile(data)
+            router.push('/')
         }
     }
 

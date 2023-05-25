@@ -1,13 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  value: {
-    avatar: null,
-    releaseTypes: [],
-    artists: [],
-    conflicts: [],
-    user: null,
-  },
+  value: {},
 };
 
 export const profileSlice = createSlice({
