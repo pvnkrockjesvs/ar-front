@@ -8,8 +8,23 @@
   align-items: center;
   height: 92vh;
   width: 100vw;
-  background-color: #f2f4f6;
+  background: linear-gradient(45deg, #cdf0ea 0%, #b9eddd 100%);
+  background-size: 200% 200%;
+  animation: background-animation 6s ease infinite;
   overflow: auto;
+}
+@keyframes background-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .leftPart {
