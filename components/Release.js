@@ -178,7 +178,7 @@ function Release() {
             </div>
             <p
               onClick={() => router.push(`/artist/${album.arid}`)}
-              className="cursor-pointer items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+              className="cursor-pointer items-center text-xl text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
             >
               {album.artist}
             </p>

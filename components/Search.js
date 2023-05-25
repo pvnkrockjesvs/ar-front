@@ -62,7 +62,6 @@ function Search() {
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
-            console.log(artistData);
             console.log("Artist is now Followed !");
             setMyArtistsList([...myArtistsList, artistData]);
           }
