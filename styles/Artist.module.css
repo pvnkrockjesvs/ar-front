@@ -67,6 +67,8 @@
   object-fit: cover;
 }
 .releaseTxt {
+  margin-top: 25px;
+  margin-bottom: 12px;
   font-weight: 700;
   font-size: 23px;
 }
@@ -78,14 +80,12 @@
 }
 .loaderDiv1 {
   display: flex;
-
   align-items: center;
   width: 300px;
   height: 300px;
 }
 .loaderDiv2 {
   display: flex;
-
   align-items: center;
   width: 180px;
   height: 180px;
@@ -120,6 +120,7 @@
   box-shadow: 0 0 9px #878787;
   background-color: #f8f6f4;
   height: 280vh;
+  overflow: auto;
 }
 
 @media (max-width: 620px) {
@@ -172,7 +173,16 @@
 
 .artistDescription {
   padding: 10px;
+  font-size: 15px;
   margin: 0px 30px 30px 30px;
+}
+
+.artLink {
+  font-style: italic;
+}
+.artLink:hover {
+  font-weight: 600;
+  color: rgb(55, 165, 35);
 }
 
 /*--Disco Container--*/
@@ -220,7 +230,8 @@
   justify-content: center;
   align-items: center;
   width: 75%;
-  padding-bottom: 30px;
+  padding-bottom: 12px;
+  margin-top: 25px;
 }
 
 @media (max-width: 940px) {
@@ -235,12 +246,12 @@
   flex-direction: row;
   justify-content: space-around;
   width: 65%;
-  height: 6vh;
+  height: 5vh;
 }
 
 @media (max-width: 800px) {
   .albumsInfos {
-    height: 9vh;
+    height: 7vh;
   }
 }
 .albumsInfos p {
@@ -272,7 +283,7 @@
   width: 100px;
   height: 80px;
   position: relative;
-  margin: 20px;
+  margin-top: 25px;
 }
 
 .loaderText {

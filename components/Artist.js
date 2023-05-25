@@ -23,6 +23,8 @@ function Artist() {
   const [filterAlbums, setFilterAlbums] = useState(false);
   const [open, setOpen] = useState(false);
   const [artistInformation, setArtistInformation] = useState(null);
+  const [artistBio, setArtistBio] = useState("");
+  const [artistLink, setArtistLink] = useState("");
   const [lastAlbum, setLastAlbum] = useState(null);
   const [cover, setCover] = useState(null);
   const [epsList, setEpsList] = useState([]);
@@ -58,9 +60,21 @@ function Artist() {
           .then((response) => response.json())
           .then((data) => {
             data && setArtistInformation(data.art);
-            console.log(data.art.bio);
+
+            if (data.art.bio) {
+              //regex pour séparer le lien de la description
+              const descriptionRegex = /(.+?)(<a href=".+?">.+?<\/a>)/s;
+              const descriptionMatch = data.art.bio.match(descriptionRegex);
+              const description = descriptionMatch[1];
+              setArtistBio(description);
+
+              const linkRegex = /<a href="(.+?)">/;
+              const linkMatch = data.art.bio.match(linkRegex);
+              const link = linkMatch[1];
+              setArtistLink(link);
+            }
           });
-      }, 2000);
+      }, 2200);
 
       //Fetch pour récupérer le last album
       setTimeout(() => {
@@ -78,7 +92,10 @@ function Artist() {
               )
                 .then((response) => response.json())
                 .then((cover) => {
-                  setCover(cover.images[0].image);
+                  if (cover) {
+                    const coverImage = cover.images[0].thumbnails.large;
+                    setCover(coverImage);
+                  }
                 });
             }
           })
@@ -114,12 +131,12 @@ function Artist() {
       }, 6000); // Ajouter une pause de 2 secondes (2000 millisecondes) avant cette requête
 
       //Vérifier les releaseTypes d'albums depuis le store + filtrage des albums avec selectedOption
-      if (profile) {
+      if (!user.token && !profile) {
+        return;
+      } else if (user.token && profile) {
+        console.log(profile.releaseTypes);
         const typesArray = profile.releaseTypes;
-        if (
-          typesArray === 3 ||
-          (typesArray.includes("ep") && typesArray.includes("album"))
-        ) {
+        if (typesArray.includes("ep") && typesArray.includes("album")) {
           setSelectedOption("all");
         } else if (typesArray.includes("album")) {
           setSelectedOption("albums");
@@ -147,7 +164,7 @@ function Artist() {
 
     const timeout = setTimeout(() => {
       setShowMessage(true);
-    }, 20000); // 20sec en millisecondes
+    }, 8000); // 20sec en millisecondes
 
     return () => clearTimeout(timeout);
   }, [router.query.arid]);
@@ -160,7 +177,6 @@ function Artist() {
   //Fonction Follow Artist
   const handleFollow = (idArtist) => {
     if (user.token && !isFollowed) {
-      console.log("Token is OK");
       fetch(`http://localhost:3000/artists`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -172,7 +188,6 @@ function Artist() {
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
-            console.log("data ok");
             setIsFollowed(true);
           }
         })
@@ -255,7 +270,8 @@ function Artist() {
   );
 
   //.map du tableau d'albums filtrés pour l'afficher
-  const albumsToShow = albumsList.map((data, i) => {
+  let albumsToShow;
+  albumsToShow = albumsList.map((data, i) => {
     const albumLength = calculTotalDuration(data.length);
     const url = `../release/${data.mbid}`;
 
@@ -268,7 +284,7 @@ function Artist() {
               className="cursor-pointer inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
             >
               {data.title}
-            </span>{" "}
+            </span>
             • {data.date}
           </p>
         </div>
@@ -314,6 +330,18 @@ function Artist() {
   const handleOpenChange = () => {
     !open ? setOpen(true) : setOpen(false);
   };
+
+  function ArtistLink() {
+    if (artistInformation && artistBio) {
+      return (
+        <>
+          <a className={styles.artLink} href={artistLink} target="_blank">
+            - Read more on Last.fm
+          </a>
+        </>
+      );
+    }
+  }
 
   return (
     <>
@@ -362,13 +390,9 @@ function Artist() {
                   onClick={() => router.push(lastUrl)}
                   className="cursor-pointer"
                 >
-                  <img
-                    className="rounded-lg"
-                    src={cover}
-                    alt="image description"
-                  />
+                  <img className="rounded-lg" src={cover} alt="Album cover" />
                 </a>
-                <figcaption className="absolute px-4 text-md text-white bottom-6">
+                <figcaption className="absolute px-4 text-base text-white bottom-6">
                   <p>{lastAlbum.title}</p>
                   <p>{lastAlbum.date}</p>
                 </figcaption>
@@ -403,7 +427,8 @@ function Artist() {
             </div>
 
             <p className={styles.artistDescription}>
-              {artistInformation && artistInformation.bio}
+              {artistInformation && artistBio}
+              <ArtistLink />
             </p>
           </div>
           {/* --DISCOGRAPHY CONTAINER-- */}
@@ -454,7 +479,7 @@ function Artist() {
               </div>
             )}
             {(!epsList || epsList.length === 0) && showMessage && (
-              <div>Cet artiste n'a pas d'EPs</div>
+              <div>This artist has no Eps</div>
             )}
           </div>
         </div>

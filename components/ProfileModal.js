@@ -7,16 +7,17 @@ import { storeProfile, updateProfile } from '../reducers/profile';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { Button, Modal, Label, Checkbox, Radio, TextInput } from "flowbite-react";
-
+import { useRouter } from 'next/router';
 function ProfileModal(props) {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.value)
     const profile = user.isProfileCreated ? useSelector((state) => state.profile.value) : null
-    console.log('USER IN PROFIEL MODAL:', user)
-    console.log('PROFILE IN PROFIEL MODAL:', profile)
+    const { register, handleSubmit, setValue, reset, watch, control } = useForm()
+    const { fields, push, append, remove} = useFieldArray({
+            control,
+            name: 'genres'}
+        )
 
-    const { register, handleSubmit, setValue, reset, watch } = useForm()
-    
     const updateDataProfile = (data) => {
         const profileData = {}
         console.log(data,'************************************')
@@ -85,6 +86,7 @@ function ProfileModal(props) {
             updateProfile(data)
         } else {
             createProfile(data)
+            router.push('/')
         }
     }
 
