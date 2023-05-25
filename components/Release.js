@@ -23,8 +23,6 @@ function Release() {
         .then((response) => response.json())
         .then((data) => {
           setAlbum(data);
-          console.log(data);
-          //console.log(data);
 
           //Ajout du fetch pour récupérer le lien spotify
           if (data.title && data.artist) {
@@ -69,7 +67,10 @@ function Release() {
                 setTrackLengthFormat("mm:ss");
               }
               return (
-                <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <Table.Row
+                  key={i}
+                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                >
                   <Table.Cell className="text-sm whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {i + 1} - {track.title}
                   </Table.Cell>
@@ -190,7 +191,12 @@ function Release() {
                 Followed
               </Button> */}
             </div>
-            <p onClick={() => router.push(`/artist/${album.arid}`)} className="cursor-pointer items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">{album.artist}</p>
+            <p
+              onClick={() => router.push(`/artist/${album.arid}`)}
+              className="cursor-pointer items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+            >
+              {album.artist}
+            </p>
             <div className={styles.releaseTitleInfos}>
               {album.trackCount} tracks <br />
               {Math.floor(album.albumLength / 60000)} minutes
