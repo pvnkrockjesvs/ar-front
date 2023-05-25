@@ -94,9 +94,6 @@ function Calendar() {
 
         username.charAt(username.length-1) === 's' ? setTitle(username+"'") : setTitle(username+"'s")
 
-        const weekStarts = computeWeekStarts()
-        setStartWeek(weekStarts[next + 1])
-        setEndWeek(weekStarts[next])        
         fetch(`http://localhost:3000/profiles/myartists/${user.token}`)
         .then((response) => response.json())
         .then((data) => {
@@ -122,7 +119,6 @@ function Calendar() {
         .then((response) => response.json())
         .then((data) => {
             if (data.result) {
-                // console.log('Fetched Date:', data)
                 setRecentReleases([...data.data])
                 setMyArtists(true)
             }
@@ -143,7 +139,7 @@ function Calendar() {
     let searchEnded = true
     let weekReleases = []
     if (recentReleases.length != 0){
-        let filtredWeekReleases = recentReleases.filter(data => (new Date(data[0].date) >= startWeek) && (new Date(data[0].date) < endWeek) )
+        let filtredWeekReleases = recentReleases.filter(data => (new Date(data[0].date) >= startWeek) && (new Date(data[0].date) < endWeek) && (profile.releaseTypes.includes(data[0].type.toLowerCase())))
         if (filtredWeekReleases.length != 0){
             weekReleases = filtredWeekReleases.map((data, index) => {
                 let releaseDate = new Date(data[0].date)
