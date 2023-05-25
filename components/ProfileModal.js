@@ -4,8 +4,6 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux'
 import { setProfile } from '../reducers/user';
 import { storeProfile, updateProfile } from '../reducers/profile';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { Button, Modal, Label, Checkbox, Radio, TextInput } from "flowbite-react";
 
 function ProfileModal(props) {
@@ -23,6 +21,7 @@ function ProfileModal(props) {
         profileData.releaseTypes = data.releaseTypes
         profileData.newsletter = data.newsletter
         profileData.isPremium = data.isPremium
+        console.log(data.genres)
 
         if (data.emailNotification === false){
             profileData.newsletter = 0
@@ -32,7 +31,7 @@ function ProfileModal(props) {
         return profileData
     }
 
-    const createProfile = (data) => {
+    const createUserProfile = (data) => {
         const profileData = updateDataProfile(data)
         // Check and extract the usefull data
         fetch("http://localhost:3000/profiles/create", {
@@ -57,7 +56,7 @@ function ProfileModal(props) {
         })
     }
 
-    const updateProfile = (data) => {
+    const updateUserProfile = (data) => {
         const profileData = updateDataProfile(data)
         // Check and extract the usefull data
         fetch("http://localhost:3000/profiles/update", {
@@ -74,6 +73,7 @@ function ProfileModal(props) {
         .then((data) => {
             if (data.result) {
                 dispatch(updateProfile(profileData))
+                dispatch(setProfile())
                 reset()
                 props.closeModal()
             }
@@ -81,10 +81,10 @@ function ProfileModal(props) {
     }
 
     const onSubmit = (data) => {
-        if (profile){
-            updateProfile(data)
+        if (user.isProfileCreated){
+            updateUserProfile(data)
         } else {
-            createProfile(data)
+            createUserProfile(data)
         }
     }
 
@@ -93,31 +93,32 @@ function ProfileModal(props) {
     useEffect(() => {
         // Check if the profile is already created, then we are in the
         // update mode, otherwise we are in the create mode
-        if ( (!user.isProfileCreated) ||(profile === null)) {
-            return
-        }
-        const formFields = ['newsletter', 'releaseTypes','genres', 'isPremium'];
-        console.log('PROFILE DATA:', profile)
-        console.log('NEWSLETTER DATA:', profile.newsletter)
-        console.log('RELEASE TYPE DATA:', profile.releaseTypes)
-        console.log('GENRES DATA:', profile.genres)
-        console.log('ISPREMIUM:', profile.isPremium)
-        formFields.forEach(field => {
-            if (field === 'newsletter'){
-                console.log('FIELD:', field)
-                setValue(field, profile[field].toString())
-                if (profile[field] != 0){
-                    setValue('emailNotification', true)
+        if (user.isProfileCreated) {
+            const formFields = ['newsletter', 'releaseTypes','genres', 'isPremium'];
+            console.log('PROFILE DATA:', profile)
+            console.log('NEWSLETTER DATA:', profile.newsletter)
+            console.log('RELEASE TYPE DATA:', profile.releaseTypes)
+            console.log('GENRES DATA:', profile.genres)
+            console.log('ISPREMIUM:', profile.isPremium)
+            formFields.forEach(field => {
+                if (field === 'newsletter'){
+                    console.log('FIELD:', field)
+                    setValue(field, profile[field].toString())
+                    if (profile[field] != 0){
+                        setValue('emailNotification', true)
+                    } else {
+                        setValue('emailNotification', false)
+                    }
+                } else if (field === 'genres'){
+                    setValue(field, profile[field].join(','))
+                    console.log('GENRE***********************************:', profile[field].join(','))
                 } else {
-                    setValue('emailNotification', false)
+                    setValue(field, profile[field])
                 }
-            } else if (field === 'genres'){
-                setValue(field, profile[field].join(','))
-                console.log('GENRE**************************************:', profile[field].join(','))
-            } else {
-                setValue(field, profile[field])
-            }
-        });            
+            });
+        } else {
+            console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+        }
     }, [])
 
     let updateCreateProfile = user.isProfileCreated ? 'Update your profile' : 'Create your profile'
@@ -224,7 +225,7 @@ function ProfileModal(props) {
                                 type="text"
                                 placeholder="Music genres"
                                 {...register('genres')}
-                                helperText={<React.Fragment><span className="font-medium text-blue-600">A list of your preferred music genres separated by comma (e.g: geanre1,genre2,...)</span></React.Fragment>}
+                                helperText={<React.Fragment><span className="font-normal text-xs text-blue-500">A list of your preferred music genres separated by comma (e.g: genre1,genre2,...)</span></React.Fragment>}
                               />
                         </div>                                
                         <Button type="submit">
