@@ -142,19 +142,22 @@ function Release() {
                   {album.title}
                 </p>
                 <p className="text-sm font-normal text-gray-700 dark:text-gray-400">
-                  <Moment format="MMMM DD YYYY">{album.date}</Moment>
+                  <Moment format="MMMM DD YYYY">{album.date}</Moment> - {album.label}
                 </p>
+                {/* <p className="text-sm font-normal text-gray-700 dark:text-gray-400">
+                  {album.genre[0].name}
+                </p> */}
               </div>
             )}
           </div>
-          <span>
+          {/* <span>
             <h2
               onClick={() => router.push(`/artist/${album.arid}`)}
               class=" cursor-pointer text-3xl pl-2 pt-4 hover:text-indigo-600"
             >
               {album && album.artist}
             </h2>
-          </span>
+          </span> */}
         </div>
 
         {/* --RIGHT CONTAINER-- */}
