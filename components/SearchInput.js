@@ -10,6 +10,7 @@ function SearchInput() {
   const [value, setValue] = useState("");
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
+  const [fetchOk, setFetchOk] = useState(false);
   const loading = open && options.length === 0;
 
   function sleep(delay = 0) {
@@ -28,7 +29,8 @@ function SearchInput() {
       fetch(`http://localhost:3000/artists/search/${valueInput}`)
         .then((response) => response.json())
         .then((data) => {
-          if (data.artists.length > 0) {
+          if (data) {
+            setFetchOk(true);
             data.artists.forEach((objet) => {
               // Vérification de l'existence de la clé "disambiguation"
               if (!objet.hasOwnProperty("disambiguation")) {
@@ -41,6 +43,7 @@ function SearchInput() {
           }
         })
         .catch((error) => {
+          setFetchOk(false);
           console.error("Error fetching data 1:", error);
         });
     }
@@ -54,10 +57,14 @@ function SearchInput() {
 
   //Fonction après appuie sur la touche entrée dans input text
   const handleKeyDown = (event) => {
-    if (event.key === "Enter" && value) {
-      router.push(`/search/${value}`);
-      console.log("Recherche effectuée avec la valeur :", value);
-    }
+    setTimeout(() => {
+      if (event.key === "Enter" && value && fetchOk) {
+        router.push(`/search/${value}`);
+        console.log("Recherche effectuée avec la valeur :", value);
+        setOpen(false);
+        setValue("");
+      }
+    }, 500);
   };
 
   const handleSelect = (artistMbid) => {
