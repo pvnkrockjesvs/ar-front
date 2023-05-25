@@ -187,7 +187,7 @@ function Calendar() {
     }
 
     let myConflicts = []
-    if (conflictList) {
+    if (conflictList.length > 0) {
         myConflicts = conflictList.map((artistConf, i) => {
             return (
                 <li key={i} className={styles.artistName}>

@@ -74,6 +74,12 @@ function Release() {
                   <Table.Cell className="text-sm whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {i + 1} - {track.title}
                   </Table.Cell>
+                  <Table.Cell className="text-sm whitespace-nowrap font-medium text-white dark:text-white">
+                    {i + 1} - {track.title}
+                  </Table.Cell>
+                  <Table.Cell className="text-sm whitespace-nowrap font-medium text-white dark:text-white">
+                    <div className="select-none">Divider that show the full tab</div>
+                  </Table.Cell>
                   <Table.Cell>
                     <Moment format={trackLengthFormat}>
                       {track.trackLength}
@@ -138,10 +144,10 @@ function Release() {
                   src={cover}
                   alt="image description"
                 ></img>
-                <p className="font-normal text-gray-700 dark:text-gray-400">
+                <p className="font-normal text-lg text-gray-700 dark:text-gray-400">
                   {album.title}
                 </p>
-                <p className="text-sm font-normal text-gray-700 dark:text-gray-400">
+                <p className="font-normal italic text-base text-gray-700 dark:text-gray-400">
                   <Moment format="MMMM DD YYYY">{album.date}</Moment> - {album.label}
                 </p>
                 {/* <p className="text-sm font-normal text-gray-700 dark:text-gray-400">
