@@ -54,7 +54,7 @@ function Home() {
         <div>
             {userConnected && (
         <div>
-            <UserHeader />
+            <UserHeader closeModal={closeModal}/>
         </div>
         )}
             {userNotConnected && (
@@ -64,7 +64,7 @@ function Home() {
                     <SignInModal 
                         closeModal={closeModal}
                         show={isSignInModalOpen}
-                        dismissible={true}
+                        dismissible={false}
                         onClose={handleSignInCancel}
                     />
                 </div>
@@ -73,7 +73,7 @@ function Home() {
                         width={300}
                         closeModal={closeModal}
                         show={isSignUpModalOpen}
-                        dismissible={true}
+                        dismissible={false}
                         onClose={handleSignUpCancel}
                     />
                 </div>
@@ -82,7 +82,7 @@ function Home() {
                         width={700}
                         closeModal={closeModal}
                         show={isProfileModalOpen}
-                        dismissible={true}
+                        dismissible={false}
                         onClose={handleProfileCancel}
                     />
           </div>

@@ -26,7 +26,7 @@ function SignInModal(props) {
             .then((data) => {
                 if (!data.result) {
                     console.log("No profile Found");
-                } else {
+                }else {
                     dispatch(storeProfile(data.profile));
                 }
             });
@@ -56,7 +56,7 @@ function SignInModal(props) {
     };
 
     return (
-        <Modal show={props.show} onClose={props.onClose} dismissible={true}>
+        <Modal show={props.show} onClose={props.onClose} dismissible={false}>
             <Modal.Header>
                 Connect to your account
             </Modal.Header>
@@ -92,7 +92,7 @@ function SignInModal(props) {
                             placeholder="Password"
                             {...register("password", { required: "The password is required" })}
                         />
-                        <p>{errors.username?.message}</p>
+                        <p>{errors.password?.message}</p>
                     </div>
                     <Button type="submit">
                         Connect

@@ -82,50 +82,6 @@ function Calendar() {
         setNext(next + 1)
     }
     
-    // For each artist, search for releases that are associated with
-    // types from the user profiles
-    
-    const getRecentReleases = async () =>{
-        const releaseStore = []
-        let nbFetches = 0
-        let types = profile.releaseTypes
-        //let types = ['album', 'single']
-        for (let artist of artistList){
-            for (let type of types) {
-                // type= 'album'
-                const resp = await fetch(`http://localhost:3000/artists/${artist.mbid}/${type}`)
-                const data = await resp.json();
-                if (data.result) {
-                    // Remove releases that have only year information in their date key
-                    const filtredData = data.releases.filter(release => (release.date && release.date.split('-').length >= 2))
-                    if (filtredData){
-                        // add the artist name and the release type to the data
-                        const completedData = filtredData.map((ele) => (
-                            {...ele,
-                                artist: artist.name,
-                                releaseType: type,
-                                // date: dates[Math.floor(Math.random() * 22)]
-                            }
-                        ))
-                        releaseStore.push(...completedData)
-                    }
-                }  else {
-                    // console.log(`No release of ${type} for artist ${artist.name} was found`)
-                }
-                nbFetches = nbFetches + 1
-                
-            }
-
-        }
-        // sort the release data by date
-        releaseStore = releaseStore.sort(( a, b ) => {
-            return new Date(a.date) - new Date(b.date)
-        })
-        setRecentReleases([...recentReleases, ...releaseStore])
-        setNbSearch(nbFetches)
-    }
-    
-        
     useEffect(() => {
         if (!user.token) {
             return;
@@ -202,7 +158,7 @@ function Calendar() {
                     releaseStyle = { 'backgroundColor': '#b3e5d1', 'color' : '#0d47a1' }
                 } else if ( data[0].type === 'Single') {
                     releaseStyle = { 'backgroundColor': '#D9E3F0', 'color' : '#0d47a1' }
-                } else {
+                } else if (data[0].type === 'Ep') {
                     releaseStyle = { 'backgroundColor': '#FFCDD2', 'color' : '#0d47a1' }
                 }
                 return <CalendarRow
