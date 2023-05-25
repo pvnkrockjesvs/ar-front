@@ -19,6 +19,7 @@ import LoaderMusic from "./LoaderMusic";
 import ConflictSearchModal from "./ConflictSearchModal";
 import { useDispatch } from "react-redux";
 import { storeProfile } from "../reducers/profile";
+import { useRouter } from 'next/router';
 
 function Calendar() {
 
@@ -39,6 +40,7 @@ function Calendar() {
     const [arconf, setArconf] = useState('')
     const [myArtists, setMyArtists] = useState(false)
     const dispatch = useDispatch();
+    const router = useRouter()
 
     const toggleCsModal = (ar) => {
         setArconf(ar)
@@ -206,8 +208,8 @@ function Calendar() {
                 return <CalendarRow
                     style={releaseStyle}
                     key={index}
-                    artist={data[0].arname.charAt(0).toUpperCase() + data[0].arname.slice(1)}
-                    title={data[0].title}
+                    artist={<span className="cursor-pointer items-center font-medium dark:text-blue-500 hover:underline " onClick={() => router.push(`/artist/${data[0].arid}`)}>{data[0].arname.charAt(0).toUpperCase() + data[0].arname.slice(1)}</span>}
+                    title={<span className="cursor-pointer items-center font-medium dark:text-blue-500 hover:underline" onClick={() => router.push(`/release/${data[0].mbid}`)}>{data[0].title}</span>}
                     type={data[0].type}
                     date={date}/>
             })
