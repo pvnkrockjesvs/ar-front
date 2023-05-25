@@ -178,7 +178,7 @@ function Calendar() {
         myArtistList = artistList.map((artist, i) => {
             return (
                 <li key={i} className={styles.artistName}>
-                    <span onClick={() => router.push(`/artist/${artist.mbid}`)} className="cursor-pointer items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+                    <span onClick={() => router.push(`/artist/${artist.mbid}`)} className="items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
                         {artist.name}
                     </span>
                  </li>
