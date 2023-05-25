@@ -271,30 +271,32 @@ function Artist() {
 
   //.map du tableau d'albums filtrés pour l'afficher
   let albumsToShow;
-  albumsToShow = albumsList.map((data, i) => {
-    const albumLength = calculTotalDuration(data.length);
-    const url = `../release/${data.mbid}`;
+  if (albumsList) {
+    albumsToShow = albumsList.map((data, i) => {
+      const albumLength = calculTotalDuration(data.length);
+      const url = `../release/${data.mbid}`;
 
-    return (
-      <div className={styles.albumsInfos} key={i}>
-        <div className={styles.albumTitle}>
-          <p>
-            <span
-              onClick={() => router.push(url)}
-              className="cursor-pointer inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-            >
-              {data.title}
-            </span>
-            • {data.date}
-          </p>
-        </div>
-        {/* <div className={styles.minuteTracks}>
+      return (
+        <div className={styles.albumsInfos} key={i}>
+          <div className={styles.albumTitle}>
+            <p>
+              <span
+                onClick={() => router.push(url)}
+                className="cursor-pointer inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+              >
+                {data.title}
+              </span>
+              • {data.date}
+            </p>
+          </div>
+          {/* <div className={styles.minuteTracks}>
           <p>{albumLength}</p>
           <p>{data.numberTracks} tracks</p>
         </div> */}
-      </div>
-    );
-  });
+        </div>
+      );
+    });
+  }
 
   //.map du tableau d'eps filtrés pour l'afficher
   let epsToShow = null;
@@ -453,7 +455,7 @@ function Artist() {
               </Popover>
             </div>
             {/* LOADER */}
-            {albumsList.length === 0 && (
+            {(albumsList.length === 0 || albumsList === undefined) && (
               <div className={styles.loader}>
                 <span className={styles.loaderText}>loading</span>
                 <span className={styles.load}></span>

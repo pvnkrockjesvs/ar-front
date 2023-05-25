@@ -151,9 +151,7 @@ function Release() {
             <h2
               onClick={() => router.push(`/artist/${album.arid}`)}
               class=" cursor-pointer text-3xl pl-2 pt-4 hover:text-indigo-600"
-            >
-              {album && album.artist}
-            </h2>
+            ></h2>
           </span>
         </div>
 
