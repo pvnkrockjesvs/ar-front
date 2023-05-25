@@ -1,23 +1,23 @@
 import { Dropdown, Avatar, Button, Modal, Label,TextInput, Checkbox, Radio } from "flowbite-react";
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import { updateArtists, updateConflicts } from "../reducers/profile";
+import { storeProfile } from "../reducers/profile";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { useRouter } from "next/router";
 
 const ConflictSearchModal = (props) => {
   const [searchResult,setSearchResult] = useState([])
   const user = useSelector((state) => state.user.value);
   const [myArtistsList, setMyArtistsList] = useState([]);
   const dispatch = useDispatch();
-  const [start, setStart] = useState(0)
+  const router = useRouter()
 
   const profile = useSelector((state) => state.profile.value);
 
 
   const handleFollow = (data) => {
-    dispatch(updateConflicts(data.name));
     const artistData = { name: data.name, mbid: data.mbid };
     const isFollowed = myArtistsList.some((objet) => objet.mbid === data.mbid);
     if (user.token && !isFollowed) {
@@ -67,7 +67,7 @@ const ConflictSearchModal = (props) => {
 };
 
   const handleDelete = (data) => {
-    dispatch(updateConflicts(data.props.artistName));
+    console.log(data)
     fetch(`http://localhost:3000/profiles/conflict`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -76,25 +76,57 @@ const ConflictSearchModal = (props) => {
         token: user.token,
       })
     }).then((response) => response.json()).then((res) => {
+
+      fetch(`http://localhost:3000/profiles/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: user.token }),
+      })
+      .then((response) => response.json())
+      .then((res) => {
+          if (!res.result) {
+            // console.log("No profile Found");
+          } else {
+            dispatch(storeProfile(res.profile));
+          }
+      });
     })
 
     data.button ? props.onClose() : console.log('')
-
-
   }
 
-  useEffect(() => {
-    if (start = 0) {
-      setMyArtistsList(props.myArtists)
-      setStart(1)
-    }
+  // useEffect(() => {
+  //   if (user.token) {
+  //     fetch(`http://localhost:3000/profiles/myartists/${user.token}`)
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         if (data.result) {
+  //           setMyArtistsList(data.artists);
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching data 1:", error);
+  //       });
+  //   }
+  // }, [handleFollow]);
 
-  }, [start])
+  // useEffect(() => { 
+  //   if (props.myArtists.length > 0) {
+  //     setMyArtistsList(props.myArtists)
+  //   }  
+  // }, [props.artistName])
+
   useEffect(() => {
-    if (props.artistName !== '') {
-      console.log(myArtistsList)
+    if (props.myArtists.length > 0) {
+      setMyArtistsList(props.myArtists)
+    }   
+    if (props.artistName !== '' && props.artistName !== undefined) {
+ 
+
+      // console.log(myArtistsList)
       fetch(`http://localhost:3000/artists/search/${props.artistName}`)
       .then((response) => response.json()).then((data) => {
+        console.log(props.artistNames)
 
         data.artists = data.artists.slice(0, 10)
         // console.log(data)
@@ -103,7 +135,7 @@ const ConflictSearchModal = (props) => {
           return(
             <div key={i} className="flex flex-row items-center justify-between py-1">
               <div>
-                <span className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+                <span onClick={() => router.push(`/artist/${searchList.mbid}`)}className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
                   {searchList.name}
                 </span>
               </div>
@@ -134,7 +166,7 @@ const ConflictSearchModal = (props) => {
         }))
       })
     }
-  }, [props])
+  }, [props.artistName])
   
   return (
     <Modal show={props.show} onClose={props.onClose} dismissible={true}>

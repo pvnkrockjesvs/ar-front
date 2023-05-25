@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import styles from "../styles/Header.module.css";
 import { TextField } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -25,7 +24,7 @@ function SearchInput() {
       setOptions([]);
     } else if (valueInput.length > 0) {
       setValue(valueInput);
-      console.log(valueInput);
+
       fetch(`http://localhost:3000/artists/search/${valueInput}`)
         .then((response) => response.json())
         .then((data) => {
@@ -38,7 +37,7 @@ function SearchInput() {
                 objet.disambiguation = "";
               }
             });
-            console.log(data);
+
             setOptions(data.artists);
           }
         })
@@ -62,13 +61,14 @@ function SearchInput() {
         router.push(`/search/${value}`);
         console.log("Recherche effectuée avec la valeur :", value);
         setOpen(false);
-        setValue("");
       }
-    }, 500);
+    }, 1000);
   };
 
   const handleSelect = (artistMbid) => {
-    router.push(`/artist/${artistMbid}`);
+    setTimeout(() => {
+      router.push(`/artist/${artistMbid}`);
+    }, 1000);
   };
 
   return (

@@ -28,7 +28,7 @@ const persistConfig = { key: "albumRelease", storage };
 const store = configureStore({
   reducer: persistReducer(persistConfig, reducers),
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }),
+    getDefaultMiddleware({ serializableCheck: false, immutableCheck: false}),
 });
 
 const persistor = persistStore(store);

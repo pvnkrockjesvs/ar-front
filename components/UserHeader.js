@@ -51,10 +51,18 @@ function UserHeader(props) {
         <SearchInput />
       </div>
       <div className={styles.title}>
-        <Navbar.Brand onClick={() => router.push("/")} className="cursor-pointer">Album Release</Navbar.Brand>
+        <Navbar.Brand
+          onClick={() => router.push("/")}
+          className="cursor-pointer"
+        >
+          Album Release
+        </Navbar.Brand>
       </div>
       <Navbar.Collapse>
-        <Navbar.Link onClick={() => router.push("/")} className="cursor-pointer">
+        <Navbar.Link
+          onClick={() => router.push("/")}
+          className="cursor-pointer"
+        >
           <AiOutlineHome className="h-11 w-10" />
         </Navbar.Link>
         <Navbar.Link href={"/calendar"}>
@@ -71,8 +79,10 @@ function UserHeader(props) {
           }
           arrowIcon={false}
           inline={true}
-        >
-          <Dropdown.Item onClick={toggleLfModal}>Import</Dropdown.Item>
+          placement="left-start">
+            <Dropdown.Item onClick={toggleLfModal}
+
+          >Import</Dropdown.Item>
           <LastFmModal
             show={lfModal}
             dismissible={true}
