@@ -77,6 +77,8 @@
   font-size: 25px;
   text-align: center;
   height: 25px;
+  margin-top: 8px;
+  margin-bottom: 15px;
 }
 .loaderDiv1 {
   display: flex;
@@ -179,10 +181,11 @@
 
 .artLink {
   font-style: italic;
+  color: rgb(37 99 235);
 }
 .artLink:hover {
   font-weight: 600;
-  color: rgb(55, 165, 35);
+  text-decoration: underline;
 }
 
 /*--Disco Container--*/

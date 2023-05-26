@@ -41,6 +41,7 @@ function Calendar() {
     const [myArtists, setMyArtists] = useState(false)
     const dispatch = useDispatch();
     const router = useRouter()
+    const [confListStyle, setConfListStyle] = useState({display: 'none'})
 
     const toggleCsModal = (ar) => {
         setArconf(ar)
@@ -105,12 +106,16 @@ function Calendar() {
         .catch((error) => {
             console.error('Fetch artist list error :' , error)
         })
+
     },[myArtists])
 
     // Get the recent releases    
     useEffect(() => {
         if (!user.token){
             return;
+        }
+        if (conflictList.length > 0) {
+            setConfListStyle({})
         }
         const weekStarts = computeWeekStarts()
         setStartWeek(weekStarts[next + 1])
@@ -180,10 +185,12 @@ function Calendar() {
                  </li>
             )
         })
+    } else {
+        myArtistList = <li><span>No artists</span></li>
     }
 
     let myConflicts = []
-    if (conflictList) {
+    if (conflictList.length > 0) {
         myConflicts = conflictList.map((artistConf, i) => {
             return (
                 <li key={i} className={styles.artistName}>
@@ -195,28 +202,29 @@ function Calendar() {
                  </li>
             )
         })
-    }
+    } 
 
     //let searchEnded = (nbSearch === (artistList.length *  profile.releaseTypes.length))
     return (
         <div className={styles.calendarContainer}>
             <div className={styles.leftPart}>
-                <div className={styles.artistListContainer}>
+                <div className={styles.artistListContainer} style={confListStyle}>
                     <h1> 
-                        {title} artist list
-                    </h1>
-                    <ul className={styles.artistList} >
-                        {myArtistList}
-                    </ul>
-                </div>
-                <div className={styles.artistListContainer}>
-                    <h1> 
-                        {title} artist conflicts
+                        {title} import conflicts
                     </h1>
                     <ul className={styles.artistList} >
                         {myConflicts}
                     </ul>
                 </div>
+                <div className={styles.artistListContainer}>
+                    <h1> 
+                        {title} artists list
+                    </h1>
+                    <ul className={styles.artistList} >
+                        {myArtistList}
+                    </ul>
+                </div>
+
                 <ConflictSearchModal
                         artistName={arconf}
                         show={csModal}

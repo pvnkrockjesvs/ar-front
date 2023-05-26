@@ -36,7 +36,7 @@ function Search() {
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
-            setMyArtistsList(data.artists);
+            data.artists && setMyArtistsList(data.artists);
           }
         })
         .catch((error) => {
@@ -62,7 +62,6 @@ function Search() {
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
-            console.log(artistData);
             console.log("Artist is now Followed !");
             setMyArtistsList([...myArtistsList, artistData]);
           }
@@ -96,7 +95,7 @@ function Search() {
   //console.log(myArtistsList);
 
   //map de la liste de résultat de recherche
-  let artistsResearchList = null;
+  let artistsResearchList;
   if (searchResult) {
     artistsResearchList = searchResult.map((data, i) => {
       const isFollowed = myArtistsList.some(

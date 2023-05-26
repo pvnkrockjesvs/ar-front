@@ -74,6 +74,11 @@ function Release() {
                   <Table.Cell className="text-sm whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {i + 1} - {track.title}
                   </Table.Cell>
+                  <Table.Cell className="text-sm whitespace-nowrap font-medium text-white dark:text-white">
+                    <div className="select-none">
+                      Divider that show the full tab
+                    </div>
+                  </Table.Cell>
                   <Table.Cell>
                     <Moment format={trackLengthFormat}>
                       {track.trackLength}
@@ -138,23 +143,29 @@ function Release() {
                   src={cover}
                   alt="image description"
                 ></img>
-                <p className="font-normal text-gray-700 dark:text-gray-400">
+                <p className="font-normal text-lg text-gray-700 dark:text-gray-400">
                   {album.title}
                 </p>
-                <p className="text-sm font-normal text-gray-700 dark:text-gray-400">
-                  <Moment format="MMMM DD YYYY">{album.date}</Moment>
+                <p className="font-normal italic text-base text-gray-700 dark:text-gray-400">
+                  <Moment format="MMMM DD YYYY">{album.date}</Moment> -{" "}
+                  {album.label}
                 </p>
+                {/* <p className="text-sm font-normal text-gray-700 dark:text-gray-400">
+                  {album.genre[0].name}
+                </p> */}
               </div>
             )}
           </div>
-          <span>
+          {/* <span>
             <h2
               onClick={() => router.push(`/artist/${album.arid}`)}
               class=" cursor-pointer text-3xl pl-2 pt-4 hover:text-indigo-600"
+            ></h2>
+          </span>
             >
               {album && album.artist}
             </h2>
-          </span>
+          </span> */}
         </div>
 
         {/* --RIGHT CONTAINER-- */}
@@ -175,7 +186,7 @@ function Release() {
             </div>
             <p
               onClick={() => router.push(`/artist/${album.arid}`)}
-              className="cursor-pointer items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+              className="cursor-pointer items-center text-xl text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
             >
               {album.artist}
             </p>
@@ -190,8 +201,11 @@ function Release() {
           </div>
           {/* --DISCOGRAPHY CONTAINER-- */}
           <div className={styles.discographyContainer}>
+            <p className=" text-2xl font-medium text-gray-700 dark:text-gray-400 pb-5">
+              Album tracks:
+            </p>
+
             {/* <div className={styles.albumsContainer}>
-            <p className={styles.albumTxt}>Tracks:</p>
             <div className={styles.trackContainer}>
               {track}           
             </div>
