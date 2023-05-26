@@ -151,9 +151,15 @@ function Artist() {
           .then((response) => response.json())
           .then((data) => {
             if (data.result) {
-              data.artists.some(
-                (mbidArtist) => mbidArtist.mbid === router.query.arid
-              ) && setIsFollowed(true);
+              if (
+                data.artists.some(
+                  (mbidArtist) => mbidArtist.mbid === router.query.arid
+                )
+              ) {
+                setIsFollowed(true);
+              } else {
+                setIsFollowed(false);
+              }
             }
           })
           .catch((error) => {
