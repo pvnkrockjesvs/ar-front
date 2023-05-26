@@ -25,7 +25,7 @@ function SignUpModal (props) {
         .then((response) => response.json())
         .then((data) => {
             if (data.result) {
-                dispatch(login({ username, token: data.token }))
+                dispatch(login({ username, email, token: data.token }))
                 // reset the value of the form to the defautl values
                 reset()          
                 // reverse data flow to close the signup model

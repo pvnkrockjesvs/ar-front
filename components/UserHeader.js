@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styles from "../styles/Header.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faHome, faCalendar } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import SearchInput from "./SearchInput";
 import { useRouter } from "next/router";
@@ -63,10 +61,16 @@ function UserHeader(props) {
           onClick={() => router.push("/")}
           className="cursor-pointer"
         >
-          <AiOutlineHome className="h-11 w-10" />
+          <div className='flex-col justify-center items-center'>
+            <AiOutlineHome className="h-11 w-10" />
+            <p>Home</p>
+          </div>
         </Navbar.Link>
         <Navbar.Link href={"/calendar"}>
-          <AiFillCalendar className="h-11 w-10" />
+          <div className='flex-col justify-center items-center'>
+            <AiFillCalendar className="h-11 w-10" />
+            <p>Calendar</p>
+          </div>
         </Navbar.Link>
         <Dropdown
           label={
@@ -79,16 +83,27 @@ function UserHeader(props) {
           }
           arrowIcon={false}
           inline={true}
-          placement="left-start">
-            <Dropdown.Item onClick={toggleLfModal}
-
-          >Import</Dropdown.Item>
-          <LastFmModal
-            show={lfModal}
-            dismissible={true}
-            onClose={toggleLfModal}
-          />
-          <Dropdown.Item onClick={togglePrModal}>Settings</Dropdown.Item>
+          placement="left-start"
+          >
+          <Dropdown.Header>
+            <span className="block text-sm">
+              {user.username}
+            </span>
+            <span className="block truncate text-sm font-medium">
+              {user.email}
+            </span>
+          </Dropdown.Header>
+          <Dropdown.Item onClick={toggleLfModal}>
+            Import
+          </Dropdown.Item>
+            <LastFmModal
+              show={lfModal}
+              dismissible={true}
+              onClose={toggleLfModal}
+            />
+          <Dropdown.Item onClick={togglePrModal}>
+            Settings
+          </Dropdown.Item>
             <ProfileModal
               show={prModal}
               dismissible={false}
@@ -96,11 +111,7 @@ function UserHeader(props) {
               closeModal={closeModal}
             />
           <Dropdown.Divider />
-          <Dropdown.Item
-            onClick={() => {
-              handleLogOut();
-            }}
-          >
+          <Dropdown.Item onClick={() => { handleLogOut(); }}>
             Sign out
           </Dropdown.Item>
         </Dropdown>

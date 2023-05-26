@@ -46,7 +46,7 @@ function SignInModal(props) {
         .then((response) => response.json())
         .then((data) => {
             if (data.result) {
-                dispatch(login({ username, token: data.token }));
+                dispatch(login({ username, email:data.email, token: data.token }));
                 dispatch(setProfile());
                 fetchProfile(data.token);
                 reset();

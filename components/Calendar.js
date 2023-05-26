@@ -20,6 +20,7 @@ import ConflictSearchModal from "./ConflictSearchModal";
 import { useDispatch } from "react-redux";
 import { storeProfile } from "../reducers/profile";
 import { useRouter } from 'next/router';
+import moment from "moment";
 
 function Calendar() {
 
@@ -147,19 +148,13 @@ function Calendar() {
         let filtredWeekReleases = recentReleases.filter(data => (new Date(data[0].date) >= startWeek) && (new Date(data[0].date) < endWeek) && (profile.releaseTypes.includes(data[0].type.toLowerCase())))
         if (filtredWeekReleases.length != 0){
             weekReleases = filtredWeekReleases.map((data, index) => {
-                let releaseDate = new Date(data[0].date)
-                //console.log('Release Date:', releaseDate)
-                let releaseYear = releaseDate.getUTCFullYear()
-                let releaseMonth = releaseDate.getUTCMonth() + 1 > 9? releaseDate.getUTCMonth() + 1 : '0'+(releaseDate.getUTCMonth() + 1)
-                let releaseDay = releaseDate.getUTCDate() > 9 ? releaseDate.getUTCDate() : '0'+(releaseDate.getUTCDate())
-                let date = `${releaseDay}-${releaseMonth}-${releaseYear}`
-
+                const date = moment(data[0].date).format("DD-MM-YYYY");
                 let releaseStyle = {}
-                if (data[0].type === 'Album'){
+                if (data[0].type.toLowerCase() === 'album'){
                     releaseStyle = { 'backgroundColor': '#b3e5d1', 'color' : '#0d47a1' }
-                } else if ( data[0].type === 'Single') {
+                } else if ( data[0].type.toLowerCase() === 'single') {
                     releaseStyle = { 'backgroundColor': '#D9E3F0', 'color' : '#0d47a1' }
-                } else if (data[0].type === 'Ep') {
+                } else if (data[0].type.toLowerCase() === 'ep') {
                     releaseStyle = { 'backgroundColor': '#FFCDD2', 'color' : '#0d47a1' }
                 }
                 return <CalendarRow
