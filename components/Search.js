@@ -17,7 +17,7 @@ function Search() {
   useEffect(() => {
     setTimeout(() => {
       if (router.query.name) {
-        fetch(`http://localhost:3000/artists/search/${router.query.name}`)
+        fetch(`http://ar-back.vercel.app/artists/search/${router.query.name}`)
           .then((response) => response.json())
           .then((data) => {
             setSearchResult(data.artists);
@@ -32,7 +32,7 @@ function Search() {
   //Vérifier si l'artiste est follow ou pas :
   useEffect(() => {
     if (user.token) {
-      fetch(`http://localhost:3000/profiles/myartists/${user.token}`)
+      fetch(`http://ar-back.vercel.app/profiles/myartists/${user.token}`)
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
@@ -51,7 +51,7 @@ function Search() {
     const isFollowed = myArtistsList.some((objet) => objet.mbid === data.mbid);
     if (user.token && !isFollowed) {
       console.log("Token is OK");
-      fetch(`http://localhost:3000/artists`, {
+      fetch(`http://ar-back.vercel.app/artists`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -70,7 +70,7 @@ function Search() {
           console.error("Error fetching data 1:", error);
         });
     } else if (user.token && isFollowed) {
-      fetch(`http://localhost:3000/artists`, {
+      fetch(`http://ar-back.vercel.app/artists`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

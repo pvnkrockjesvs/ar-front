@@ -22,7 +22,7 @@ const ConflictSearchModal = (props) => {
     const isFollowed = myArtistsList.some((objet) => objet.mbid === data.mbid);
     if (user.token && !isFollowed) {
       console.log("Token is OK");
-      fetch(`http://localhost:3000/artists`, {
+      fetch(`http://ar-back.vercel.app/artists`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -45,7 +45,7 @@ const ConflictSearchModal = (props) => {
         handleDelete({props: props});
 
     } else if (user.token && isFollowed) {
-      fetch(`http://localhost:3000/artists`, {
+      fetch(`http://ar-back.vercel.app/artists`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -68,7 +68,7 @@ const ConflictSearchModal = (props) => {
 
   const handleDelete = (data) => {
     console.log(data)
-    fetch(`http://localhost:3000/profiles/conflict`, {
+    fetch(`http://ar-back.vercel.app/profiles/conflict`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -77,7 +77,7 @@ const ConflictSearchModal = (props) => {
       })
     }).then((response) => response.json()).then((res) => {
 
-      fetch(`http://localhost:3000/profiles/`, {
+      fetch(`http://ar-back.vercel.app/profiles/`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ token: user.token }),
@@ -97,7 +97,7 @@ const ConflictSearchModal = (props) => {
 
   // useEffect(() => {
   //   if (user.token) {
-  //     fetch(`http://localhost:3000/profiles/myartists/${user.token}`)
+  //     fetch(`http://ar-back.vercel.app/profiles/myartists/${user.token}`)
   //       .then((response) => response.json())
   //       .then((data) => {
   //         if (data.result) {
@@ -124,7 +124,7 @@ const ConflictSearchModal = (props) => {
  
 
       // console.log(myArtistsList)
-      fetch(`http://localhost:3000/artists/search/${props.artistName}`)
+      fetch(`http://ar-back.vercel.app/artists/search/${props.artistName}`)
       .then((response) => response.json()).then((data) => {
         console.log(props.artistNames)
 

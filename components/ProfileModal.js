@@ -32,7 +32,7 @@ function ProfileModal(props) {
     const createUserProfile = (data) => {
         const profileData = updateDataProfile(data)
         // Check and extract the usefull data
-        fetch("http://localhost:3000/profiles/create", {
+        fetch("http://ar-back.vercel.app/profiles/create", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -57,7 +57,7 @@ function ProfileModal(props) {
     const updateUserProfile = (data) => {
         const profileData = updateDataProfile(data)
         // Check and extract the usefull data
-        fetch("http://localhost:3000/profiles/update", {
+        fetch("http://ar-back.vercel.app/profiles/update", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -124,7 +124,7 @@ function ProfileModal(props) {
                         <div className="mb-2 block">
                             <Label
                                 htmlFor="field-notify"
-                                value="Do you wante to be notified by email?"
+                                value="Do you want to be notified by email?"
                                 className="mr-5"
                             />
                         </div>            
@@ -150,7 +150,7 @@ function ProfileModal(props) {
                                     id="field-twoweek"
                                     name="newsletter"
                                     value='2'
-                                    {...register("newsletter", { required: "news letter frequency is required" })}
+                                    {...register("newsletter", { required: "newsletter frequency is required" })}
                                 />
                                 <Label htmlFor="field-twoWeek"> 2 week </Label>
                                 <Radio
@@ -193,7 +193,7 @@ function ProfileModal(props) {
                             </div>
                         </div>
                         <div>
-                            <Label htmlFor="field-support" value="Do you wante to support us?"/>
+                            <Label htmlFor="field-support" value="Do you want to support us?"/>
                             <div className="flex items-center gap-2">
                                 <Checkbox
                                     id="field-support"

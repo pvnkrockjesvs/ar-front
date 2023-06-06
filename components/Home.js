@@ -10,7 +10,7 @@ function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch(`http://localhost:3000/topreleases`)
+    fetch(`http://ar-back.vercel.app/topreleases`)
       .then((response) => response.json())
       .then((data) => {
         //console.log(data.releases);

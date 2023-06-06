@@ -16,7 +16,7 @@ function SignUpModal (props) {
     const CreateUserAccount = (data) => {
         // destructuring the data object
         const { username, email, password } = data
-        fetch("http://localhost:3000/users/signup", {
+        fetch("http://ar-back.vercel.app/users/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, email, password }),

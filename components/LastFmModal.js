@@ -16,7 +16,7 @@ const LastFmModal = (props) => {
   const user = useSelector((state) => state.user.value);
 
   const importLFM = (data) => {
-    fetch('http://localhost:3000/profiles/import-last-fm', {
+    fetch('http://ar-back.vercel.app/profiles/import-last-fm', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -28,7 +28,7 @@ const LastFmModal = (props) => {
       }),
     })
     .then(response => response.json()).then(data => {
-      fetch(`http://localhost:3000/profiles/`, {
+      fetch(`http://ar-back.vercel.app/profiles/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: user.token }),
@@ -141,7 +141,7 @@ const LastFmModal = (props) => {
           /> 
         </div>
         <div >
-          <Label htmlFor="scrobbles" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Minimum artist scrobbles</Label>
+          <Label htmlFor="scrobbles" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Minimum artist listens</Label>
           <TextInput type="number" id="visitors" className="bg-gray-50 border border-gray-300 
           text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 
           block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 

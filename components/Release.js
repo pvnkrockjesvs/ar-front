@@ -19,14 +19,14 @@ function Release() {
 
   useEffect(() => {
     if (router.query.mbid) {
-      fetch(`http://localhost:3000/releases/${router.query.mbid}`)
+      fetch(`http://ar-back.vercel.app/releases/${router.query.mbid}`)
         .then((response) => response.json())
         .then((data) => {
           setAlbum(data);
 
           //Ajout du fetch pour récupérer le lien spotify
           if (data.title && data.artist) {
-            fetch("http://localhost:3000/streaming/spotify/album", {
+            fetch("http://ar-back.vercel.app/streaming/spotify/album", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ album: data.title, artist: data.artist }),
@@ -40,7 +40,7 @@ function Release() {
               });
 
             //Ajout du fetch pour récupérer le lien deezer
-            fetch(`http://localhost:3000/streaming/deezer/album`, {
+            fetch(`http://ar-back.vercel.app/streaming/deezer/album`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ album: data.title, artist: data.artist }),
@@ -73,11 +73,6 @@ function Release() {
                 >
                   <Table.Cell className="text-sm whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {i + 1} - {track.title}
-                  </Table.Cell>
-                  <Table.Cell className="text-sm whitespace-nowrap font-medium text-white dark:text-white">
-                    <div className="select-none">
-                      Divider that show the full tab
-                    </div>
                   </Table.Cell>
                   <Table.Cell>
                     <Moment format={trackLengthFormat}>

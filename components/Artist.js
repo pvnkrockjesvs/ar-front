@@ -56,7 +56,7 @@ function Artist() {
       dispatch(removeAllAlbums());
       //Fetch pour infos artist & albums
       setTimeout(() => {
-        fetch(`http://localhost:3000/artists/${router.query.arid}`)
+        fetch(`http://ar-back.vercel.app/artists/${router.query.arid}`)
           .then((response) => response.json())
           .then((data) => {
             data && setArtistInformation(data.art);
@@ -78,7 +78,7 @@ function Artist() {
 
       //Fetch pour récupérer le last album
       setTimeout(() => {
-        fetch(`http://localhost:3000/artists/${router.query.arid}/lastalbum`)
+        fetch(`http://ar-back.vercel.app/artists/${router.query.arid}/lastalbum`)
           .then((response) => response.json())
           .then((data) => {
             if (data) {
@@ -106,7 +106,7 @@ function Artist() {
 
       //Fetch pour récupérer les infos d'albums
       setTimeout(() => {
-        fetch(`http://localhost:3000/artists/${router.query.arid}/album`)
+        fetch(`http://ar-back.vercel.app/artists/${router.query.arid}/album`)
           .then((response) => response.json())
           .then((data) => {
             data && dispatch(addAlbums(data.releases));
@@ -119,7 +119,7 @@ function Artist() {
 
       //Fetch pour récupérer les infos d'eps
       setTimeout(() => {
-        fetch(`http://localhost:3000/artists/${router.query.arid}/ep`)
+        fetch(`http://ar-back.vercel.app/artists/${router.query.arid}/ep`)
           .then((response) => response.json())
           .then((data) => {
             data && dispatch(addEps(data.releases));
@@ -147,7 +147,7 @@ function Artist() {
 
       //Vérifier si l'artiste est follow ou pas :
       if (user.token) {
-        fetch(`http://localhost:3000/profiles/myartists/${user.token}`)
+        fetch(`http://ar-back.vercel.app/profiles/myartists/${user.token}`)
           .then((response) => response.json())
           .then((data) => {
             if (data.result) {
@@ -177,7 +177,7 @@ function Artist() {
   //Fonction Follow Artist
   const handleFollow = (idArtist) => {
     if (user.token && !isFollowed) {
-      fetch(`http://localhost:3000/artists`, {
+      fetch(`http://ar-back.vercel.app/artists`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -195,7 +195,7 @@ function Artist() {
           console.error("Error fetching data 1:", error);
         });
     } else if (user.token && isFollowed) {
-      fetch(`http://localhost:3000/artists`, {
+      fetch(`http://ar-back.vercel.app/artists`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

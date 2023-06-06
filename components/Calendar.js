@@ -95,7 +95,7 @@ function Calendar() {
 
         username.charAt(username.length-1) === 's' ? setTitle(username+"'") : setTitle(username+"'s")
 
-        fetch(`http://localhost:3000/profiles/myartists/${user.token}`)
+        fetch(`http://ar-back.vercel.app/profiles/myartists/${user.token}`)
         .then((response) => response.json())
         .then((data) => {
             if (data.result) {
@@ -120,7 +120,7 @@ function Calendar() {
         const weekStarts = computeWeekStarts()
         setStartWeek(weekStarts[next + 1])
         setEndWeek(weekStarts[next])  
-        fetch(`http://localhost:3000/profiles/myreleases/${user.token}`)
+        fetch(`http://ar-back.vercel.app/profiles/myreleases/${user.token}`)
         .then((response) => response.json())
         .then((data) => {
             if (data.result) {

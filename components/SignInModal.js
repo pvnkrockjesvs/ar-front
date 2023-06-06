@@ -17,7 +17,7 @@ function SignInModal(props) {
     const fetchProfile = (tokenData) => {
         if (tokenData) {
             console.log(`Token is OK : ${tokenData}`);
-            fetch(`http://localhost:3000/profiles/`, {
+            fetch(`http://ar-back.vercel.app/profiles/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ token: tokenData }),
@@ -38,7 +38,7 @@ function SignInModal(props) {
     const connectToUserAccount = (data) => {
     // destructuring the data object
         const { username, password } = data;
-        fetch("http://localhost:3000/users/signin", {
+        fetch("http://ar-back.vercel.app/users/signin", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password }),
