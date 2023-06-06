@@ -25,7 +25,7 @@ function SearchInput() {
     } else if (valueInput.length > 0) {
       setValue(valueInput);
 
-      fetch(`http://ar-back.vercel.app/artists/search/${valueInput}`)
+      fetch(`http://ar-back-git-main-pvnkrockjesvs.vercel.app/artists/search/${valueInput}`)
         .then((response) => response.json())
         .then((data) => {
           if (data) {

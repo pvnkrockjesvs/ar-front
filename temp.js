@@ -13,7 +13,7 @@ function SignUp () {
 
 
     const handleConnection = () => {
-        fetch("http://ar-back.vercel.app/users/signup", {
+        fetch("http://ar-back-git-main-pvnkrockjesvs.vercel.app/users/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password }),

@@ -19,14 +19,14 @@ function Release() {
 
   useEffect(() => {
     if (router.query.mbid) {
-      fetch(`http://ar-back.vercel.app/releases/${router.query.mbid}`)
+      fetch(`http://ar-back-git-main-pvnkrockjesvs.vercel.app/releases/${router.query.mbid}`)
         .then((response) => response.json())
         .then((data) => {
           setAlbum(data);
 
           //Ajout du fetch pour récupérer le lien spotify
           if (data.title && data.artist) {
-            fetch("http://ar-back.vercel.app/streaming/spotify/album", {
+            fetch("http://ar-back-git-main-pvnkrockjesvs.vercel.app/streaming/spotify/album", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ album: data.title, artist: data.artist }),
@@ -40,7 +40,7 @@ function Release() {
               });
 
             //Ajout du fetch pour récupérer le lien deezer
-            fetch(`http://ar-back.vercel.app/streaming/deezer/album`, {
+            fetch(`http://ar-back-git-main-pvnkrockjesvs.vercel.app/streaming/deezer/album`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ album: data.title, artist: data.artist }),
