@@ -22,7 +22,7 @@ const ConflictSearchModal = (props) => {
     const isFollowed = myArtistsList.some((objet) => objet.mbid === data.mbid);
     if (user.token && !isFollowed) {
       console.log("Token is OK");
-      fetch(`http://ar-back-git-main-pvnkrockjesvs.vercel.app/artists`, {
+      fetch(`https://ar-back-git-main-pvnkrockjesvs.vercel.app/artists`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -45,7 +45,7 @@ const ConflictSearchModal = (props) => {
         handleDelete({props: props});
 
     } else if (user.token && isFollowed) {
-      fetch(`http://ar-back-git-main-pvnkrockjesvs.vercel.app/artists`, {
+      fetch(`https://ar-back-git-main-pvnkrockjesvs.vercel.app/artists`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -68,7 +68,7 @@ const ConflictSearchModal = (props) => {
 
   const handleDelete = (data) => {
     console.log(data)
-    fetch(`http://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/conflict`, {
+    fetch(`https://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/conflict`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -77,7 +77,7 @@ const ConflictSearchModal = (props) => {
       })
     }).then((response) => response.json()).then((res) => {
 
-      fetch(`http://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/`, {
+      fetch(`https://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ token: user.token }),
@@ -97,7 +97,7 @@ const ConflictSearchModal = (props) => {
 
   // useEffect(() => {
   //   if (user.token) {
-  //     fetch(`http://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/myartists/${user.token}`)
+  //     fetch(`https://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/myartists/${user.token}`)
   //       .then((response) => response.json())
   //       .then((data) => {
   //         if (data.result) {
@@ -124,7 +124,7 @@ const ConflictSearchModal = (props) => {
  
 
       // console.log(myArtistsList)
-      fetch(`http://ar-back-git-main-pvnkrockjesvs.vercel.app/artists/search/${props.artistName}`)
+      fetch(`https://ar-back-git-main-pvnkrockjesvs.vercel.app/artists/search/${props.artistName}`)
       .then((response) => response.json()).then((data) => {
         console.log(props.artistNames)
 

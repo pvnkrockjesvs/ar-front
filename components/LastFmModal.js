@@ -16,7 +16,7 @@ const LastFmModal = (props) => {
   const user = useSelector((state) => state.user.value);
 
   const importLFM = (data) => {
-    fetch('http://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/import-last-fm', {
+    fetch('https://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/import-last-fm', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -28,7 +28,7 @@ const LastFmModal = (props) => {
       }),
     })
     .then(response => response.json()).then(data => {
-      fetch(`http://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/`, {
+      fetch(`https://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: user.token }),

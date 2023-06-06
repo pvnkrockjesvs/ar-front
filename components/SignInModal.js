@@ -17,7 +17,7 @@ function SignInModal(props) {
     const fetchProfile = (tokenData) => {
         if (tokenData) {
             console.log(`Token is OK : ${tokenData}`);
-            fetch(`http://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/`, {
+            fetch(`https://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ token: tokenData }),
@@ -38,7 +38,7 @@ function SignInModal(props) {
     const connectToUserAccount = (data) => {
     // destructuring the data object
         const { username, password } = data;
-        fetch("http://ar-back-git-main-pvnkrockjesvs.vercel.app/users/signin", {
+        fetch("https://ar-back-git-main-pvnkrockjesvs.vercel.app/users/signin", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password }),

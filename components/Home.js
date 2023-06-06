@@ -10,7 +10,7 @@ function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch(`http://ar-back-git-main-pvnkrockjesvs.vercel.app/topreleases`)
+    fetch(`https://ar-back-git-main-pvnkrockjesvs.vercel.app/topreleases`)
       .then((response) => response.json())
       .then((data) => {
         //console.log(data.releases);

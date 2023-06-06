@@ -39,7 +39,7 @@ function ProfileModal(props) {
   const createUserProfile = (data) => {
     const profileData = updateDataProfile(data);
     // Check and extract the usefull data
-    fetch("http://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/create", {
+    fetch("https://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -64,7 +64,7 @@ function ProfileModal(props) {
     const updateUserProfile = (data) => {
         const profileData = updateDataProfile(data)
         // Check and extract the usefull data
-        fetch("http://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/update", {
+        fetch("https://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/update", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
