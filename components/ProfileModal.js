@@ -1,58 +1,65 @@
-import styles from '../styles/Profile.module.css'
-import React,  { useEffect } from "react";
+import styles from "../styles/Profile.module.css";
+import React, { useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
-import { useDispatch, useSelector } from 'react-redux'
-import { setProfile } from '../reducers/user';
-import { storeProfile, updateProfile } from '../reducers/profile';
-import { Button, Modal, Label, Checkbox, Radio, TextInput } from "flowbite-react";
-import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from "react-redux";
+import { setProfile } from "../reducers/user";
+import { storeProfile, updateProfile } from "../reducers/profile";
+import {
+  Button,
+  Modal,
+  Label,
+  Checkbox,
+  Radio,
+  TextInput,
+} from "flowbite-react";
+import { useRouter } from "next/router";
 function ProfileModal(props) {
-    const dispatch = useDispatch();
-    const user = useSelector((state) => state.user.value)
-    //const profile = user.isProfileCreated ? useSelector((state) => state.profile.value) : null
-    const profile =  useSelector((state) => state.profile.value)
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value);
+  //const profile = user.isProfileCreated ? useSelector((state) => state.profile.value) : null
+  const profile = useSelector((state) => state.profile.value);
 
-    const { register, handleSubmit, setValue, reset, watch } = useForm()
-    
-    const updateDataProfile = (data) => {
-        const profileData = {}
-        profileData.releaseTypes = data.releaseTypes
-        profileData.newsletter = data.newsletter
-        profileData.isPremium = data.isPremium
-        console.log(data.genres)
+  const { register, handleSubmit, setValue, reset, watch } = useForm();
 
-        if (data.emailNotification === false){
-            profileData.newsletter = 0
+  const updateDataProfile = (data) => {
+    const profileData = {};
+    profileData.releaseTypes = data.releaseTypes;
+    profileData.newsletter = data.newsletter;
+    profileData.isPremium = data.isPremium;
+    console.log(data.genres);
+
+    if (data.emailNotification === false) {
+      profileData.newsletter = 0;
+    }
+    profileData.genres = data.genres.split(",");
+    console.log(profileData.genres);
+    return profileData;
+  };
+
+  const createUserProfile = (data) => {
+    const profileData = updateDataProfile(data);
+    // Check and extract the usefull data
+    fetch("http://ar-back.vercel.app/profiles/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        token: user.token,
+        releaseTypes: profileData.releaseTypes,
+        newsletter: profileData.newsletter,
+        isPremium: profileData.isPremium,
+        genres: profileData.genres,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          dispatch(storeProfile(data.profile));
+          dispatch(setProfile());
+          reset();
+          props.closeModal();
         }
-        profileData.genres = data.genres.split(',')
-        console.log(profileData.genres)
-        return profileData
-    }
-
-    const createUserProfile = (data) => {
-        const profileData = updateDataProfile(data)
-        // Check and extract the usefull data
-        fetch("http://ar-back.vercel.app/profiles/create", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: user.token,
-                releaseTypes: profileData.releaseTypes,
-                newsletter: profileData.newsletter,
-                isPremium: profileData.isPremium,
-                genres: profileData.genres
-            }),
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.result) {
-                dispatch(storeProfile(data.profile))
-                dispatch(setProfile())
-                reset()
-                props.closeModal()
-            }
-        })
-    }
+      });
+  };
 
     const updateUserProfile = (data) => {
         const profileData = updateDataProfile(data)
@@ -78,39 +85,39 @@ function ProfileModal(props) {
         })
     }
 
-    const onSubmit = (data) => {
-        if (user.isProfileCreated){
-            updateUserProfile(data)
-        } else {
-            createUserProfile(data)
-        }
+  const onSubmit = (data) => {
+    if (user.isProfileCreated) {
+      updateUserProfile(data);
+    } else {
+      createUserProfile(data);
     }
+  };
 
-    const emailNotification = watch("emailNotification");
+  const emailNotification = watch("emailNotification");
 
-    useEffect(() => {
-        // Check if the profile is already created, then we are in the
-        // update mode, otherwise we are in the create mode
-        if ((user.isProfileCreated)  && (profile && profile.user)){
-            const formFields = ['newsletter', 'releaseTypes','genres', 'isPremium'];
-            formFields.forEach(field => {
-                if (field === 'newsletter'){
-                    setValue(field, profile[field].toString())
-                    if (profile[field] != 0){
-                        setValue('emailNotification', true)
-                    } else {
-                        setValue('emailNotification', false)
-                    }
-                } else if (field === 'genres'){
-                    setValue(field, profile[field].join(','))
-                } else {
-                    setValue(field, profile[field])
-                }
-            });
+  useEffect(() => {
+    // Check if the profile is already created, then we are in the
+    // update mode, otherwise we are in the create mode
+    if (user.isProfileCreated && profile && profile.user) {
+      const formFields = ["newsletter", "releaseTypes", "genres", "isPremium"];
+      formFields.forEach((field) => {
+        if (field === "newsletter") {
+          setValue(field, profile[field].toString());
+          if (profile[field] != 0) {
+            setValue("emailNotification", true);
+          } else {
+            setValue("emailNotification", false);
+          }
+        } else if (field === "genres") {
+          setValue(field, profile[field].join(","));
         } else {
-            return
+          setValue(field, profile[field]);
         }
-    }, [profile])
+      });
+    } else {
+      return;
+    }
+  }, [profile]);
 
     let updateCreateProfile = user.isProfileCreated ? 'Update your profile' : 'Create your profile'
     return (
@@ -124,7 +131,7 @@ function ProfileModal(props) {
                         <div className="mb-2 block">
                             <Label
                                 htmlFor="field-notify"
-                                value="Do you want to be notified by email?"
+                                value="Do you wante to be notified by email?"
                                 className="mr-5"
                             />
                         </div>            
@@ -150,7 +157,7 @@ function ProfileModal(props) {
                                     id="field-twoweek"
                                     name="newsletter"
                                     value='2'
-                                    {...register("newsletter", { required: "newsletter frequency is required" })}
+                                    {...register("newsletter", { required: "news letter frequency is required" })}
                                 />
                                 <Label htmlFor="field-twoWeek"> 2 week </Label>
                                 <Radio
@@ -193,7 +200,7 @@ function ProfileModal(props) {
                             </div>
                         </div>
                         <div>
-                            <Label htmlFor="field-support" value="Do you want to support us?"/>
+                            <Label htmlFor="field-support" value="Do you wante to support us?"/>
                             <div className="flex items-center gap-2">
                                 <Checkbox
                                     id="field-support"
@@ -228,5 +235,4 @@ function ProfileModal(props) {
     )
 }
 
-export default ProfileModal
-
+export default ProfileModal;

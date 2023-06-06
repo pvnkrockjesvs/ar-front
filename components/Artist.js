@@ -151,9 +151,15 @@ function Artist() {
           .then((response) => response.json())
           .then((data) => {
             if (data.result) {
-              data.artists.some(
-                (mbidArtist) => mbidArtist.mbid === router.query.arid
-              ) && setIsFollowed(true);
+              if (
+                data.artists.some(
+                  (mbidArtist) => mbidArtist.mbid === router.query.arid
+                )
+              ) {
+                setIsFollowed(true);
+              } else {
+                setIsFollowed(false);
+              }
             }
           })
           .catch((error) => {
@@ -312,7 +318,7 @@ function Artist() {
             <p>
               <span
                 onClick={() => router.push(url)}
-                className="cursor-pointer inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
               >
                 {data.title}
               </span>

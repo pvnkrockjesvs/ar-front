@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../reducers/user';
 import { useForm } from "react-hook-form";
 import { Button, Modal, Label,TextInput } from "flowbite-react";
+import { useState } from 'react'
 
 
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -24,14 +25,13 @@ function SignUpModal (props) {
         .then((response) => response.json())
         .then((data) => {
             if (data.result) {
-                dispatch(login({ username, token: data.token }))
+                dispatch(login({ username, email, token: data.token }))
                 // reset the value of the form to the defautl values
                 reset()          
                 // reverse data flow to close the signup model
                 props.closeModal('signup')
             } else {
                 reset()
-                console.log(data)
             }           
         });
     };
