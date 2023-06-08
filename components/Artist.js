@@ -88,7 +88,7 @@ function Artist() {
 
               //Fetch pour récupérer la cover last album
               fetch(
-                `http://coverartarchive.org/release-group/${albumMbid}?fmt=json`
+                `https://coverartarchive.org/release-group/${albumMbid}?fmt=json`
               )
                 .then((response) => response.json())
                 .then((cover) => {
