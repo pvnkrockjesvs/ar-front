@@ -17,7 +17,9 @@ function Search() {
   useEffect(() => {
     setTimeout(() => {
       if (router.query.name) {
-        fetch(`https://ar-back-git-main-pvnkrockjesvs.vercel.app/artists/search/${router.query.name}`)
+        fetch(
+          `https://ar-back-git-main-pvnkrockjesvs.vercel.app/artists/search/${router.query.name}`
+        )
           .then((response) => response.json())
           .then((data) => {
             setSearchResult(data.artists);
@@ -32,7 +34,9 @@ function Search() {
   //Vérifier si l'artiste est follow ou pas :
   useEffect(() => {
     if (user.token) {
-      fetch(`https://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/myartists/${user.token}`)
+      fetch(
+        `https://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/myartists/${user.token}`
+      )
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
@@ -111,7 +115,7 @@ function Search() {
             </Link>
           </div>
           <div>
-            <p>{data.disambiguation}</p>
+            <p className={styles.artistDescription}>{data.disambiguation}</p>
           </div>
           <div class="mx-2">
             {isFollowed ? (

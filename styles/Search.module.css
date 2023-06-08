@@ -39,6 +39,13 @@
   padding-top: 25px;
   font-size: 40px;
 }
+
+@media (max-width: 620px) {
+  .title {
+    font-size: 32px;
+  }
+}
+
 .searchContainer {
   display: flex;
   flex-direction: column;
@@ -54,6 +61,18 @@
   overflow: auto;
 }
 
+@media (max-width: 620px) {
+  .searchContainer {
+    width: 90%;
+    height: 97%;
+  }
+}
+@media (max-width: 620px) {
+  .artistDescription {
+    font-size: 13px;
+  }
+}
+
 .artistContainer {
   display: flex;
   justify-content: space-between;
@@ -67,6 +86,7 @@
 .artistContainer p {
   margin: 15px;
 }
+
 .artistContainer a {
   margin-left: 15px;
 }

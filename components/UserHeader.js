@@ -31,13 +31,13 @@ function UserHeader(props) {
   const handleLogOut = () => {
     dispatch(logout());
     dispatch(deleteProfile());
-    props.closeModal('profile')
-    router.push("/")
+    props.closeModal("profile");
+    router.push("/");
   };
 
   const closeModal = () => {
-    setPrModal(false)
-  }
+    setPrModal(false);
+  };
 
   return (
     <Navbar
@@ -56,18 +56,19 @@ function UserHeader(props) {
           Album Release
         </Navbar.Brand>
       </div>
+      <Navbar.Toggle />
       <Navbar.Collapse>
         <Navbar.Link
           onClick={() => router.push("/")}
           className="cursor-pointer"
         >
-          <div className='flex-col justify-center items-center'>
+          <div className="flex-col justify-center items-center">
             <AiOutlineHome className="h-11 w-10" />
             <p>Home</p>
           </div>
         </Navbar.Link>
         <Navbar.Link href={"/calendar"}>
-          <div className='flex-col justify-center items-center'>
+          <div className="flex-col justify-center items-center">
             <AiFillCalendar className="h-11 w-10" />
             <p>Calendar</p>
           </div>
@@ -84,34 +85,32 @@ function UserHeader(props) {
           arrowIcon={false}
           inline={true}
           placement="left-start"
-          >
+        >
           <Dropdown.Header>
-            <span className="block text-sm">
-              {user.username}
-            </span>
+            <span className="block text-sm">{user.username}</span>
             <span className="block truncate text-sm font-medium">
               {user.email}
             </span>
           </Dropdown.Header>
-          <Dropdown.Item onClick={toggleLfModal}>
-            Import
-          </Dropdown.Item>
-            <LastFmModal
-              show={lfModal}
-              dismissible={true}
-              onClose={toggleLfModal}
-            />
-          <Dropdown.Item onClick={togglePrModal}>
-            Settings
-          </Dropdown.Item>
-            <ProfileModal
-              show={prModal}
-              dismissible={false}
-              onClose={togglePrModal}
-              closeModal={closeModal}
-            />
+          <Dropdown.Item onClick={toggleLfModal}>Import</Dropdown.Item>
+          <LastFmModal
+            show={lfModal}
+            dismissible={true}
+            onClose={toggleLfModal}
+          />
+          <Dropdown.Item onClick={togglePrModal}>Settings</Dropdown.Item>
+          <ProfileModal
+            show={prModal}
+            dismissible={false}
+            onClose={togglePrModal}
+            closeModal={closeModal}
+          />
           <Dropdown.Divider />
-          <Dropdown.Item onClick={() => { handleLogOut(); }}>
+          <Dropdown.Item
+            onClick={() => {
+              handleLogOut();
+            }}
+          >
             Sign out
           </Dropdown.Item>
         </Dropdown>

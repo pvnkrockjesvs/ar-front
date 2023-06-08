@@ -1,7 +1,7 @@
 import styles from "../styles/Header.module.css";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Navbar, Button } from "flowbite-react";
+import { Navbar, Button, Dropdown } from "flowbite-react";
 import SearchInput from "./SearchInput";
 
 function ConnectionHeader(props) {
@@ -22,6 +22,7 @@ function ConnectionHeader(props) {
       <div className={styles.title}>
         <Navbar.Brand href="/">Album Release</Navbar.Brand>
       </div>
+      <Navbar.Toggle />
       <Navbar.Collapse>
         <Navbar.Link onClick={(e) => handleClick("signup")}>
           <Button gradientMonochrome="teal" pill={true}>

@@ -56,7 +56,9 @@ function Artist() {
       dispatch(removeAllAlbums());
       //Fetch pour infos artist & albums
       setTimeout(() => {
-        fetch(`https://ar-back-git-main-pvnkrockjesvs.vercel.app/artists/${router.query.arid}`)
+        fetch(
+          `https://ar-back-git-main-pvnkrockjesvs.vercel.app/artists/${router.query.arid}`
+        )
           .then((response) => response.json())
           .then((data) => {
             data && setArtistInformation(data.art);
@@ -78,7 +80,9 @@ function Artist() {
 
       //Fetch pour récupérer le last album
       setTimeout(() => {
-        fetch(`https://ar-back-git-main-pvnkrockjesvs.vercel.app/artists/${router.query.arid}/lastalbum`)
+        fetch(
+          `https://ar-back-git-main-pvnkrockjesvs.vercel.app/artists/${router.query.arid}/lastalbum`
+        )
           .then((response) => response.json())
           .then((data) => {
             if (data) {
@@ -106,7 +110,9 @@ function Artist() {
 
       //Fetch pour récupérer les infos d'albums
       setTimeout(() => {
-        fetch(`https://ar-back-git-main-pvnkrockjesvs.vercel.app/artists/${router.query.arid}/album`)
+        fetch(
+          `https://ar-back-git-main-pvnkrockjesvs.vercel.app/artists/${router.query.arid}/album`
+        )
           .then((response) => response.json())
           .then((data) => {
             data && dispatch(addAlbums(data.releases));
@@ -119,7 +125,9 @@ function Artist() {
 
       //Fetch pour récupérer les infos d'eps
       setTimeout(() => {
-        fetch(`https://ar-back-git-main-pvnkrockjesvs.vercel.app/artists/${router.query.arid}/ep`)
+        fetch(
+          `https://ar-back-git-main-pvnkrockjesvs.vercel.app/artists/${router.query.arid}/ep`
+        )
           .then((response) => response.json())
           .then((data) => {
             data && dispatch(addEps(data.releases));
@@ -147,7 +155,9 @@ function Artist() {
 
       //Vérifier si l'artiste est follow ou pas :
       if (user.token) {
-        fetch(`https://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/myartists/${user.token}`)
+        fetch(
+          `https://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/myartists/${user.token}`
+        )
           .then((response) => response.json())
           .then((data) => {
             if (data.result) {
@@ -315,7 +325,7 @@ function Artist() {
       return (
         <div className={styles.albumsInfos} key={i}>
           <div className={styles.albumTitle}>
-            <p>
+            <p className={styles.txtTest}>
               <span
                 onClick={() => router.push(url)}
                 className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"

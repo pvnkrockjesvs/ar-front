@@ -254,7 +254,8 @@
 
 @media (max-width: 800px) {
   .albumsInfos {
-    height: 7vh;
+    width: 95%;
+    height: 4vh;
   }
 }
 .albumsInfos p {
@@ -263,7 +264,7 @@
 
 @media (max-width: 800px) {
   .albumsInfos p {
-    font-size: 15px;
+    font-size: 13px;
   }
 }
 .albumTxt {
