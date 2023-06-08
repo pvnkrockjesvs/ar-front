@@ -5,7 +5,7 @@ function LoaderMusic() {
     <div className={styles.loader}>
       <span className={styles.icon}>
         <svg
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
           version="1.1"
           x="0"
           y="0"
@@ -27,7 +27,7 @@ function LoaderMusic() {
       </span>
       <span className={styles.icon}>
         <svg
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
           version="1.1"
           x="0"
           y="0"
@@ -49,7 +49,7 @@ function LoaderMusic() {
       </span>
       <span className={styles.icon}>
         <svg
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
           version="1.1"
           x="0"
           y="0"

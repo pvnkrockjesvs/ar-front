@@ -86,7 +86,7 @@ function Release() {
         });
 
       fetch(
-        `http://coverartarchive.org/release-group/${router.query.mbid}?fmt=json`
+        `https://coverartarchive.org/release-group/${router.query.mbid}?fmt=json`
       )
         .then((response) => response.json())
         .then((cover) => {
