@@ -61,29 +61,29 @@ function ProfileModal(props) {
       });
   };
 
-    const updateUserProfile = (data) => {
-        const profileData = updateDataProfile(data)
-        // Check and extract the usefull data
-        fetch("https://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/update", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: user.token,
-                releaseTypes: profileData.releaseTypes,
-                newsletter: profileData.newsletter,
-                genres: profileData.genres
-            }),
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.result) {
-                dispatch(updateProfile(profileData))
-                dispatch(setProfile())
-                reset()
-                props.closeModal()
-            }
-        })
-    }
+  const updateUserProfile = (data) => {
+    const profileData = updateDataProfile(data);
+    // Check and extract the usefull data
+    fetch("https://ar-back-git-main-pvnkrockjesvs.vercel.app/profiles/update", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        token: user.token,
+        releaseTypes: profileData.releaseTypes,
+        newsletter: profileData.newsletter,
+        genres: profileData.genres,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          dispatch(updateProfile(profileData));
+          dispatch(setProfile());
+          reset();
+          props.closeModal();
+        }
+      });
+  };
 
   const onSubmit = (data) => {
     if (user.isProfileCreated) {
@@ -119,120 +119,159 @@ function ProfileModal(props) {
     }
   }, [profile]);
 
-    let updateCreateProfile = user.isProfileCreated ? 'Update your profile' : 'Create your profile'
-    return (
-        <Modal show={props.show} onClose={props.onClose} dismissible={false}>
-            <Modal.Header>
-                {updateCreateProfile}
-            </Modal.Header>
-            <Modal.Body>
-                <form className="flex flex-col gap-8" autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
-                    <div>
-                        <div className="mb-2 block">
-                            <Label
-                                htmlFor="field-notify"
-                                value="Do you wante to be notified by email?"
-                                className="mr-5"
-                            />
-                        </div>            
-                            <Checkbox
-                                id="field-notify"
-                                name="emailNotification"
-                                value="true"
-                                {...register("emailNotification")}
-                            />
-                        </div>
-                        {emailNotification && (
-                        <div>
-                            <Label htmlFor="field-fequency" value="How often to receive email notification?"/>
-                            <div className="flex items-center gap-2">
-                                <Radio
-                                    id="field-oneweek"
-                                    name="newsletter"
-                                    value='1'
-                                    {...register("newsletter", { required: "news letter frequency is required" })}
-                                />
-                                <Label htmlFor="field-oneWeek"> 1 week  </Label>
-                                <Radio
-                                    id="field-twoweek"
-                                    name="newsletter"
-                                    value='2'
-                                    {...register("newsletter", { required: "news letter frequency is required" })}
-                                />
-                                <Label htmlFor="field-twoWeek"> 2 week </Label>
-                                <Radio
-                                    id="field-oneMonth"
-                                    name="newsletter"
-                                    value='3'
-                                    {...register("newsletter", { required: "news letter frequency is required" })}
-                                />
-                                <Label htmlFor="field-oneMonth"> 1 month </Label>
-                            </div>
-                        </div>
-                        )}
-                        <div>
-                            <Label htmlFor="release-types" value="What type of release do you prefer?"/>
-                            <div className="flex items-center gap-2">
-                                <Checkbox
-                                    id="field-album"
-                                    {...register("releaseTypes", { required: "release type is required" })}
-                                    name="releaseTypes"
-                                    value="album"
-                                    checked={user.isprofileCreated ? profile.releaseTypes.includes('album'): undefined}
-                                />
-                                <Label htmlFor="field-album"> Album  </Label>
-                                <Checkbox
-                                    id="field-single"
-                                    {...register("releaseTypes", { required: "release type  is required" })}
-                                    name="releaseTypes"
-                                    value="single"
-                                    checked={user.isprofileCreated ? profile.releaseTypes.includes('single') : undefined}
-                                />
-                                <Label htmlFor="field-single"> Single  </Label>
-                                <Checkbox
-                                    id="field-ep"
-                                    {...register("releaseTypes", { required: "release type is required" })}
-                                    name="releaseTypes"
-                                    value="ep"
-                                    checked={user.isprofileCreated ? profile.releaseTypes.includes('ep'): undefined}
-                                />
-                                <Label htmlFor="field-ep"> EP  </Label>
-                            </div>
-                        </div>
-                        <div>
-                            <Label htmlFor="field-support" value="Do you wante to support us?"/>
-                            <div className="flex items-center gap-2">
-                                <Checkbox
-                                    id="field-support"
-                                    name="isPremium"
-                                    value="true"
-                                    {...register("isPremium")}
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <div className="mb-2 block">
-                                <Label
-                                    htmlFor="genres"
-                                    value="What music genres do you prefer (maximum 5 genres)?"
-                                    className="mr-5"
-                                />
-                            </div>             
-                            <TextInput
-                                id="genres"
-                                type="text"
-                                placeholder="Music genres"
-                                {...register('genres')}
-                                helperText={<React.Fragment><span className="font-normal text-xs text-blue-500">A list of your preferred music genres separated by comma (e.g: genre1,genre2,...)</span></React.Fragment>}
-                              />
-                        </div>                                
-                        <Button type="submit">
-                        Save
-                    </Button>
-                </form>
-            </Modal.Body>                
-        </Modal>
-    )
+  let updateCreateProfile = user.isProfileCreated
+    ? "Update your profile"
+    : "Create your profile";
+  return (
+    <Modal show={props.show} onClose={props.onClose} dismissible={false}>
+      <Modal.Header>{updateCreateProfile}</Modal.Header>
+      <Modal.Body>
+        <form
+          className="flex flex-col gap-8"
+          autoComplete="off"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <div>
+            <div className="mb-2 block">
+              <Label
+                htmlFor="field-notify"
+                value="Do you want to be notified by email?"
+                className="mr-5"
+              />
+            </div>
+            <Checkbox
+              id="field-notify"
+              name="emailNotification"
+              value="true"
+              {...register("emailNotification")}
+            />
+          </div>
+          {emailNotification && (
+            <div>
+              <Label
+                htmlFor="field-fequency"
+                value="How often to receive email notification?"
+              />
+              <div className="flex items-center gap-2">
+                <Radio
+                  id="field-oneweek"
+                  name="newsletter"
+                  value="1"
+                  {...register("newsletter", {
+                    required: "news letter frequency is required",
+                  })}
+                />
+                <Label htmlFor="field-oneWeek"> 1 week </Label>
+                <Radio
+                  id="field-twoweek"
+                  name="newsletter"
+                  value="2"
+                  {...register("newsletter", {
+                    required: "news letter frequency is required",
+                  })}
+                />
+                <Label htmlFor="field-twoWeek"> 2 week </Label>
+                <Radio
+                  id="field-oneMonth"
+                  name="newsletter"
+                  value="3"
+                  {...register("newsletter", {
+                    required: "news letter frequency is required",
+                  })}
+                />
+                <Label htmlFor="field-oneMonth"> 1 month </Label>
+              </div>
+            </div>
+          )}
+          <div>
+            <Label
+              htmlFor="release-types"
+              value="What type of release do you prefer?"
+            />
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="field-album"
+                {...register("releaseTypes", {
+                  required: "release type is required",
+                })}
+                name="releaseTypes"
+                value="album"
+                checked={
+                  user.isprofileCreated
+                    ? profile.releaseTypes.includes("album")
+                    : undefined
+                }
+              />
+              <Label htmlFor="field-album"> Album </Label>
+              <Checkbox
+                id="field-single"
+                {...register("releaseTypes", {
+                  required: "release type  is required",
+                })}
+                name="releaseTypes"
+                value="single"
+                checked={
+                  user.isprofileCreated
+                    ? profile.releaseTypes.includes("single")
+                    : undefined
+                }
+              />
+              <Label htmlFor="field-single"> Single </Label>
+              <Checkbox
+                id="field-ep"
+                {...register("releaseTypes", {
+                  required: "release type is required",
+                })}
+                name="releaseTypes"
+                value="ep"
+                checked={
+                  user.isprofileCreated
+                    ? profile.releaseTypes.includes("ep")
+                    : undefined
+                }
+              />
+              <Label htmlFor="field-ep"> EP </Label>
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="field-support" value="Do you want to support us?" />
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="field-support"
+                name="isPremium"
+                value="true"
+                {...register("isPremium")}
+              />
+            </div>
+          </div>
+          <div>
+            <div className="mb-2 block">
+              <Label
+                htmlFor="genres"
+                value="What music genres do you prefer (maximum 5 genres)?"
+                className="mr-5"
+              />
+            </div>
+            <TextInput
+              id="genres"
+              type="text"
+              placeholder="Music genres"
+              {...register("genres")}
+              helperText={
+                <React.Fragment>
+                  <span className="font-normal text-xs text-blue-500">
+                    A list of your preferred music genres separated by comma
+                    (e.g: genre1,genre2,...)
+                  </span>
+                </React.Fragment>
+              }
+            />
+          </div>
+          <Button type="submit">Save</Button>
+        </form>
+      </Modal.Body>
+    </Modal>
+  );
 }
 
 export default ProfileModal;
