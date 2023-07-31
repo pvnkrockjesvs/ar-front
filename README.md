@@ -1,6 +1,6 @@
 <br/>
 <p align="center">
-  <h3 align="center">Album Release</h3>
+  <h1 align="center">Album Release</h1>
 
   <p align="center">
     A website to track your favorites artists' new releases
